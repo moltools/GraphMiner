@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
-def increment(x):
-    return x + 2
 
-def load_data(x):
-    print('Hey' + str(x))
+import pandas as pd
+
+def increment(x):
+    df = pd.read_csv('test_file.csv')
+    groups = df.iloc[:,1]
+    dif_groups = []
+    for group in list(groups):
+        if group in dif_groups:
+            continue
+        else:
+            dif_groups.append(group)
+    return dif_groups
