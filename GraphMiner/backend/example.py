@@ -11,4 +11,10 @@ def increment(x):
             continue
         else:
             dif_groups.append(group)
-    return dif_groups
+    list_of_mol = {}
+    for group_num in dif_groups:
+        list_of_mol[group_num] = []
+        for mol in range(len(df)):
+            if df.iloc[mol,1] == group_num:
+                list_of_mol[group_num].append(df.iloc[mol,0])
+    return list_of_mol
