@@ -14,9 +14,9 @@ def subgraph_miner(Smiles):
     the number of atoms in the subgraph, each list has tuples of the same length.
     m1 - molecule in mol format from RDKit'''
     m1 = Chem.MolFromSmiles(Smiles)
-    print(m1.GetNumHeavyAtoms())
+    heavy_atoms = m1.GetNumHeavyAtoms()
     subgraphs = Chem.FindAllSubgraphsOfLengthMToN(m1, 1, m1.GetNumHeavyAtoms()-1)
-    return subgraphs, m1
+    return subgraphs, m1, heavy_atoms
 
 def sub_to_smiles(subgraphs, mol1):
     '''
@@ -32,7 +32,6 @@ def sub_to_smiles(subgraphs, mol1):
     '''
     list_of_smiles = []
     for size in subgraphs:
-        print(size)
         for atoms in size:
             sub_smiles = Chem.MolFragmentToSmiles(mol1, atoms)
             print(sub_smiles)

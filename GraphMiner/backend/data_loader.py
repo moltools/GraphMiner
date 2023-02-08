@@ -10,7 +10,7 @@ def load_data():
     returns: 
     df - pandas dataframe of the csv file
     '''
-    df = pd.read_csv(argv[1])
+    df = pd.read_csv(argv[1], sep = ';')
     return df
 
 def determine_groups(dataset):
