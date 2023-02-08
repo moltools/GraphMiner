@@ -32,8 +32,21 @@ from GraphMiner import subgraph_miner,sub_to_smiles
 #         print(sub_to_smiles(sub_graphs, m_1))
 
 ### GRAPH MINING ###
+
+## Breadth First Search, self parsing
+
 from GraphMiner import list_of_nodes, dict_of_nodes, breadth_first_search
 
+test_smiles = 'CC(O)C(=N)Br'
 mol_list = ['C', 'N', 'O', 'Br']
-nodelist = list_of_nodes('CC(=O)C(=N)Br', mol_list)
-print(breadth_first_search(nodelist, 'CC(=O)C(=N)Br'))
+
+# nodelist = list_of_nodes(test_smiles, mol_list)
+# nodedict = dict_of_nodes(test_smiles, mol_list)
+# print(breadth_first_search(nodelist, test_smiles, nodedict))
+
+## Using RDKit to find the neighboring atoms
+from GraphMiner import rdkit_parse, list_nodes
+
+list_node = list_nodes(test_smiles, mol_list)
+print(list_node)
+print(rdkit_parse(test_smiles, list_node))
