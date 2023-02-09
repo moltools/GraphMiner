@@ -2,7 +2,7 @@
 
 from rdkit import Chem
 
-def subgraph_miner(Smiles):
+def subgraph_miner(Smiles:str):
     '''
     Retrieve the subgraphs from a molecule in smiles format
     
@@ -18,7 +18,7 @@ def subgraph_miner(Smiles):
     subgraphs = Chem.FindAllSubgraphsOfLengthMToN(m1, 1, m1.GetNumHeavyAtoms()-1)
     return subgraphs, m1, heavy_atoms
 
-def sub_to_smiles(subgraphs, mol1):
+def sub_to_smiles(subgraphs:tuple, mol1):
     '''
     Turn subgraphs retrieved into SMILES
     

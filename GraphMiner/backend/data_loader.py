@@ -32,7 +32,7 @@ def determine_groups(dataset):
             dif_groups.append(group)
     return dif_groups
 
-def create_dict(diff_groups, data_set):
+def create_dict(diff_groups:list, data_set):
     '''
     Create a dictionairy of the input data, to separate SMILES on group
     
