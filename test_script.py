@@ -1,9 +1,9 @@
 ### DATA LOADING ###
-# from GraphMiner import load_data, determine_groups, create_dict
+from GraphMiner import load_data, determine_groups, create_dict
 
-# infile = load_data()
-# grouplist = determine_groups(infile)
-# dict_of_data = create_dict(grouplist, infile)
+infile = load_data()
+grouplist = determine_groups(infile)
+dict_of_data = create_dict(grouplist, infile)
 
 
 ### RDKit MINING ###
@@ -38,15 +38,19 @@ from GraphMiner import subgraph_miner,sub_to_smiles
 from GraphMiner import list_of_nodes, dict_of_nodes, breadth_first_search
 
 test_smiles = 'CC(O)C(=N)Br'
-mol_list = ['C', 'N', 'O', 'Br']
+mol_list = ['C', 'N', 'O', 'Br', 'S']
 
 # nodelist = list_of_nodes(test_smiles, mol_list)
 # nodedict = dict_of_nodes(test_smiles, mol_list)
 # print(breadth_first_search(nodelist, test_smiles, nodedict))
 
 ## Using RDKit to find the neighboring atoms
-from GraphMiner import rdkit_parse, list_nodes
+from GraphMiner import rdkit_parse, list_nodes, breadth_fs
 
-list_node = list_nodes(test_smiles, mol_list)
-print(list_node)
-print(rdkit_parse(test_smiles, list_node))
+for group in grouplist:
+    list_of_smiles = dict_of_data[group]
+    for mol_smile in list_of_smiles:
+        list_node = list_nodes(mol_smile, mol_list)
+        dictnode = rdkit_parse(mol_smile, list_node)
+        print(dictnode)
+        #breadth_fs(list_node, mol_smile, dictnode)
