@@ -50,12 +50,21 @@ def breadth_fs(nodelist:list, smilesmol:str, neigh_dict:dict):
     subgraphs = {}
     subgraphs[len_subgraph] = []
     for key in neigh_dict:
-        subgraphs[len_subgraph].append(key)
+        subgraphs[len_subgraph].append(str(key))
     for index in range(len(nodelist)):
         len_subgraph += 1
         subgraphs[len_subgraph] = []
         for values in subgraphs[len_subgraph-1]:
-            print(str(values)[-1])
+            last_added = str(values)[-1] #Maybe change to after last -
+            nb_list = neigh_dict[int(last_added)]
+            for nb in nb_list:
+                print(values.split('-'))
+                for value in values.split('-'):
+                    if nb == value:
+                        ..... #hier moet nog iets komen help
+                new = str(values) + '-' +str(nb)
+                subgraphs[len_subgraph].append(new)
+    
         
         
     print(subgraphs)
