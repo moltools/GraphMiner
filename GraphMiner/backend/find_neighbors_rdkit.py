@@ -45,30 +45,45 @@ def rdkit_parse(inputsmiles:str, nodelist:list):
         neighbours_dict[nodelist[atom]] = [nodelist[x.GetIdx()] for x in m1.GetAtomWithIdx(atom).GetNeighbors()]
     return neighbours_dict
 
-def breadth_fs(nodelist:list, smilesmol:str, neigh_dict:dict):
+def breadth_fs(nodelist:list, neigh_dict:dict):
+    '''
+    Find all subgraphs that are present
+    
+    input:
+    nodelist - list containing the indeces (int) in the string containing an atom
+    neigh_dicht - dictionary containing as value (int) the index of the start atom
+    and as key (list of int) the indices of the neighbouring atoms
+
+    returns:
+    subgraphs - dictionary containg as value (int) the subgraph length and as key
+    (list of str) with the subgraphs in 
+    '''
     len_subgraph = 1
     subgraphs = {}
     subgraphs[len_subgraph] = []
+    #Generate the first list of keys
     for key in neigh_dict:
         subgraphs[len_subgraph].append(str(key))
+    #Add in all unqiue regions for each length of subgraphs
     for index in range(len(nodelist)):
         len_subgraph += 1
         subgraphs[len_subgraph] = []
         for values in subgraphs[len_subgraph-1]:
-            last_added = str(values)[-1] #Maybe change to after last -
-            nb_list = neigh_dict[int(last_added)]
-            for nb in nb_list:
-                print(values.split('-'))
-                for value in values.split('-'):
-                    if nb == value:
-                        ..... #hier moet nog iets komen help
-                new = str(values) + '-' +str(nb)
-                subgraphs[len_subgraph].append(new)
-    
-        
-        
-    print(subgraphs)
-    return
+            last_added = values.split('-')[-1] 
+            for nb in neigh_dict[int(last_added)]:
+                if str(nb) not in values.split('-'):
+                    list_val = values.split('-')
+                    new_list = list_val
+                    new_list.append(str(nb))
+                    new_list.sort()
+                    new = '-'.join(new_list)
+                    if new not in subgraphs[len_subgraph]:
+                        subgraphs[len_subgraph].append(new)
+                    ###PROBLEM: SUBGRAPHS ARE NOT IN THEIR MOLECULAR ORDER ANYMORE :(
+        if subgraphs[len_subgraph] == []:
+            #Maybe remove even last empty one?
+            break
+    return subgraphs
 
 
 

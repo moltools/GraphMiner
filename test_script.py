@@ -37,7 +37,7 @@ from GraphMiner import subgraph_miner,sub_to_smiles
 
 from GraphMiner import list_of_nodes, dict_of_nodes, breadth_first_search
 
-test_smiles = 'NNC(O)=NN'
+#test_smiles = 'NNC(O)=NN'
 mol_list = ['C', 'N', 'O', 'Br', 'S']
 
 # nodelist = list_of_nodes(test_smiles, mol_list)
@@ -47,11 +47,12 @@ mol_list = ['C', 'N', 'O', 'Br', 'S']
 ## Using RDKit to find the neighboring atoms
 from GraphMiner import rdkit_parse, list_nodes, breadth_fs
 
-# for group in grouplist:
-#     list_of_smiles = dict_of_data[group]
-#     for mol_smile in list_of_smiles:
-list_node = list_nodes(test_smiles, mol_list)
-dictnode = rdkit_parse(test_smiles, list_node)
-print(dictnode)
-print(breadth_fs(list_node, test_smiles, dictnode))
+for group in grouplist:
+    list_of_smiles = dict_of_data[group]
+    for mol_smile in list_of_smiles:
+        list_node = list_nodes(mol_smile, mol_list)
+        dictnode = rdkit_parse(mol_smile, list_node)
+        print(dictnode)
+        print(breadth_fs(list_node, dictnode))
+
         
