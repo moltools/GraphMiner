@@ -52,7 +52,6 @@ for group in grouplist:
     for mol_smile in list_of_smiles:
         list_node = list_nodes(mol_smile, mol_list)
         dictnode = rdkit_parse(mol_smile, list_node)
-        print(dictnode)
         subgraphdict = breadth_fs(list_node, dictnode)
         print(subgraphs_smiles(subgraphdict, mol_smile))
 

@@ -68,18 +68,19 @@ def breadth_fs(nodelist:list, neigh_dict:dict):
     for index in range(len(nodelist)):
         len_subgraph += 1
         subgraphs[len_subgraph] = []
+        sorted_graphs = []
         for values in subgraphs[len_subgraph-1]:
             last_added = values.split('-')[-1] 
             for nb in neigh_dict[int(last_added)]:
                 if str(nb) not in values.split('-'):
                     list_val = values.split('-')
-                    new_list = list_val
-                    new_list.append(str(nb))
-                    new_list.sort()
-                    new = '-'.join(new_list)
-                    if new not in subgraphs[len_subgraph]:
+                    list_val.append(str(nb))
+                    sorted_list = list_val
+                    new = '-'.join(list_val)
+                    sorted_list.sort()
+                    if sorted_list not in sorted_graphs:
                         subgraphs[len_subgraph].append(new)
-                    ###PROBLEM: SUBGRAPHS ARE NOT IN THEIR MOLECULAR ORDER ANYMORE :(
+                        sorted_graphs.append(sorted_list)
         if subgraphs[len_subgraph] == []:
             #Maybe remove even last empty one?
             break
