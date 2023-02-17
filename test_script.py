@@ -31,6 +31,16 @@ from GraphMiner import subgraph_miner,sub_to_smiles
 #         sub_graphs, m_1, m_ha = subgraph_miner(mol_smile)
 #         print(sub_to_smiles(sub_graphs, m_1))
 
+### PREPARATION OF SMILES ###
+
+## Selection on size
+from GraphMiner import select_on_size
+
+for group in grouplist:
+    list_of_smiles = dict_of_data[group]
+    for mol_smile in list_of_smiles:
+        select_on_size(mol_smile)
+
 ### GRAPH MINING ###
 
 ## Breadth First Search, self parsing

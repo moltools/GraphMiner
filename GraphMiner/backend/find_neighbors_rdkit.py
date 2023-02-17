@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
+#IMPORT STATEMENTS
 from rdkit import Chem
+
 
 def list_nodes(insmiles:str, atom_list:list):
     '''
@@ -26,6 +28,7 @@ def list_nodes(insmiles:str, atom_list:list):
             node_list.append(index)
     return node_list
 
+
 def rdkit_parse(inputsmiles:str, nodelist:list):
     '''
     Parsing SMILES using RDKit
@@ -44,6 +47,7 @@ def rdkit_parse(inputsmiles:str, nodelist:list):
     for atom in range(len(nodelist)):
         neighbours_dict[nodelist[atom]] = [nodelist[x.GetIdx()] for x in m1.GetAtomWithIdx(atom).GetNeighbors()]
     return neighbours_dict
+
 
 def breadth_fs(nodelist:list, neigh_dict:dict):
     '''
@@ -86,6 +90,7 @@ def breadth_fs(nodelist:list, neigh_dict:dict):
             break
     return subgraphs
 
+
 def subgraphs_smiles(sub_graphs:dict, smilesmol:str):
     '''
     Return indicies of subgraphs back to atoms
@@ -108,9 +113,3 @@ def subgraphs_smiles(sub_graphs:dict, smilesmol:str):
                 mol_subgraph += smilesmol[int(number)]
             mol_graphs[subgraph_length].append(mol_subgraph)
     return mol_graphs
-
-    
-
-
-
-
