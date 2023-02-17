@@ -56,7 +56,7 @@ def breadth_fs(nodelist:list, neigh_dict:dict):
 
     returns:
     subgraphs - dictionary containg as value (int) the subgraph length and as key
-    (list of str) with the subgraphs in 
+    (list of str) with the subgraphs as strings of indeces divided by '-'
     '''
     len_subgraph = 1
     subgraphs = {}
@@ -84,6 +84,31 @@ def breadth_fs(nodelist:list, neigh_dict:dict):
             #Maybe remove even last empty one?
             break
     return subgraphs
+
+def subgraphs_smiles(sub_graphs:dict, smilesmol:str):
+    '''
+    Return indicies of subgraphs back to atoms
+    
+    input:
+    subgraphs - dictionary containg as value (int) the subgraph length and as key
+    (list of str) with the subgraphs as strings of indeces divided by '-'
+    smilesmol - SMILES format of a molecule (str)
+
+    return
+    mol_graphs - dictionary containg as value (int) the subgraph length and as key
+    (list of str) with the subgraphs as strings of atoms
+    '''
+    mol_graphs = {}
+    for subgraph_length in sub_graphs:
+        mol_graphs[subgraph_length] = []
+        for subgraphlist in sub_graphs[subgraph_length]:
+            mol_subgraph = ''
+            for number in subgraphlist.split('-'):
+                mol_subgraph += smilesmol[int(number)]
+            mol_graphs[subgraph_length].append(mol_subgraph)
+    return mol_graphs
+
+    
 
 
 
