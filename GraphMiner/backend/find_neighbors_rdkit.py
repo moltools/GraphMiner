@@ -41,7 +41,7 @@ def rdkit_parse(inputsmiles:str, nodelist:list):
     neighbours_dict - dictionary containing as value (int) the index of the start atom
     and as key (list of int) the indices of the neighbouring atoms
     '''
-    print(inputsmiles)
+    #print(inputsmiles)
     neighbours_dict = {}
     m1 = Chem.MolFromSmiles(inputsmiles)
     for atom in range(len(nodelist)):
