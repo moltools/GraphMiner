@@ -46,14 +46,14 @@ mol_list = ['C', 'N', 'O', 'Br', 'S']
 ## Using RDKit to find the neighboring atoms without preselection
 from GraphMiner import rdkit_parse, list_nodes, breadth_fs, subgraphs_smiles
 
-# for group in grouplist:
-#     list_of_smiles = dict_of_data[group]
-#     for mol_smile in list_of_smiles:
-#         list_node = list_nodes(mol_smile, mol_list)
-#         dictnode = rdkit_parse(mol_smile, list_node)
-#         subgraphdict = breadth_fs(list_node, dictnode)
-#         print('Without Preselection')
-#         print(subgraphs_smiles(subgraphdict, mol_smile))
+for group in grouplist:
+    list_of_smiles = dict_of_data[group]
+    for mol_smile in list_of_smiles:
+        list_node = list_nodes(mol_smile, mol_list)
+        dictnode = rdkit_parse(mol_smile, list_node)
+        subgraphdict = breadth_fs(list_node, dictnode)
+        print('Without Preselection')
+        print(subgraphs_smiles(subgraphdict, mol_smile))
 
 ### PREPARATION OF SMILES + GRAPH MINING ###
 
@@ -70,7 +70,6 @@ for group in grouplist:
         dictnode = rdkit_parse(selected_smile, list_node)
         subgraphdict = breadth_fs(list_node, dictnode)
         print('With Preselection on Size')
-        print(subgraphdict)
         print(subgraphs_smiles(subgraphdict, selected_smile))
 
 ## Combination of C-OH, C=O and COOH
