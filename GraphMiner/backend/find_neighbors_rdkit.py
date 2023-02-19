@@ -17,11 +17,6 @@ def list_nodes(insmiles:str, atom_list:list):
     node_list - list containing the indeces (int) in the string containing an atom
     '''
     node_list = []
-    # for index in range(len(insmiles)):
-    #     if insmiles[index:index+2] in atom_list: 
-    #         node_list.append(insmiles[index:index+2])
-    #     elif insmiles[index] in atom_list:
-    #         node_list.append(insmiles[index])
     for index in range(len(insmiles)):
         if insmiles[index:index+2] in atom_list: 
             node_list.append(index)
@@ -42,7 +37,6 @@ def rdkit_parse(inputsmiles:str, nodelist:list):
     neighbours_dict - dictionary containing as value (int) the index of the start atom
     and as key (list of int) the indices of the neighbouring atoms
     '''
-    #print(inputsmiles)
     neighbours_dict = {}
     m1 = Chem.MolFromSmiles(inputsmiles)
     for atom in range(len(nodelist)):

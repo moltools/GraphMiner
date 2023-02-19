@@ -34,6 +34,5 @@ def sub_to_smiles(subgraphs:tuple, mol1):
     for size in subgraphs:
         for atoms in size:
             sub_smiles = Chem.MolFragmentToSmiles(mol1, atoms)
-            print(sub_smiles)
             list_of_smiles.append(sub_smiles)
     return list_of_smiles
