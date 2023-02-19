@@ -2,6 +2,7 @@
 
 #IMPORT STATEMENTS
 from rdkit import Chem
+import string
 
 
 def list_nodes(insmiles:str, atom_list:list):
@@ -102,14 +103,25 @@ def subgraphs_smiles(sub_graphs:dict, smilesmol:str):
 
     return
     mol_graphs - dictionary containg as value (int) the subgraph length and as key
-    (list of str) with the subgraphs as strings of atoms
+    (list of str) with the subgraphs as strings of atoms in SMILES format
     '''
     mol_graphs = {}
+    alphabet = list(string.ascii_uppercase)
     for subgraph_length in sub_graphs:
         mol_graphs[subgraph_length] = []
         for subgraphlist in sub_graphs[subgraph_length]:
             mol_subgraph = ''
             for number in subgraphlist.split('-'):
-                mol_subgraph += smilesmol[int(number)]
+                index = int(number)
+                mol_subgraph += smilesmol[index]
+                #Don't know if this should be in?
+                #if index == int(subgraphlist.split('-')[-1]):
+                #    break
+                for index in range(index, len(smilesmol)-1):
+                    index += 1
+                    if smilesmol[index] in alphabet:
+                        break
+                    else:
+                         mol_subgraph += smilesmol[index]
             mol_graphs[subgraph_length].append(mol_subgraph)
     return mol_graphs
