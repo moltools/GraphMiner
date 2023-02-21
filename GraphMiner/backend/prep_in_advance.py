@@ -14,7 +14,7 @@ def select_on_size(smile_mol):
     smile_mol - SMILES format of a molecule (str)'''
     mol1 = Chem.MolFromSmiles(smile_mol)
     heavy_atoms = mol1.GetNumHeavyAtoms()
-    if heavy_atoms <= 20: #Change to 40
+    if heavy_atoms <= 40: #Change to 40
         return smile_mol
 
 

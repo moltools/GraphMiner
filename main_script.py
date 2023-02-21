@@ -1,3 +1,8 @@
+import timer
+from timer import Timer
+t = Timer()
+
+
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
@@ -58,7 +63,7 @@ from GraphMiner import rdkit_parse, list_nodes, breadth_fs, subgraphs_smiles
 
 ## Selection on size
 from GraphMiner import select_on_size
-
+t.start()
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
     for mol_smile in list_of_smiles:
@@ -70,6 +75,8 @@ for group in grouplist:
         subgraphdict = breadth_fs(list_node, dictnode)
         print('With Preselection on Size')
         print(subgraphs_smiles(subgraphdict, selected_smile))
+t.stop()
+print(t)
 
 ## Combination of C-OH, C=O and COOH
 from GraphMiner import combine_basic_substructures
