@@ -34,8 +34,8 @@ def rdkit_parse(inputsmiles:str, nodelist:list):
     nodelist - list containing the indeces (int) in the string containing an atom
 
     returns:
-    neighbours_dict - dictionary containing as value (int) the index of the start atom
-    and as key (list of int) the indices of the neighbouring atoms
+    neighbours_dict - dictionary containing as key (int) the index of the start atom
+    and as value (list of int) the indices of the neighbouring atoms
     '''
     neighbours_dict = {}
     m1 = Chem.MolFromSmiles(inputsmiles)
@@ -50,11 +50,11 @@ def breadth_fs(nodelist:list, neigh_dict:dict):
     
     input:
     nodelist - list containing the indeces (int) in the string containing an atom
-    neigh_dicht - dictionary containing as value (int) the index of the start atom
-    and as key (list of int) the indices of the neighbouring atoms
+    neigh_dicht - dictionary containing as key(int) the index of the start atom
+    and as value (list of int) the indices of the neighbouring atoms
 
     returns:
-    subgraphs - dictionary containg as value (int) the subgraph length and as key
+    subgraphs - dictionary containg as key (int) the subgraph length and as value
     (list of str) with the subgraphs as strings of indeces divided by '-'
     '''
     len_subgraph = 1
@@ -69,34 +69,33 @@ def breadth_fs(nodelist:list, neigh_dict:dict):
         subgraphs[len_subgraph] = []
         sorted_graphs = []
         for values in subgraphs[len_subgraph-1]:
-            last_added = values.split('-')[-1] 
-            for nb in neigh_dict[int(last_added)]:
-                if str(nb) not in values.split('-'):
-                    list_val = values.split('-')
-                    list_val.append(str(nb))
-                    sorted_list = list_val
-                    new = '-'.join(list_val)
-                    sorted_list.sort()
-                    if sorted_list not in sorted_graphs:
-                        subgraphs[len_subgraph].append(new)
-                        sorted_graphs.append(sorted_list)
-        if subgraphs[len_subgraph] == []:
-            #Maybe remove even last empty one?
+            for added in values.split('-'):
+                for nb in neigh_dict[int(added)]:
+                    if str(nb) not in values.split('-'):
+                        list_val = values.split('-')
+                        sorted_list = [int(index) for index in list_val]
+                        sorted_list.append(nb)
+                        sorted_list.sort()
+                        sorted_list_str = [str(val) for val in sorted_list]
+                        new = '-'.join(sorted_list_str)
+                        if sorted_list not in sorted_graphs:
+                            subgraphs[len_subgraph].append(new)
+                            sorted_graphs.append(sorted_list)
+        if len(subgraphs[len_subgraph]) == 1:
             break
     return subgraphs
-
 
 def subgraphs_smiles(sub_graphs:dict, smilesmol:str):
     '''
     Return indicies of subgraphs back to atoms
     
     input:
-    subgraphs - dictionary containg as value (int) the subgraph length and as key
+    subgraphs - dictionary containg as key (int) the subgraph length and as value
     (list of str) with the subgraphs as strings of indeces divided by '-'
     smilesmol - SMILES format of a molecule (str)
 
     return
-    mol_graphs - dictionary containg as value (int) the subgraph length and as key
+    mol_graphs - dictionary containg as key (int) the subgraph length and as value
     (list of str) with the subgraphs as strings of atoms in SMILES format
     '''
     mol_graphs = {}
