@@ -5,7 +5,7 @@ def breadth_fs(nodelist:list, neigh_dict:dict):
     Find all subgraphs that are present
     
     input:
-    nodelist - list containing the indeces (int) in the string containing an atom
+    nodelist - list containing the indeces (int) in the string of the atom
     neigh_dicht - dictionary containing as key(int) the index of the start atom
     and as value (list of int) the indices of the neighbouring atoms
 

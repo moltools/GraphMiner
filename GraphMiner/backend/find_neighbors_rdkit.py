@@ -2,30 +2,29 @@
 
 #IMPORT STATEMENTS
 from rdkit import Chem
-import string
 
 
-def list_nodes(insmiles:str, atom_list:list):
-    '''
-    Create a list of all nodes based on SMILES
+# def list_nodes(insmiles:str, atom_list:list):
+#     '''
+#     Create a list of all nodes based on SMILES
 
-    input:
-    insmiles - SMILES format of a molecule (str)
-    atom_list - list of all atoms (and merges) to check for in molecule]
+#     input:
+#     insmiles - SMILES format of a molecule (str)
+#     atom_list - list of all atoms (and merges) to check for in molecule]
 
-    returns:
-    node_list - list containing the indeces (int) in the string containing an atom
-    '''
-    node_list = []
-    for index in range(len(insmiles)):
-        if insmiles[index:index+2] in atom_list: 
-            node_list.append(index)
-        elif insmiles[index] in atom_list:
-            node_list.append(index)
-    return node_list
+#     returns:
+#     node_list - list containing the indeces (int) in the string containing an atom
+#     '''
+#     node_list = []
+#     for index in range(len(insmiles)):
+#         if insmiles[index:index+2] in atom_list: 
+#             node_list.append(index)
+#         elif insmiles[index] in atom_list:
+#             node_list.append(index)
+#     return node_list
 
 
-def rdkit_parse(inputsmiles:str, nodelist:list):
+def rdkit_parse(inputsmiles:str):
     '''
     Parsing SMILES using RDKit
     
@@ -39,6 +38,8 @@ def rdkit_parse(inputsmiles:str, nodelist:list):
     '''
     neighbours_dict = {}
     m1 = Chem.MolFromSmiles(inputsmiles)
-    for atom in range(len(nodelist)):
-        neighbours_dict[nodelist[atom]] = [nodelist[x.GetIdx()] for x in m1.GetAtomWithIdx(atom).GetNeighbors()]
-    return neighbours_dict
+    num_heavy_atoms = m1.GetNumHeavyAtoms()
+    heavy_atoms_list = list(range(0,num_heavy_atoms))
+    for atom in range(num_heavy_atoms):
+        neighbours_dict[heavy_atoms_list[atom]] = [heavy_atoms_list[x.GetIdx()] for x in m1.GetAtomWithIdx(atom).GetNeighbors()]
+    return neighbours_dict, heavy_atoms_list

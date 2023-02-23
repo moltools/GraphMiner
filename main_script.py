@@ -1,7 +1,3 @@
-# import timer
-# from timer import Timer
-# t = Timer()
-
 
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
@@ -48,7 +44,7 @@ mol_list = ['C', 'N', 'O', 'Br', 'S']
 # print(breadth_first_search(nodelist, test_smiles, nodedict))
 
 ## BFS - Using RDKit to find the neighboring atoms without preselection
-from GraphMiner import rdkit_parse, list_nodes, breadth_fs, subgraphs_smiles
+from GraphMiner import rdkit_parse, breadth_fs, rdkit_smiles
 
 # for group in grouplist:
 #     list_of_smiles = dict_of_data[group]
@@ -56,38 +52,39 @@ from GraphMiner import rdkit_parse, list_nodes, breadth_fs, subgraphs_smiles
 #         list_node = list_nodes(mol_smile, mol_list)
 #         dictnode = rdkit_parse(mol_smile, list_node)
 #         subgraphdict = breadth_fs(list_node, dictnode)
+#         print(subgraphdict)
 #         print('Without Preselection')
 #         print(subgraphs_smiles(subgraphdict, mol_smile))
 
 ## DFS - Using RDKit to find the neighboring atoms without preselection
 from GraphMiner import depth_fs
 
-for group in grouplist:
-    list_of_smiles = dict_of_data[group]
-    for mol_smile in list_of_smiles:
-        list_node = list_nodes(mol_smile, mol_list)
-        dictnode = rdkit_parse(mol_smile, list_node)
-        dfs_subgraph = depth_fs(list_node, dictnode)
-        print(dfs_subgraph)
+# for group in grouplist:
+#     list_of_smiles = dict_of_data[group]
+#     for mol_smile in list_of_smiles:
+#         list_node = list_nodes(mol_smile, mol_list)
+#         dictnode = rdkit_parse(mol_smile, list_node)
+#         dfs_subgraph = depth_fs(list_node, dictnode)
+#         print(dfs_subgraph)
 
 ### PREPARATION OF SMILES + GRAPH MINING ###
 
 ## Selection on size
-# from GraphMiner import select_on_size
-# t.start()
-# for group in grouplist:
-#     list_of_smiles = dict_of_data[group]
-#     for mol_smile in list_of_smiles:
-#         selected_smile = select_on_size(mol_smile)
-#         if selected_smile == None:
-#             continue
-#         list_node = list_nodes(selected_smile, mol_list)
-#         dictnode = rdkit_parse(selected_smile, list_node)
-#         subgraphdict = breadth_fs(list_node, dictnode)
-#         print('With Preselection on Size')
-#         print(subgraphs_smiles(subgraphdict, selected_smile))
-# t.stop()
-# print(t)
+from GraphMiner import select_on_size
+
+for group in grouplist:
+    list_of_smiles = dict_of_data[group]
+    for mol_smile in list_of_smiles:
+        selected_smile = select_on_size(mol_smile)
+        if selected_smile == None:
+            continue
+        #list_node = list_nodes(selected_smile, mol_list)
+        dictnode, list_node = rdkit_parse(selected_smile)
+        print(dictnode)
+        subgraphdict = breadth_fs(list_node, dictnode)
+        print(subgraphdict)
+        print('With Preselection on Size')
+        print(rdkit_smiles(subgraphdict, selected_smile))
 
 ## Combination of C-OH, C=O and COOH
 from GraphMiner import combine_basic_substructures
