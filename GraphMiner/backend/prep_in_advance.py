@@ -2,6 +2,7 @@
 
 #IMPORT STATEMENTS
 from rdkit import Chem
+from rdkit.Chem import AllChem
 
 def select_on_size(smile_mol):
     ''' 
@@ -18,6 +19,16 @@ def select_on_size(smile_mol):
         return smile_mol
 
 
-def combine_basic_substructures():
-    
-    return
+def combine_basic_substructures(molsmiles):
+    print(molsmiles)
+    moll = Chem.MolFromSmiles(molsmiles)
+    if 'C(=O)O' in molsmiles:
+        patt = Chem.MolFromSmiles('C(=O)O')
+        repl = Chem.MolFromSmiles('C')
+        for atom in atomIter:
+            atom.GetIdx()
+        repl_str = AllChem.ReplaceSubstructs(moll, patt, repl)
+        mts = Chem.MolToSmiles(repl_str[0])
+    else:
+        mts = molsmiles
+    return mts
