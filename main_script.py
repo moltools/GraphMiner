@@ -86,43 +86,43 @@ from GraphMiner import select_on_size
 ## Combination of C-OH, C=O and COOH
 from GraphMiner import combine_basic_substructures
 
-# for group in grouplist:
-#     list_of_smiles = dict_of_data[group]
-#     for mol_smile in list_of_smiles:
-#         selected_smile = select_on_size(mol_smile)
-#         if selected_smile == None:
-#             continue
-#         ## => Hier komt de combinatie
-#         dictnode, list_node = rdkit_parse(selected_smile)
-#         subgraphdict = breadth_fs(list_node, dictnode)
-#         print('With Preselection on Size and Combination')
-#         print(subgraphs_smiles(subgraphdict, selected_smile))
-
-##Write csv file with frequencies and percentages
-from GraphMiner import combine_substr, count_freq, perc_substr
-
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
-    all_substr = []
-    total_molecules = 0
     for mol_smile in list_of_smiles:
         selected_smile = select_on_size(mol_smile)
         if selected_smile == None:
             continue
+        ## => Hier komt de combinatie
         dictnode, list_node = rdkit_parse(selected_smile)
         subgraphdict = breadth_fs(list_node, dictnode)
-        smilesdict = rdkit_smiles(subgraphdict, selected_smile)
-        unique_str = combine_substr(smilesdict)
-        all_substr += (unique_str)
-        total_molecules += 1
-    counts = count_freq(all_substr)
-    name = 'Frequency_overview_group' + str(group) +'.csv'
-    percentages = perc_substr(counts, total_molecules)
-    f = open(name,  'w')
-    writer = csv.writer(f)
-    Head_row = ('Substructure', 'Frequency', 'Percentage')
-    writer.writerow(Head_row)
-    for perc in percentages:
-        writer.writerow(perc)
-    f.close()
+        print('With Preselection on Size and Combination')
+        print(rdkit_smiles(subgraphdict, selected_smile))
+
+##Write csv file with frequencies and percentages
+from GraphMiner import combine_substr, count_freq, perc_substr
+
+# for group in grouplist:
+#     list_of_smiles = dict_of_data[group]
+#     all_substr = []
+#     total_molecules = 0
+#     for mol_smile in list_of_smiles:
+#         selected_smile = select_on_size(mol_smile)
+#         if selected_smile == None:
+#             continue
+#         dictnode, list_node = rdkit_parse(selected_smile)
+#         subgraphdict = breadth_fs(list_node, dictnode)
+#         smilesdict = rdkit_smiles(subgraphdict, selected_smile)
+#         unique_str = combine_substr(smilesdict)
+#         all_substr += (unique_str)
+#         total_molecules += 1
+#     counts = count_freq(all_substr)
+#     name = 'Frequency_overview_group' + str(group) +'.csv'
+#     percentages = perc_substr(counts, total_molecules)
+#     f = open(name,  'w')
+#     writer = csv.writer(f)
+#     Head_row = ('Substructure', 'Frequency', 'Percentage')
+#     writer.writerow(Head_row)
+#     for perc in percentages:
+#         writer.writerow(perc)
+#     f.close()
     

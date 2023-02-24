@@ -38,6 +38,18 @@ from rdkit import Chem
 #     return mol_graphs
 
 def rdkit_smiles(sub_graphs:dict, smilesmol:str):
+    '''
+    Convert the indices of subgraphs to SMILES subgraphs
+
+    input:
+    subgraphs - dictionary containing as key (int) the subgraph length and as value
+    (list of str) with the subgraphs as strings of indeces divided by '-'
+    smilesmol - SMILES format of a molecule (str)
+
+    returns:
+    mol_graphs - dictionary containing as key (int) the subgraph length and as value
+    (list of str) the subgraphs as strings in SMILES format
+    '''
     mol = Chem.MolFromSmiles(smilesmol)
     mol_graphs = {}
     for subgraph_length in sub_graphs:
