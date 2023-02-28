@@ -7,7 +7,7 @@ from .data_loader import load_data, determine_groups, create_dict
 from .rdkit_mining import subgraph_miner, sub_to_smiles
 
 #Preparation beforehand
-from .prep_in_advance import select_on_size, combine_basic_substructures
+from .prep_in_advance import select_on_size, combine_basic_substructures, return_basic_substructures
 
 #Determine neighbours
 from .find_neighbours_bfs_self import list_of_nodes, dict_of_nodes, breadth_first_search
