@@ -92,12 +92,13 @@ for group in grouplist:
         selected_smile = select_on_size(mol_smile)
         if selected_smile == None:
             continue
+        print(selected_smile)
         com_mol_smiles, replaced = combine_basic_substructures(selected_smile)
-        dictnode, list_node = rdkit_parse(com_mol_smiles)
-        subgraphdict = breadth_fs(list_node, dictnode)
-        print('With Preselection on Size and Combination')
-        returned_dict = return_basic_substructures(replaced, subgraphdict)
-        print(rdkit_smiles(returned_dict, selected_smile))
+        # dictnode, list_node = rdkit_parse(com_mol_smiles)
+        # subgraphdict = breadth_fs(list_node, dictnode)
+        # print('With Preselection on Size and Combination')
+        # returned_dict = return_basic_substructures(replaced, subgraphdict)
+        # print(rdkit_smiles(returned_dict, selected_smile))
 
 ##Write csv file with frequencies and percentages
 from GraphMiner import combine_substr, count_freq, perc_substr

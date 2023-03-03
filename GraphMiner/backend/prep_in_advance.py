@@ -33,20 +33,40 @@ def combine_basic_substructures(molsmiles:str):
     atom of the substructure and as value (list of int) the indeces of the replaced atoms
     '''
     moll = Chem.MolFromSmiles(molsmiles)
+    mts = molsmiles
     replacements = {}
-    if 'C(=O)O' in molsmiles:
-        start_index = molsmiles.index('C(=O)O')
-        atom_index = start_index
-        for char in molsmiles[:start_index]:
-            if char not in string.ascii_uppercase:
-                atom_index -= 1
-        replacements[atom_index] = [atom_index+1, atom_index+2]
+    list_of_C = [Cidx[0] for Cidx in moll.GetSubstructMatches(Chem.MolFromSmiles('C'))]
+    if moll.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+        idx_COO = moll.GetSubstructMatches(Chem.MolFromSmiles('C(=O)O'))
+        for idx__COO in idx_COO:
+            new_list = []
+            for indiv_idx in idx__COO:
+                if indiv_idx in list_of_C:
+                    start_idx = indiv_idx
+                elif indiv_idx not in list_of_C:
+                    new_list.append(indiv_idx)
+        replacements[start_idx] = new_list
+        #Actual Replacement
         patt = Chem.MolFromSmiles('C(=O)O')
         repl = Chem.MolFromSmiles('C')
         repl_str = AllChem.ReplaceSubstructs(moll, patt, repl)
+        #ONLY WORKS FOR ONE CHAR PER MOLECULE
         mts = Chem.MolToSmiles(repl_str[0])
-    else:
+    ###UGH WERKT NOG NIETT
+    if moll.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+        idx_CO = moll.GetSubstructMatches(Chem.MolFromSmiles('CO'))
+        for idx__CO in idx_CO:
+            new_list = []
+            for indiv_idx in idx__CO:
+                if indiv_idx in replacements.keys():
+                    continue
+                if indiv_idx in list_of_C:
+                    start_idx = indiv_idx
+                elif indiv_idx not in list_of_C:
+                    new_list.append(indiv_idx)
+        replacements[start_idx] = new_list
         mts = molsmiles
+    print(replacements)
     return mts, replacements
 
 
