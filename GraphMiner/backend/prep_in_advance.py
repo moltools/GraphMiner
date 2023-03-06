@@ -22,7 +22,7 @@ def select_on_size(smile_mol:str):
 
 def combine_basic_substructures(molsmiles:str):
     '''
-    Replace acid group by C and store replacements
+    Replace substructures by C and store replacements
 
     input:
     molsmiles - SMILES format of a molecule (str)
@@ -58,10 +58,8 @@ def combine_basic_substructures(molsmiles:str):
             for indiv_idx in idx__CO:
                 if indiv_idx in list_of_C:
                     start_idx = indiv_idx
-                    print('start: ' + str(start_idx))
                 elif indiv_idx not in list_of_C:
                     new_list.append(indiv_idx)
-                    print(new_list)
             if start_idx not in replacements.keys():
                 replacements[start_idx] = new_list
         for number in range(len(idx_CO)):
@@ -69,9 +67,7 @@ def combine_basic_substructures(molsmiles:str):
             repl = Chem.MolFromSmiles('C')
             repl_str = AllChem.ReplaceSubstructs(moll, patt, repl)
             moll = repl_str[0]
-    print('final: ' + str(replacements))
     mts = Chem.MolToSmiles(moll)
-    print(mts)
     return mts, replacements
 
 
@@ -94,6 +90,8 @@ def return_basic_substructures(repl_dicts:dict, index_dicts:dict):
         for subgraph in index_dicts[subgraphlength]:
             for value in repl_dicts:
                 length_input = len(repl_dicts[value])
+                if subgraph not in index_dicts[subgraphlength]:
+                    continue
                 index = index_dicts[subgraphlength].index(subgraph)
                 sorted_list = [int(idx) for idx in subgraph.split('-')]
                 #Replace all values that are higher than the one for which the 

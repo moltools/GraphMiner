@@ -86,6 +86,26 @@ from GraphMiner import select_on_size
 ## Combination of C-OH, C=O and COOH
 from GraphMiner import combine_basic_substructures, return_basic_substructures
 
+# for group in grouplist:
+#     list_of_smiles = dict_of_data[group]
+#     for mol_smile in list_of_smiles:
+#         selected_smile = select_on_size(mol_smile)
+#         if selected_smile == None:
+#             continue
+#         print(' ')
+#         print(selected_smile)
+#         com_mol_smiles, replaced = combine_basic_substructures(selected_smile)
+#         print(replaced)
+#         dictnode, list_node = rdkit_parse(com_mol_smiles)
+#         print(com_mol_smiles)
+#         subgraphdict = breadth_fs(list_node, dictnode)
+#         print('With Preselection on Size and Combination')
+#         print(subgraphdict)
+#         returned_dict = return_basic_substructures(replaced, subgraphdict)
+#         print(returned_dict)
+#         print(rdkit_smiles(returned_dict, selected_smile))
+
+from GraphMiner import combining, returning
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
     for mol_smile in list_of_smiles:
@@ -94,12 +114,13 @@ for group in grouplist:
             continue
         print(' ')
         print(selected_smile)
-        com_mol_smiles, replaced = combine_basic_substructures(selected_smile)
+        com_mol_smiles, new_indeces = combining(selected_smile)
+        print(com_mol_smiles)
         # dictnode, list_node = rdkit_parse(com_mol_smiles)
         # subgraphdict = breadth_fs(list_node, dictnode)
-        # print('With Preselection on Size and Combination')
-        # returned_dict = return_basic_substructures(replaced, subgraphdict)
-        # print(rdkit_smiles(returned_dict, selected_smile))
+        # print(subgraphdict)
+        repl_smile = returning(com_mol_smiles, new_indeces)
+        print(repl_smile)
 
 ##Write csv file with frequencies and percentages
 from GraphMiner import combine_substr, count_freq, perc_substr
