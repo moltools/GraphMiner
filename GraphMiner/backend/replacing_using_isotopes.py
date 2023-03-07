@@ -51,13 +51,13 @@ def returning(mts:str, indeces:list):
     '''
     moll = Chem.MolFromSmiles(mts)
     if moll.HasSubstructMatch(Chem.MolFromSmiles('C[1*]')):
-        for number in range(len(indece[1])):
+        for number in range(len(indeces)):
             patt = Chem.MolFromSmiles('C[1*]')
             repl = Chem.MolFromSmiles('C(=O)O')
             repl_str = AllChem.ReplaceSubstructs(moll, patt, repl)
             moll = repl_str[0]
     if moll.HasSubstructMatch(Chem.MolFromSmiles('C[2*]')):
-        for number in range(len(indeces[2])):
+        for number in range(len(indeces)):
             patt = Chem.MolFromSmiles('C[2*]')
             repl = Chem.MolFromSmiles('CO')
             repl_str = AllChem.ReplaceSubstructs(moll, patt, repl)

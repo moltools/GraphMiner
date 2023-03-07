@@ -37,8 +37,8 @@ from GraphMiner import subgraph_miner,sub_to_smiles
 ## Breadth First Search, self parsing
 from GraphMiner import list_of_nodes, dict_of_nodes, breadth_first_search
 
-test_smiles = 'NNC(O)=NN'
-mol_list = ['C', 'N', 'O', 'Br', 'S']
+# test_smiles = 'NNC(O)=NN'
+# mol_list = ['C', 'N', 'O', 'Br', 'S']
 
 # nodelist = list_of_nodes(test_smiles, mol_list)
 # nodedict = dict_of_nodes(test_smiles, mol_list)
@@ -50,7 +50,7 @@ from GraphMiner import rdkit_parse, breadth_fs, rdkit_smiles
 # for group in grouplist:
 #     list_of_smiles = dict_of_data[group]
 #     for mol_smile in list_of_smiles:
-#         dictnode, list_node = rdkit_parse(selected_smile)
+#         dictnode, list_node = rdkit_parse(mol_smile)
 #         subgraphdict = breadth_fs(list_node, dictnode)
 #         print(subgraphdict)
 #         print('Without Preselection')
@@ -62,7 +62,9 @@ from GraphMiner import depth_fs
 # for group in grouplist:
 #     list_of_smiles = dict_of_data[group]
 #     for mol_smile in list_of_smiles:
-#         dictnode, list_node = rdkit_parse(selected_smile)
+#         dictnode, list_node = rdkit_parse(mol_smile)
+#         print(dictnode)
+#         print(list_node)
 #         dfs_subgraph = depth_fs(list_node, dictnode)
 #         print(dfs_subgraph)
 
@@ -74,9 +76,9 @@ from GraphMiner import select_on_size
 # for group in grouplist:
 #     list_of_smiles = dict_of_data[group]
 #     for mol_smile in list_of_smiles:
-#         selected_smile = select_on_size(mol_smile)
-#         if selected_smile == None:
-#             continue
+        # selected_smile = select_on_size(mol_smile)
+        # if selected_smile == None:
+        #     continue
 #         dictnode, list_node = rdkit_parse(selected_smile)
 #         subgraphdict = breadth_fs(list_node, dictnode)
 #         # print('With Preselection on Size')
@@ -87,21 +89,6 @@ from GraphMiner import select_on_size
 ## Combination of C-OH, C=O and COOH
 from GraphMiner import combine_basic_substructures, return_basic_substructures
 
-# for group in grouplist:
-#     list_of_smiles = dict_of_data[group]
-#     for mol_smile in list_of_smiles:
-#         selected_smile = select_on_size(mol_smile)
-#         if selected_smile == None:
-#             continue
-#         print(' ')
-#         print(selected_smile)
-#         com_mol_smiles, replaced = combine_basic_substructures(selected_smile)
-#         dictnode, list_node = rdkit_parse(com_mol_smiles)
-#         subgraphdict = breadth_fs(list_node, dictnode)
-#         returned_dict = return_basic_substructures(replaced, subgraphdict)
-#         print(rdkit_smiles(returned_dict, selected_smile))
-
-from GraphMiner import combining, returning
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
     for mol_smile in list_of_smiles:
@@ -110,14 +97,29 @@ for group in grouplist:
             continue
         print(' ')
         print(selected_smile)
-        com_mol_smiles, new_indeces = combining(selected_smile)
+        com_mol_smiles, replaced = combine_basic_substructures(selected_smile)
         print(com_mol_smiles)
-        print(new_indeces)
-        # dictnode, list_node = rdkit_parse(com_mol_smiles)
-        # subgraphdict = breadth_fs(list_node, dictnode)
-        # print(subgraphdict)
-        repl_smile = returning(com_mol_smiles, new_indeces)
-        print(repl_smile)
+        dictnode, list_node = rdkit_parse(com_mol_smiles)
+        subgraphdict = breadth_fs(list_node, dictnode)
+        returned_dict = return_basic_substructures(replaced, subgraphdict)
+        print(rdkit_smiles(returned_dict, selected_smile))
+
+# from GraphMiner import combining, returning
+# for group in grouplist:
+#     list_of_smiles = dict_of_data[group]
+#     for mol_smile in list_of_smiles:
+#         selected_smile = select_on_size(mol_smile)
+#         if selected_smile == None:
+#             continue
+#         print(' ')
+#         print(selected_smile)
+#         com_mol_smiles, new_indeces = combining(selected_smile)
+#         print(com_mol_smiles)
+#         # dictnode, list_node = rdkit_parse(com_mol_smiles)
+#         # subgraphdict = breadth_fs(list_node, dictnode)
+#         # print(subgraphdict)
+#         repl_smile = returning(com_mol_smiles, new_indeces)
+#         print(repl_smile)
 
 ##Write csv file with frequencies and percentages
 from GraphMiner import combine_substr, count_freq, perc_substr

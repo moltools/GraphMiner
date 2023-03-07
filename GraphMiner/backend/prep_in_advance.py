@@ -67,6 +67,22 @@ def combine_basic_substructures(molsmiles:str):
             repl = Chem.MolFromSmiles('C')
             repl_str = AllChem.ReplaceSubstructs(moll, patt, repl)
             moll = repl_str[0]
+    if moll.HasSubstructMatch(Chem.MolFromSmiles('C(=O)')) == True:
+        idx_C_O = moll.GetSubstructMatches(Chem.MolFromSmiles('C(=O)'))
+        for idx__C_O in idx_C_O:
+            new_list = []
+            for indiv_idx in idx__C_O:
+                if indiv_idx in list_of_C:
+                    start_idx = indiv_idx
+                elif indiv_idx not in list_of_C:
+                    new_list.append(indiv_idx)
+            if start_idx not in replacements.keys():
+                replacements[start_idx] = new_list
+        for number in range(len(idx_C_O)):
+            patt = Chem.MolFromSmiles('C(=O)')
+            repl = Chem.MolFromSmiles('C')
+            repl_str = AllChem.ReplaceSubstructs(moll, patt, repl)
+            moll = repl_str[0]
     mts = Chem.MolToSmiles(moll)
     return mts, replacements
 
