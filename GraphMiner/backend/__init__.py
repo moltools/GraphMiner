@@ -23,4 +23,4 @@ from .return_to_smile import rdkit_smiles
 from .frequency_counter import combine_substr, count_freq, perc_substr
 
 #Statistics
-from .statistics import bonferonni_corr
+from .statistics import retrieve_pval, bonferonni_corr, benj_hoch
