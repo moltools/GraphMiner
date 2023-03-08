@@ -8,7 +8,7 @@ setuptools.setup(
     author_email="",
     description="",
     url="",
-    install_requires=["rdkit>=2022.03.5", "pandas", "timer"],
+    install_requires=["rdkit>=2022.03.5", "pandas", "timer", "statsmodels"],
     packages=setuptools.find_packages(),
     python_requires=">=3.8.5",
     entry_points={"console_scripts": ["GraphMiner = GraphMiner.main:main"]}

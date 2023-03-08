@@ -3,7 +3,7 @@ import csv
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data()
+infile = load_data(1)
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -89,20 +89,20 @@ from GraphMiner import select_on_size
 ## Combination of C-OH, C=O and COOH
 from GraphMiner import combine_basic_substructures, return_basic_substructures
 
-for group in grouplist:
-    list_of_smiles = dict_of_data[group]
-    for mol_smile in list_of_smiles:
-        selected_smile = select_on_size(mol_smile)
-        if selected_smile == None:
-            continue
-        print(' ')
-        print(selected_smile)
-        com_mol_smiles, replaced = combine_basic_substructures(selected_smile)
-        print(com_mol_smiles)
-        dictnode, list_node = rdkit_parse(com_mol_smiles)
-        subgraphdict = breadth_fs(list_node, dictnode)
-        returned_dict = return_basic_substructures(replaced, subgraphdict)
-        print(rdkit_smiles(returned_dict, selected_smile))
+# for group in grouplist:
+#     list_of_smiles = dict_of_data[group]
+#     for mol_smile in list_of_smiles:
+#         selected_smile = select_on_size(mol_smile)
+#         if selected_smile == None:
+#             continue
+#         print(' ')
+#         print(selected_smile)
+#         com_mol_smiles, replaced = combine_basic_substructures(selected_smile)
+#         print(com_mol_smiles)
+#         dictnode, list_node = rdkit_parse(com_mol_smiles)
+#         subgraphdict = breadth_fs(list_node, dictnode)
+#         returned_dict = return_basic_substructures(replaced, subgraphdict)
+#         print(rdkit_smiles(returned_dict, selected_smile))
 
 # from GraphMiner import combining, returning
 # for group in grouplist:
@@ -148,4 +148,13 @@ from GraphMiner import combine_substr, count_freq, perc_substr
 #     for perc in percentages:
 #         writer.writerow(perc)
 #     f.close()
-    
+
+### STATISTICS PART ###
+
+## Load in csv files
+from GraphMiner import bonferonni_corr
+
+freq_file_1 = load_data(2)
+freq_file_2 = load_data(3)
+print(freq_file_1)
+print(bonferonni_corr())    

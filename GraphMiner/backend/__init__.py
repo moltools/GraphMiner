@@ -21,3 +21,6 @@ from .return_to_smile import rdkit_smiles
 
 #Frequency counter
 from .frequency_counter import combine_substr, count_freq, perc_substr
+
+#Statistics
+from .statistics import bonferonni_corr
