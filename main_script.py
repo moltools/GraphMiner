@@ -1,9 +1,10 @@
 import csv
 
+
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1)
+infile = load_data(1, ';')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -152,9 +153,15 @@ from GraphMiner import combine_substr, count_freq, perc_substr
 ### STATISTICS PART ###
 
 ## Load in csv files
+from GraphMiner import new_dataframes
+
+for group in grouplist:
+    freq_file = load_data(group+2, ',')
+    red_file = new_dataframes(freq_file)
+    
+
+
+## Multiple Testing Correction
 from GraphMiner import bonferonni_corr
 
-freq_file_1 = load_data(2)
-freq_file_2 = load_data(3)
-print(freq_file_1)
-print(bonferonni_corr())    
+# print(bonferonni_corr())    

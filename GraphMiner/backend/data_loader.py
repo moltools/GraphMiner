@@ -3,14 +3,14 @@
 from sys import argv
 import pandas as pd
 
-def load_data(input_num:int):
+def load_data(input_num:int, seperator:str):
     '''
     Load in the csv file
 
     returns: 
     df - pandas dataframe of the csv file
     '''
-    df = pd.read_csv(argv[input_num], sep = ';')
+    df = pd.read_csv(argv[input_num], sep = seperator)
     return df
 
 def determine_groups(dataset):
