@@ -155,11 +155,19 @@ from GraphMiner import combine_substr, count_freq, perc_substr
 ## Load in csv files
 from GraphMiner import new_dataframes
 
+df_list = []
+sub_list = []
 for group in grouplist:
     freq_file = load_data(group+2, ',')
-    red_file = new_dataframes(freq_file)
-    
+    red_file, substrlist = new_dataframes(freq_file)
+    sub_list.append(substrlist)
+    df_list.append(red_file)
 
+## Calculate p values
+from GraphMiner import join_df, add_in_perc
+
+substr_df = join_df(sub_list)
+add_in_perc(substr_df, df_list, grouplist)
 
 ## Multiple Testing Correction
 from GraphMiner import bonferonni_corr
