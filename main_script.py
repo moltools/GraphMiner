@@ -139,12 +139,13 @@ from GraphMiner import combine_substr, count_freq, perc_substr
 #         unique_str = combine_substr(smilesdict)
 #         all_substr += (unique_str)
 #         total_molecules += 1
+#     print(group)
 #     counts = count_freq(all_substr)
 #     name = 'Frequency_overview_group' + str(group) +'.csv'
 #     percentages = perc_substr(counts, total_molecules)
 #     f = open(name,  'w')
 #     writer = csv.writer(f)
-#     Head_row = ('Substructure', 'Frequency', 'Percentage')
+#     Head_row = ('Substructure', 'Frequency', 'Percentage' + str(group))
 #     writer.writerow(Head_row)
 #     for perc in percentages:
 #         writer.writerow(perc)
@@ -160,14 +161,13 @@ sub_list = []
 for group in grouplist:
     freq_file = load_data(group+2, ',')
     red_file, substrlist = new_dataframes(freq_file)
-    sub_list.append(substrlist)
     df_list.append(red_file)
 
 ## Calculate p values
-from GraphMiner import join_df, add_in_perc
+from GraphMiner import join_df
 
-substr_df = join_df(sub_list)
-add_in_perc(substr_df, df_list, grouplist)
+substr_df = join_df(df_list)
+print(substr_df)
 
 ## Multiple Testing Correction
 from GraphMiner import bonferonni_corr
