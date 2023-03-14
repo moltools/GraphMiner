@@ -20,7 +20,7 @@ from .dfs import depth_fs
 from .return_to_smile import rdkit_smiles
 
 #Frequency counter
-from .frequency_counter import combine_substr, count_freq, perc_substr
+from .frequency_counter import combine_substr, count_freq, perc_substr, list_maker
 
 #Statistics
 from .statistics import new_dataframes, join_df, retrieve_pval, bonferonni_corr, benj_hoch

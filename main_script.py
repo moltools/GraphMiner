@@ -151,6 +151,39 @@ from GraphMiner import combine_substr, count_freq, perc_substr
 #         writer.writerow(perc)
 #     f.close()
 
+
+## Write second type CSV file
+# from GraphMiner import list_maker
+#
+# for group in grouplist:
+#     list_of_smiles = dict_of_data[group]
+#     all_substr = []
+#     dict_substr = {}
+#     total_molecules = 0
+#     for mol_smile in list_of_smiles:
+#         # print('tot: ' + str(total_molecules))
+#         selected_smile = select_on_size(mol_smile)
+#         if selected_smile == None:
+#             continue
+#         dictnode, list_node = rdkit_parse(selected_smile)
+#         subgraphdict = breadth_fs(list_node, dictnode)
+#         smilesdict = rdkit_smiles(subgraphdict, selected_smile)
+#         unique_str = combine_substr(smilesdict)
+#         all_substr += (unique_str)
+#         dict_substr[total_molecules] = unique_str
+#         total_molecules += 1
+#     print(group)
+#     counts = count_freq(all_substr)
+#     list_of_rows = list_maker(dict_substr, counts)
+#     name = 'New_overview_group' + str(group) +'.csv'
+#     f = open(name,  'w')
+#     writer = csv.writer(f)
+#     Head_row = ('Substructure', 'Frequency' + str(group), 'OccurrenceList' + str(group))
+#     writer.writerow(Head_row)
+#     for row in list_of_rows:
+#         writer.writerow(row)
+#     f.close()
+
 ### STATISTICS PART ###
 
 ## Load in csv files
@@ -160,16 +193,17 @@ df_list = []
 sub_list = []
 for group in grouplist:
     freq_file = load_data(group+2, ',')
-    red_file, substrlist = new_dataframes(freq_file)
+    red_file, substrlist = new_dataframes(freq_file, group)
     df_list.append(red_file)
 
 ## Calculate p values
-from GraphMiner import join_df
+from GraphMiner import join_df, retrieve_pval
 
 substr_df = join_df(df_list)
-print(substr_df)
+pvalues = retrieve_pval(substr_df)
 
 ## Multiple Testing Correction
 from GraphMiner import bonferonni_corr
 
-# print(bonferonni_corr())    
+mtc = bonferonni_corr(pvalues)
+print(mtc[0])
