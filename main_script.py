@@ -206,6 +206,19 @@ pvalues = retrieve_pval(substr_df)
 from GraphMiner import bonferonni_corr, benj_hoch
 
 mtc_bonn = bonferonni_corr(pvalues)
+TF_bonn_list = mtc_bonn[0].tolist()
 mtc_benj = benj_hoch(pvalues)
-print(mtc_bonn)
-print(mtc_benj)
+TF_benj_list = mtc_benj[0].tolist()
+substr_df['True/False Bonferonni'] = TF_bonn_list
+substr_df['True/False Benj-Hoch'] = TF_benj_list
+substr_df.to_csv('substructuretruefalse.csv', sep=';')
+
+truetotal = 0
+falsetotal = 0
+for TF in TF_benj_list:
+    print(TF)
+    if TF =='True':
+        truetotal += 1
+    elif TF == 'False':
+        falsetotal +=1
+print(truetotal, falsetotal)

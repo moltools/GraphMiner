@@ -22,7 +22,8 @@ def new_dataframes(input_df, groupnum):
     SMILES (str) and OccurrenceList[groupnum] displaying whether the
     substructure occurred (1) or not (0) in a molecule at the index of the
     molecule
-    list_of_substr - list containing all substructures
+    list_of_substr - pandas dataframe containing all substructures in one
+    column
     '''
     input_df.pop('Frequency'+str(groupnum))
     list_substr = input_df.iloc[:, 0]
