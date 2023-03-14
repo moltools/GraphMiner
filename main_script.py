@@ -203,7 +203,9 @@ substr_df = join_df(df_list)
 pvalues = retrieve_pval(substr_df)
 
 ## Multiple Testing Correction
-from GraphMiner import bonferonni_corr
+from GraphMiner import bonferonni_corr, benj_hoch
 
-mtc = bonferonni_corr(pvalues)
-print(mtc[0])
+mtc_bonn = bonferonni_corr(pvalues)
+mtc_benj = benj_hoch(pvalues)
+print(mtc_bonn)
+print(mtc_benj)
