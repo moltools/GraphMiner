@@ -122,6 +122,20 @@ from GraphMiner import combine_basic_substructures, return_basic_substructures
 #         repl_smile = returning(com_mol_smiles, new_indeces)
 #         print(repl_smile)
 
+## Working with RWMol
+from GraphMiner import starting_rwmol
+
+for group in grouplist:
+    list_of_smiles = dict_of_data[group]
+    for mol_smile in list_of_smiles:
+        selected_smile = select_on_size(mol_smile)
+        if selected_smile == None:
+            continue
+        print(' ')
+        print(selected_smile)
+        print(starting_rwmol(selected_smile))
+
+
 ##Write csv file with frequencies and percentages
 from GraphMiner import combine_substr, count_freq, perc_substr
 
@@ -189,35 +203,35 @@ from GraphMiner import combine_substr, count_freq, perc_substr
 ## Load in csv files
 from GraphMiner import new_dataframes
 
-df_list = []
-sub_list = []
-for group in grouplist:
-    freq_file = load_data(group+2, ',')
-    red_file, substrlist = new_dataframes(freq_file, group)
-    df_list.append(red_file)
+# df_list = []
+# sub_list = []
+# for group in grouplist:
+#     freq_file = load_data(group+2, ',')
+#     red_file, substrlist = new_dataframes(freq_file, group)
+#     df_list.append(red_file)
 
 ## Calculate p values
 from GraphMiner import join_df, retrieve_pval
 
-substr_df = join_df(df_list)
-pvalues = retrieve_pval(substr_df)
+# substr_df = join_df(df_list)
+# pvalues = retrieve_pval(substr_df)
 
 ## Multiple Testing Correction
 from GraphMiner import bonferonni_corr, benj_hoch
-
-mtc_bonn = bonferonni_corr(pvalues)
-TF_bonn_list = mtc_bonn[0].tolist()
-mtc_benj = benj_hoch(pvalues)
-TF_benj_list = mtc_benj[0].tolist()
-substr_df['True/False Bonferonni'] = TF_bonn_list
-substr_df['True/False Benj-Hoch'] = TF_benj_list
-substr_df.to_csv('substructuretruefalse.csv', sep=';')
-
-truetotal = 0
-falsetotal = 0
-for TF in TF_benj_list:
-    if TF ==True:
-        truetotal += 1
-    elif TF == False:
-        falsetotal +=1
-print(truetotal, falsetotal)
+#
+# mtc_bonn = bonferonni_corr(pvalues)
+# TF_bonn_list = mtc_bonn[0].tolist()
+# mtc_benj = benj_hoch(pvalues)
+# TF_benj_list = mtc_benj[0].tolist()
+# substr_df['True/False Bonferonni'] = TF_bonn_list
+# substr_df['True/False Benj-Hoch'] = TF_benj_list
+# substr_df.to_csv('substructuretruefalse.csv', sep=';')
+#
+# truetotal = 0
+# falsetotal = 0
+# for TF in TF_benj_list:
+#     if TF ==True:
+#         truetotal += 1
+#     elif TF == False:
+#         falsetotal +=1
+# print(truetotal, falsetotal)
