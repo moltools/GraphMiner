@@ -216,9 +216,8 @@ substr_df.to_csv('substructuretruefalse.csv', sep=';')
 truetotal = 0
 falsetotal = 0
 for TF in TF_benj_list:
-    print(TF)
-    if TF =='True':
+    if TF ==True:
         truetotal += 1
-    elif TF == 'False':
+    elif TF == False:
         falsetotal +=1
 print(truetotal, falsetotal)
