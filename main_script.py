@@ -129,20 +129,26 @@ from GraphMiner import prep_replacing, replacing_COO, replacing_C_O, replacing_C
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
     for mol_smile in list_of_smiles:
-        selected_smile = select_on_size(mol_smile)
-        if selected_smile == None:
+        selected_mol = select_on_size(mol_smile)
+        if selected_mol == None:
             continue
+        ssmile = Chem.MolToSmiles(selected_mol)
         print(' ')
-        print(selected_smile)
-        C_list, selected_mol = prep_replacing(selected_smile)
+        print('START:' + Chem.MolToSmiles(selected_mol))
         repl = {}
         if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
-            selected_mol, repl = replacing_COO(selected_mol, C_list, repl)
+            selected_mol, repl = replacing_COO(selected_mol, repl)
         if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
-            selected_mol, repl = replacing_C_O(selected_mol, C_list, repl)
+            selected_mol, repl = replacing_C_O(selected_mol, repl)
         if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
-            selected_mol, repl = replacing_CO(selected_mol, C_list, repl)
-        print(Chem.MolToSmiles(selected_mol))
+            selected_mol, repl = replacing_CO(selected_mol, repl)
+        selected_smile = Chem.MolToSmiles(selected_mol)
+        dictnode, list_node = rdkit_parse(selected_smile)
+        subgraphdict = breadth_fs(list_node, dictnode)
+        returned_dict = return_basic_substructures(repl, subgraphdict)
+        smilesdict = rdkit_smiles(returned_dict, ssmile)
+        print(smilesdict)
+
 
 
 ##Write csv file with frequencies and percentages

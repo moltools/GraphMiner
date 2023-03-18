@@ -7,12 +7,12 @@ from rdkit import Chem
 
 def prep_replacing(insmiles):
     inmol = Chem.MolFromSmiles(insmiles)
-    Clist = [Cidx[0] for Cidx in
-                 inmol.GetSubstructMatches(Chem.MolFromSmiles('C'))]
-    return Clist, inmol
+    return inmol
 
 
-def replacing_COO(moll, list_of_C:list, replacements:dict):
+def replacing_COO(moll, replacements:dict):
+    list_of_C = [Cidx[0] for Cidx in
+                 moll.GetSubstructMatches(Chem.MolFromSmiles('C'))]
     rwmol = rdkit.Chem.rdchem.RWMol()
     rwmol.InsertMol(moll)
     COOlist = []
@@ -41,7 +41,9 @@ def replacing_COO(moll, list_of_C:list, replacements:dict):
     return moll, replacements
 
 
-def replacing_CO(moll, list_of_C:list, replacements:dict):
+def replacing_CO(moll, replacements:dict):
+    list_of_C = [Cidx[0] for Cidx in
+                 moll.GetSubstructMatches(Chem.MolFromSmiles('C'))]
     rwmol = rdkit.Chem.rdchem.RWMol()
     rwmol.InsertMol(moll)
     COlist = []
@@ -53,19 +55,16 @@ def replacing_CO(moll, list_of_C:list, replacements:dict):
                 start_idx = indiv_idx
             elif indiv_idx not in list_of_C:
                 new_list.append(indiv_idx)
-                COlist.append(indiv_idx)
+                if indiv_idx not in COlist:
+                    COlist.append(indiv_idx)
         replacements[start_idx] = new_list
     # Actual Replacement
     COlist.sort()
-    print(COlist)
     rem_atoms = 0
     for number in COlist:
         adj_num = number-rem_atoms
         rwmol.RemoveAtom(adj_num)
-        print(Chem.MolToSmiles(rwmol))
         if '.' in Chem.MolToSmiles(rwmol):
-            print('dot found')
-            print(rwmol.GetBondBetweenAtoms(adj_num-1, adj_num))
             rwmol.RemoveBond(adj_num-1, adj_num)
             rwmol.AddBond(adj_num - 1, adj_num, rdkit.Chem.rdchem.BondType.SINGLE)
         rem_atoms += 1
@@ -74,7 +73,9 @@ def replacing_CO(moll, list_of_C:list, replacements:dict):
     return moll, replacements
 
 
-def replacing_C_O(moll, list_of_C:list, replacements:dict):
+def replacing_C_O(moll, replacements:dict):
+    list_of_C = [Cidx[0] for Cidx in
+                 moll.GetSubstructMatches(Chem.MolFromSmiles('C'))]
     rwmol = rdkit.Chem.rdchem.RWMol()
     rwmol.InsertMol(moll)
     COlist = []
@@ -90,7 +91,6 @@ def replacing_C_O(moll, list_of_C:list, replacements:dict):
         replacements[start_idx] = new_list
     # Actual Replacement
     COlist.sort()
-    print(COlist)
     rem_atoms = 0
     for number in COlist:
         adj_num = number-rem_atoms
