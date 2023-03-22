@@ -16,7 +16,7 @@ def select_on_size(smile_mol:str):
     smile_mol - SMILES format of a molecule (str)'''
     mol1 = Chem.MolFromSmiles(smile_mol)
     heavy_atoms = mol1.GetNumHeavyAtoms()
-    if heavy_atoms <= 40: #Change to 40
+    if heavy_atoms <= 20: #Change to 40
         return Chem.MolFromSmiles(smile_mol)
 
 
@@ -103,23 +103,32 @@ def return_basic_substructures(repl_dicts:dict, index_dicts:dict):
     substructures indeces placed back in again
     '''
     for subgraphlength in index_dicts:
-        for subgraph in index_dicts[subgraphlength]:
-            for value in repl_dicts:
-                length_input = len(repl_dicts[value])
+        for value in repl_dicts:
+            for subgraph in index_dicts[subgraphlength]:
                 if subgraph not in index_dicts[subgraphlength]:
                     continue
                 index = index_dicts[subgraphlength].index(subgraph)
                 sorted_list = [int(idx) for idx in subgraph.split('-')]
-                #Replace all values that are higher than the one for which the 
-                #subgraph will be added in
+                # Replace all values that are higher than the one for which the
+                # subgraph will be added in
+                length_input = len(repl_dicts[value])
                 for ind in range(len(sorted_list)):
                     if sorted_list[ind] > value:
                         sorted_list[ind] = sorted_list[ind] + length_input
+                    else:
+                        for val in repl_dicts[value]:
+                            if value > sorted_list[ind] >= val:
+                                sorted_list[ind] = value
+
+                sorted_list_str = [str(val) for val in sorted_list]
+                new = '-'.join(sorted_list_str)
+                index_dicts[subgraphlength][index] = new
+                # print(index_dicts)
                 #Add in the earlier combined subgraphs
                 if str(value) in subgraph.split('-'):
                     sorted_list += (repl_dicts[value])
                     sorted_list.sort()
                 sorted_list_str = [str(val) for val in sorted_list]
-                new = '-'.join(sorted_list_str)
-                index_dicts[subgraphlength][index] = new
+                r_new = '-'.join(sorted_list_str)
+                index_dicts[subgraphlength][index] = r_new
     return index_dicts

@@ -16,16 +16,19 @@ def replacing_COO(moll, replacements:dict):
     rwmol = rdkit.Chem.rdchem.RWMol()
     rwmol.InsertMol(moll)
     COOlist = []
-    idx_COO = moll.GetSubstructMatches(Chem.MolFromSmiles('C(=O)O'))
+    for atom in moll.GetAtoms():
+        atom.SetAtomMapNum(0)
+    query = Chem.MolFromSmiles('C(=O)O')
+    for atom in query.GetAtoms():
+        atom.SetAtomMapNum(0)
+    idx_COO = moll.GetSubstructMatches(query)
     for idx__COO in idx_COO:
+        sort_idx = sorted(idx__COO)
         new_list = []
         for indiv_idx in idx__COO:
-            if indiv_idx in list_of_C:
-                start_idx = indiv_idx
-            elif indiv_idx not in list_of_C:
-                new_list.append(indiv_idx)
+            if indiv_idx not in list_of_C:
                 COOlist.append(indiv_idx)
-        replacements[start_idx] = new_list
+        replacements[sort_idx[0]] = sort_idx[1:]
     # Actual Replacement
     COOlist.sort()
     rem_atoms = 0
