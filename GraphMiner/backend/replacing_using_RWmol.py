@@ -5,9 +5,9 @@ import rdkit
 from rdkit import Chem
 
 
-def prep_replacing(insmiles):
-    inmol = Chem.MolFromSmiles(insmiles)
-    return inmol
+# def prep_replacing(insmiles):
+#     inmol = Chem.MolFromSmiles(insmiles)
+#     return inmol
 
 
 def replacing_COO(moll, replacements:dict):
@@ -24,7 +24,6 @@ def replacing_COO(moll, replacements:dict):
     idx_COO = moll.GetSubstructMatches(query)
     for idx__COO in idx_COO:
         sort_idx = sorted(idx__COO)
-        new_list = []
         for indiv_idx in idx__COO:
             if indiv_idx not in list_of_C:
                 COOlist.append(indiv_idx)
@@ -52,15 +51,11 @@ def replacing_CO(moll, replacements:dict):
     COlist = []
     idx_CO = moll.GetSubstructMatches(Chem.MolFromSmiles('CO'))
     for idx__CO in idx_CO:
-        new_list = []
+        sort_idx = sorted(idx__CO)
         for indiv_idx in idx__CO:
-            if indiv_idx in list_of_C:
-                start_idx = indiv_idx
-            elif indiv_idx not in list_of_C:
-                new_list.append(indiv_idx)
-                if indiv_idx not in COlist:
-                    COlist.append(indiv_idx)
-        replacements[start_idx] = new_list
+            if indiv_idx not in list_of_C:
+                COlist.append(indiv_idx)
+        replacements[sort_idx[0]] = sort_idx[1:]
     # Actual Replacement
     COlist.sort()
     rem_atoms = 0
@@ -84,14 +79,11 @@ def replacing_C_O(moll, replacements:dict):
     COlist = []
     idx_CO = moll.GetSubstructMatches(Chem.MolFromSmiles('C=O'))
     for idx__CO in idx_CO:
-        new_list = []
+        sort_idx = sorted(idx__CO)
         for indiv_idx in idx__CO:
-            if indiv_idx in list_of_C:
-                start_idx = indiv_idx
-            elif indiv_idx not in list_of_C:
-                new_list.append(indiv_idx)
+            if indiv_idx not in list_of_C:
                 COlist.append(indiv_idx)
-        replacements[start_idx] = new_list
+        replacements[sort_idx[0]] = sort_idx[1:]
     # Actual Replacement
     COlist.sort()
     rem_atoms = 0

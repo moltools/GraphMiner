@@ -9,7 +9,7 @@ from .rdkit_mining import subgraph_miner, sub_to_smiles
 #Preparation beforehand
 from .prep_in_advance import select_on_size, combine_basic_substructures, return_basic_substructures
 from .replacing_using_isotopes import combining, returning
-from .replacing_using_RWmol import prep_replacing, replacing_COO, replacing_C_O, replacing_CO
+from .replacing_using_RWmol import replacing_COO, replacing_C_O, replacing_CO
 
 #Determine neighbours
 from .find_neighbours_bfs_self import list_of_nodes, dict_of_nodes, breadth_first_search
