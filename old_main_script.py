@@ -95,6 +95,35 @@ from GraphMiner import combine_basic_substructures, return_basic_substructures
 #         returned_dict = return_basic_substructures(replaced, subgraphdict)
 #         print(rdkit_smiles(returned_dict, selected_smile))
 
+from GraphMiner import select_on_size, replacing_COO, replacing_C_O, replacing_CO, \
+    rdkit_parse, breadth_fs, return_basic_substructures, rdkit_smiles, combine_substr
+
+# for group in grouplist:
+#     list_of_smiles = dict_of_data[group]
+#     for mol_smile in list_of_smiles:
+#         selected_mol = select_on_size(mol_smile)
+#         if selected_mol == None:
+#             continue
+#         print(' ')
+#         repl = {}
+#         sel_smile = Chem.MolToSmiles(selected_mol)
+#         sel_mol = Chem.MolFromSmiles(sel_smile)
+#         print('START2: ' + sel_smile)
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+            # sel_mol, repl = replacing_COO(sel_mol, repl)
+        # if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
+        #     selected_mol, repl = replacing_C_O(selected_mol, repl)
+        # if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+        #     selected_mol, repl = replacing_CO(selected_mol, repl)
+        # print(repl)
+        # dictnode, list_node = rdkit_parse(sel_mol)
+        # subgraphdict = breadth_fs(list_node, dictnode)
+        # returned_dict = return_basic_substructures(repl, subgraphdict)
+        # smilesdict = rdkit_smiles(returned_dict, sel_smile)
+        # print(smilesdict)
+        # unique_str = combine_substr(smilesdict)
+        # print(unique_str)
+
 # from GraphMiner import combining, returning
 # for group in grouplist:
 #     list_of_smiles = dict_of_data[group]

@@ -42,3 +42,19 @@ def repl_atommap_COO(moll, replacements:dict):
     moll = Chem.MolFromSmiles(inputsmls)
     print(replacements)
     return moll, replacements
+
+def return_replaced(repl_dicts:dict, index_dicts:dict):
+    for subgraphlength in index_dicts:
+        for value in repl_dicts:
+            for subgraph in index_dicts[subgraphlength]:
+                if str(value) not in subgraph:
+                    continue
+                index = index_dicts[subgraphlength].index(subgraph)
+                sorted_list = [int(idx) for idx in subgraph.split('-')]
+                if str(value) in subgraph.split('-'):
+                    sorted_list += (repl_dicts[value])
+                    sorted_list.sort()
+                sorted_list_str = [str(val) for val in sorted_list]
+                r_new = '-'.join(sorted_list_str)
+                index_dicts[subgraphlength][index] = r_new
+    return index_dicts

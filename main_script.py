@@ -13,9 +13,8 @@ dict_of_data = create_dict(grouplist, infile)
 ### PREPARATION OF SMILES + GRAPH MINING ###
 
 ## Working with RWMol
-from GraphMiner import select_on_size, replacing_COO, replacing_C_O, replacing_CO, \
-    rdkit_parse, breadth_fs, return_basic_substructures, rdkit_smiles, combine_substr, \
-    repl_atommap_COO, set_atommapnum, rdkit_parse_atommap
+from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, combine_substr, \
+    repl_atommap_COO, set_atommapnum, rdkit_parse_atommap, return_replaced
 
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
@@ -24,31 +23,25 @@ for group in grouplist:
         if selected_mol == None:
             continue
         print(' ')
-        print('START:' + mol_smile)
         repl = {}
         sel_smile = Chem.MolToSmiles(selected_mol)
         sel_mol = Chem.MolFromSmiles(sel_smile)
         print('START2: ' + sel_smile)
         set_atommapnum(sel_mol)
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
-            # sel_mol, repl = replacing_COO(sel_mol, repl)
             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-        # for atom in sel_mol.GetAtoms():
-        #     print(atom.GetAtomMapNum())
         # if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
         #     selected_mol, repl = replacing_C_O(selected_mol, repl)
         # if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
         #     selected_mol, repl = replacing_CO(selected_mol, repl)
         # print(repl)
         dictnode, list_node = rdkit_parse_atommap(sel_mol)
-        # dictnode, list_node = rdkit_parse(sel_mol)
-        # subgraphdict = breadth_fs(list_node, dictnode)
-        # returned_dict = return_basic_substructures(repl, subgraphdict)
-        # # print(returned_dict)
-        # smilesdict = rdkit_smiles(returned_dict, sel_smile)
+        subgraphdict = breadth_fs(list_node, dictnode)
+        returned_dict = return_replaced(repl, subgraphdict)
+        smilesdict = rdkit_smiles(returned_dict, sel_smile)
         # print(smilesdict)
-        # unique_str = combine_substr(smilesdict)
-        # print(unique_str)
+        unique_str = combine_substr(smilesdict)
+        print(unique_str)
 
 
 # from GraphMiner import combining, returning

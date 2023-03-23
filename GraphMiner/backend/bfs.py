@@ -6,7 +6,7 @@ def breadth_fs(nodelist:list, neigh_dict:dict):
     
     input:
     nodelist - list containing the indeces (int) in the string of the atom
-    neigh_dicht - dictionary containing as key(int) the index of the start atom
+    neigh_dict - dictionary containing as key(int) the index of the start atom
     and as value (list of int) the indices of the neighbouring atoms
 
     returns:
