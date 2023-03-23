@@ -65,6 +65,4 @@ def rdkit_parse_atommap(inputmol: str):
     for atom in range(num_heavy_atoms):
         neighbours_dict[inputmol.GetAtomWithIdx(atom).GetAtomMapNum()] = \
             [x.GetAtomMapNum() for x in inputmol.GetAtomWithIdx(atom).GetNeighbors()]
-
-    print(neighbours_dict)
     return neighbours_dict, heavy_atoms_list

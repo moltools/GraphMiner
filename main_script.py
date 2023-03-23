@@ -14,7 +14,8 @@ dict_of_data = create_dict(grouplist, infile)
 
 ## Working with RWMol
 from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, combine_substr, \
-    repl_atommap_COO, set_atommapnum, rdkit_parse_atommap, return_replaced
+    repl_atommap_COO, set_atommapnum, rdkit_parse_atommap, return_replaced, repl_atommap_CO, \
+    repl_atommap_C_O
 
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
@@ -30,14 +31,15 @@ for group in grouplist:
         set_atommapnum(sel_mol)
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-        # if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
-        #     selected_mol, repl = replacing_C_O(selected_mol, repl)
-        # if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
-        #     selected_mol, repl = replacing_CO(selected_mol, repl)
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+            sel_mol, repl = repl_atommap_CO(sel_mol, repl)
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
+            sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
         # print(repl)
         dictnode, list_node = rdkit_parse_atommap(sel_mol)
         subgraphdict = breadth_fs(list_node, dictnode)
         returned_dict = return_replaced(repl, subgraphdict)
+        # print(returned_dict)
         smilesdict = rdkit_smiles(returned_dict, sel_smile)
         # print(smilesdict)
         unique_str = combine_substr(smilesdict)
