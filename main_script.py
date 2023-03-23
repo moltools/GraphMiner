@@ -6,7 +6,7 @@ from rdkit import Chem
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ';')
+infile = load_data(1, ',')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -31,10 +31,15 @@ for group in grouplist:
         set_atommapnum(sel_mol)
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
+            print('C(=O)O done')
+        # print(Chem.MolToSmiles(sel_mol))
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
             sel_mol, repl = repl_atommap_CO(sel_mol, repl)
+            print('CO done')
+        # print(Chem.MolToSmiles(sel_mol))
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
             sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
+            print('C=O done')
         # print(repl)
         dictnode, list_node = rdkit_parse_atommap(sel_mol)
         subgraphdict = breadth_fs(list_node, dictnode)
@@ -43,8 +48,8 @@ for group in grouplist:
         smilesdict = rdkit_smiles(returned_dict, sel_smile)
         # print(smilesdict)
         unique_str = combine_substr(smilesdict)
-        print(unique_str)
-
+        # print(unique_str)
+        print('all okay')
 
 # from GraphMiner import combining, returning
 # for group in grouplist:
