@@ -36,10 +36,37 @@ def rdkit_parse(inputsmiles:str):
     neighbours_dict - dictionary containing as key (int) the index of the start atom
     and as value (list of int) the indices of the neighbouring atoms
     '''
+    print(inputsmiles)
     neighbours_dict = {}
     m1 = Chem.MolFromSmiles(inputsmiles)
     num_heavy_atoms = m1.GetNumHeavyAtoms()
     heavy_atoms_list = list(range(0,num_heavy_atoms))
     for atom in range(num_heavy_atoms):
         neighbours_dict[heavy_atoms_list[atom]] = [heavy_atoms_list[x.GetIdx()] for x in m1.GetAtomWithIdx(atom).GetNeighbors()]
+    print(neighbours_dict)
+    return neighbours_dict, heavy_atoms_list
+
+
+def rdkit_parse_atommap(inputmol: str):
+    '''
+    Parsing SMILES using RDKit
+
+    input:
+    inputsmiles - SMILES format of a molecule (str)
+    nodelist - list containing the indeces (int) in the string containing an atom
+
+    returns:
+    neighbours_dict - dictionary containing as key (int) the index of the start atom
+    and as value (list of int) the indices of the neighbouring atoms
+    '''
+    neighbours_dict = {}
+    num_heavy_atoms = inputmol.GetNumHeavyAtoms()
+    heavy_atoms_list = list(range(0, num_heavy_atoms))
+    for atom in range(num_heavy_atoms):
+        print('ATOM')
+        print(atom.GetAtomMapNum())
+        neighbours_dict[heavy_atoms_list[atom]] = [heavy_atoms_list[x.GetIdx()]
+                                                   for x in inputmol.GetAtomWithIdx(
+                atom).GetNeighbors()]
+    print(neighbours_dict)
     return neighbours_dict, heavy_atoms_list

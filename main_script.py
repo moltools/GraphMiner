@@ -14,30 +14,41 @@ dict_of_data = create_dict(grouplist, infile)
 
 ## Working with RWMol
 from GraphMiner import select_on_size, replacing_COO, replacing_C_O, replacing_CO, \
-    rdkit_parse, breadth_fs, return_basic_substructures, rdkit_smiles
+    rdkit_parse, breadth_fs, return_basic_substructures, rdkit_smiles, combine_substr, \
+    repl_atommap_COO, set_atommapnum, rdkit_parse_atommap
 
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
     for mol_smile in list_of_smiles:
-        selected_smile = select_on_size(mol_smile)
-        if selected_smile == None:
+        selected_mol = select_on_size(mol_smile)
+        if selected_mol == None:
             continue
         print(' ')
         print('START:' + mol_smile)
         repl = {}
-        selected_mol = Chem.MolFromSmiles(selected_smile)
-        if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
-            selected_mol, repl = replacing_COO(selected_mol, repl)
+        sel_smile = Chem.MolToSmiles(selected_mol)
+        sel_mol = Chem.MolFromSmiles(sel_smile)
+        print('START2: ' + sel_smile)
+        set_atommapnum(sel_mol)
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+            # sel_mol, repl = replacing_COO(sel_mol, repl)
+            sel_mol, repl = repl_atommap_COO(sel_mol, repl)
+        # for atom in sel_mol.GetAtoms():
+        #     print(atom.GetAtomMapNum())
         # if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
         #     selected_mol, repl = replacing_C_O(selected_mol, repl)
         # if selected_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
         #     selected_mol, repl = replacing_CO(selected_mol, repl)
-        dictnode, list_node = rdkit_parse(Chem.MolToSmiles(selected_mol))
-        subgraphdict = breadth_fs(list_node, dictnode)
-        returned_dict = return_basic_substructures(repl, subgraphdict)
-        # print(returned_dict)
-        smilesdict = rdkit_smiles(returned_dict, selected_smile)
-        print(smilesdict)
+        # print(repl)
+        dictnode, list_node = rdkit_parse_atommap(sel_mol)
+        # dictnode, list_node = rdkit_parse(sel_mol)
+        # subgraphdict = breadth_fs(list_node, dictnode)
+        # returned_dict = return_basic_substructures(repl, subgraphdict)
+        # # print(returned_dict)
+        # smilesdict = rdkit_smiles(returned_dict, sel_smile)
+        # print(smilesdict)
+        # unique_str = combine_substr(smilesdict)
+        # print(unique_str)
 
 
 # from GraphMiner import combining, returning
@@ -58,8 +69,8 @@ for group in grouplist:
 
 
 ## Write second type CSV file
-# from GraphMiner import list_maker
-#
+from GraphMiner import list_maker
+
 # for group in grouplist:
 #     list_of_smiles = dict_of_data[group]
 #     all_substr = []
@@ -67,13 +78,15 @@ for group in grouplist:
 #     total_molecules = 0
 #     for mol_smile in list_of_smiles:
 #         # print('tot: ' + str(total_molecules))
-#         selected_smile = select_on_size(mol_smile)
-#         if selected_smile == None:
+#         selected_mol = select_on_size(mol_smile)
+#         if selected_mol == None:
 #             continue
+#         selected_smile = Chem.MolToSmiles(selected_mol)
 #         dictnode, list_node = rdkit_parse(selected_smile)
 #         subgraphdict = breadth_fs(list_node, dictnode)
 #         smilesdict = rdkit_smiles(subgraphdict, selected_smile)
 #         unique_str = combine_substr(smilesdict)
+#         print(unique_str)
 #         all_substr += (unique_str)
 #         dict_substr[total_molecules] = unique_str
 #         total_molecules += 1

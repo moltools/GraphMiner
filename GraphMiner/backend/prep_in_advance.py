@@ -17,7 +17,7 @@ def select_on_size(smile_mol:str):
     mol1 = Chem.MolFromSmiles(smile_mol)
     heavy_atoms = mol1.GetNumHeavyAtoms()
     if heavy_atoms <= 20: #Change to 40
-        return smile_mol
+        return mol1
 
 
 def combine_basic_substructures(molsmiles:str):

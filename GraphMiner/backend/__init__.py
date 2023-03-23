@@ -10,10 +10,11 @@ from .rdkit_mining import subgraph_miner, sub_to_smiles
 from .prep_in_advance import select_on_size, combine_basic_substructures, return_basic_substructures
 from .replacing_using_isotopes import combining, returning
 from .replacing_using_RWmol import replacing_COO, replacing_C_O, replacing_CO
+from .replacing_using_atommapnum import set_atommapnum, repl_atommap_COO
 
 #Determine neighbours
 from .find_neighbours_bfs_self import list_of_nodes, dict_of_nodes, breadth_first_search
-from .find_neighbors_rdkit import rdkit_parse
+from .find_neighbors_rdkit import rdkit_parse, rdkit_parse_atommap
 
 #Mining search
 from .bfs import breadth_fs
