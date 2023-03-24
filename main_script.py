@@ -15,10 +15,13 @@ dict_of_data = create_dict(grouplist, infile)
 ## Working with RWMol
 from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, combine_substr, \
     repl_atommap_COO, set_atommapnum, rdkit_parse_atommap, return_replaced, repl_atommap_CO, \
-    repl_atommap_C_O
+    repl_atommap_C_O, count_freq, list_maker
 
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
+    all_substr = []
+    dict_substr = {}
+    total_molecules = 0
     for mol_smile in list_of_smiles:
         selected_mol = select_on_size(mol_smile)
         if selected_mol == None:
@@ -50,6 +53,20 @@ for group in grouplist:
         unique_str = combine_substr(smilesdict)
         # print(unique_str)
         print('all okay')
+        all_substr += (unique_str)
+        dict_substr[total_molecules] = unique_str
+        total_molecules += 1
+    print(group)
+    counts = count_freq(all_substr)
+    list_of_rows = list_maker(dict_substr, counts)
+    name = 'combined_overview_group' + str(group) +'.csv'
+    f = open(name,  'w')
+    writer = csv.writer(f)
+    Head_row = ('Substructure', 'Frequency' + str(group), 'OccurrenceList' + str(group))
+    writer.writerow(Head_row)
+    for row in list_of_rows:
+        writer.writerow(row)
+    f.close()
 
 # from GraphMiner import combining, returning
 # for group in grouplist:
@@ -107,35 +124,35 @@ from GraphMiner import list_maker
 ## Load in csv files
 from GraphMiner import new_dataframes
 
-# df_list = []
-# sub_list = []
-# for group in grouplist:
-#     freq_file = load_data(group+2, ',')
-#     red_file, substrlist = new_dataframes(freq_file, group)
-#     df_list.append(red_file)
+df_list = []
+sub_list = []
+for group in grouplist:
+    freq_file = load_data(group+2, ',')
+    red_file, substrlist = new_dataframes(freq_file, group)
+    df_list.append(red_file)
 
 ## Calculate p values
 from GraphMiner import join_df, retrieve_pval
 
-# substr_df = join_df(df_list)
-# pvalues = retrieve_pval(substr_df)
+substr_df = join_df(df_list)
+pvalues = retrieve_pval(substr_df)
 
 ## Multiple Testing Correction
 from GraphMiner import bonferonni_corr, benj_hoch
-#
-# mtc_bonn = bonferonni_corr(pvalues)
-# TF_bonn_list = mtc_bonn[0].tolist()
-# mtc_benj = benj_hoch(pvalues)
-# TF_benj_list = mtc_benj[0].tolist()
-# substr_df['True/False Bonferonni'] = TF_bonn_list
-# substr_df['True/False Benj-Hoch'] = TF_benj_list
-# substr_df.to_csv('substructuretruefalse.csv', sep=';')
-#
-# truetotal = 0
-# falsetotal = 0
-# for TF in TF_benj_list:
-#     if TF ==True:
-#         truetotal += 1
-#     elif TF == False:
-#         falsetotal +=1
-# print(truetotal, falsetotal)
+
+mtc_bonn = bonferonni_corr(pvalues)
+TF_bonn_list = mtc_bonn[0].tolist()
+mtc_benj = benj_hoch(pvalues)
+TF_benj_list = mtc_benj[0].tolist()
+substr_df['True/False Bonferonni'] = TF_bonn_list
+substr_df['True/False Benj-Hoch'] = TF_benj_list
+substr_df.to_csv('substructuretruefalse.csv', sep=';')
+
+truetotal = 0
+falsetotal = 0
+for TF in TF_benj_list:
+    if TF ==True:
+        truetotal += 1
+    elif TF == False:
+        falsetotal +=1
+print(truetotal, falsetotal)
