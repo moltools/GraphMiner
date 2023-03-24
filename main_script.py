@@ -6,7 +6,7 @@ from rdkit import Chem
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ',')
+infile = load_data(1, ';')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -27,7 +27,7 @@ for group in grouplist:
         repl = {}
         sel_smile = Chem.MolToSmiles(selected_mol)
         sel_mol = Chem.MolFromSmiles(sel_smile)
-        print('START2: ' + sel_smile)
+        print('START: ' + sel_smile)
         set_atommapnum(sel_mol)
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
             sel_mol, repl = repl_atommap_COO(sel_mol, repl)

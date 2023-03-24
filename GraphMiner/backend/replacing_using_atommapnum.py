@@ -23,7 +23,8 @@ def repl_atommap_COO(moll, replacements:dict):
         new_list = []
         for indiv_idx in idx__COO:
             if indiv_idx not in list_of_C:
-                COOlist.append(indiv_idx)
+                if indiv_idx not in COOlist:
+                    COOlist.append(indiv_idx)
                 new_list += [moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()]
             elif indiv_idx in list_of_C:
                 C_atom = moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()
@@ -54,7 +55,8 @@ def repl_atommap_CO(moll, replacements:dict):
         new_list = []
         for indiv_idx in idx__CO:
             if indiv_idx not in list_of_C:
-                COlist.append(indiv_idx)
+                if indiv_idx not in COlist:
+                    COlist.append(indiv_idx)
                 new_list += [moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()]
             elif indiv_idx in list_of_C:
                 C_atom = moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()
@@ -85,7 +87,8 @@ def repl_atommap_C_O(moll, replacements:dict):
         new_list = []
         for indiv_idx in idx__CO:
             if indiv_idx not in list_of_C:
-                COlist.append(indiv_idx)
+                if indiv_idx not in COlist:
+                    COlist.append(indiv_idx)
                 new_list += [moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()]
             elif indiv_idx in list_of_C:
                 C_atom = moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()
