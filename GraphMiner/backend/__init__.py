@@ -17,6 +17,7 @@ from .find_neighbors_rdkit import rdkit_parse_atommap
 #Mining search
 from .bfs import breadth_fs
 from .dfs import depth_fs
+from .return_to_smile import rdkit_smiles
 
 #Frequency counter
 from .frequency_counter import combine_substr, count_freq, perc_substr, \

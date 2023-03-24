@@ -37,25 +37,25 @@ from rdkit import Chem
 #             mol_graphs[subgraph_length].append(mol_subgraph)
 #     return mol_graphs
 
-# def rdkit_smiles(sub_graphs:dict, smilesmol:str):
-#     '''
-#     Convert the indices of subgraphs to SMILES subgraphs
-#
-#     input:
-#     subgraphs - dictionary containing as key (int) the subgraph length and as value
-#     (list of str) with the subgraphs as strings of indeces divided by '-'
-#     smilesmol - SMILES format of a molecule (str)
-#
-#     returns:
-#     mol_graphs - dictionary containing as key (int) the subgraph length and as value
-#     (list of str) the subgraphs as strings in SMILES format
-#     '''
-#     mol = Chem.MolFromSmiles(smilesmol)
-#     mol_graphs = {}
-#     for subgraph_length in sub_graphs:
-#         mol_graphs[subgraph_length] = []
-#         for subgraphlist in sub_graphs[subgraph_length]:
-#             atom_list = subgraphlist.split('-')
-#             int_atom_list = [int(index) for index in atom_list]
-#             mol_graphs[subgraph_length].append(Chem.MolFragmentToSmiles(mol, int_atom_list))
-#     return mol_graphs
+def rdkit_smiles(sub_graphs:dict, smilesmol:str):
+    '''
+    Convert the indices of subgraphs to SMILES subgraphs
+
+    input:
+    subgraphs - dictionary containing as key (int) the subgraph length and as value
+    (list of str) with the subgraphs as strings of indeces divided by '-'
+    smilesmol - SMILES format of a molecule (str)
+
+    returns:
+    mol_graphs - dictionary containing as key (int) the subgraph length and as value
+    (list of str) the subgraphs as strings in SMILES format
+    '''
+    mol = Chem.MolFromSmiles(smilesmol)
+    mol_graphs = {}
+    for subgraph_length in sub_graphs:
+        mol_graphs[subgraph_length] = []
+        for subgraphlist in sub_graphs[subgraph_length]:
+            atom_list = subgraphlist.split('-')
+            int_atom_list = [int(index) for index in atom_list]
+            mol_graphs[subgraph_length].append(Chem.MolFragmentToSmiles(mol, int_atom_list))
+    return mol_graphs
