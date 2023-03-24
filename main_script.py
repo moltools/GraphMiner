@@ -15,7 +15,7 @@ dict_of_data = create_dict(grouplist, infile)
 ## Working with RWMol
 from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, combine_substr, \
     repl_atommap_COO, set_atommapnum, rdkit_parse_atommap, return_replaced, repl_atommap_CO, \
-    repl_atommap_C_O, count_freq, list_maker
+    repl_atommap_C_O, count_freq, list_maker, repl_atommap_NCO
 
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
@@ -35,6 +35,9 @@ for group in grouplist:
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
             print('C(=O)O done')
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
+            sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
+            print('NC=O done')
         # print(Chem.MolToSmiles(sel_mol))
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
             sel_mol, repl = repl_atommap_CO(sel_mol, repl)
@@ -53,20 +56,20 @@ for group in grouplist:
         unique_str = combine_substr(smilesdict)
         # print(unique_str)
         print('all okay')
-        all_substr += (unique_str)
-        dict_substr[total_molecules] = unique_str
-        total_molecules += 1
-    print(group)
-    counts = count_freq(all_substr)
-    list_of_rows = list_maker(dict_substr, counts)
-    name = 'combined_overview_group' + str(group) +'.csv'
-    f = open(name,  'w')
-    writer = csv.writer(f)
-    Head_row = ('Substructure', 'Frequency' + str(group), 'OccurrenceList' + str(group))
-    writer.writerow(Head_row)
-    for row in list_of_rows:
-        writer.writerow(row)
-    f.close()
+    #     all_substr += (unique_str)
+    #     dict_substr[total_molecules] = unique_str
+    #     total_molecules += 1
+    # print(group)
+    # counts = count_freq(all_substr)
+    # list_of_rows = list_maker(dict_substr, counts)
+    # name = 'combined_overview_group' + str(group) +'.csv'
+    # f = open(name,  'w')
+    # writer = csv.writer(f)
+    # Head_row = ('Substructure', 'Frequency' + str(group), 'OccurrenceList' + str(group))
+    # writer.writerow(Head_row)
+    # for row in list_of_rows:
+    #     writer.writerow(row)
+    # f.close()
 
 # from GraphMiner import combining, returning
 # for group in grouplist:
@@ -122,37 +125,37 @@ from GraphMiner import list_maker
 ### STATISTICS PART ###
 
 ## Load in csv files
-from GraphMiner import new_dataframes
-
-df_list = []
-sub_list = []
-for group in grouplist:
-    freq_file = load_data(group+2, ',')
-    red_file, substrlist = new_dataframes(freq_file, group)
-    df_list.append(red_file)
-
-## Calculate p values
-from GraphMiner import join_df, retrieve_pval
-
-substr_df = join_df(df_list)
-pvalues = retrieve_pval(substr_df)
-
-## Multiple Testing Correction
-from GraphMiner import bonferonni_corr, benj_hoch
-
-mtc_bonn = bonferonni_corr(pvalues)
-TF_bonn_list = mtc_bonn[0].tolist()
-mtc_benj = benj_hoch(pvalues)
-TF_benj_list = mtc_benj[0].tolist()
-substr_df['True/False Bonferonni'] = TF_bonn_list
-substr_df['True/False Benj-Hoch'] = TF_benj_list
-substr_df.to_csv('substructuretruefalse.csv', sep=';')
-
-truetotal = 0
-falsetotal = 0
-for TF in TF_benj_list:
-    if TF ==True:
-        truetotal += 1
-    elif TF == False:
-        falsetotal +=1
-print(truetotal, falsetotal)
+# from GraphMiner import new_dataframes
+#
+# df_list = []
+# sub_list = []
+# for group in grouplist:
+#     freq_file = load_data(group+2, ',')
+#     red_file, substrlist = new_dataframes(freq_file, group)
+#     df_list.append(red_file)
+#
+# ## Calculate p values
+# from GraphMiner import join_df, retrieve_pval
+#
+# substr_df = join_df(df_list)
+# pvalues = retrieve_pval(substr_df)
+#
+# ## Multiple Testing Correction
+# from GraphMiner import bonferonni_corr, benj_hoch
+#
+# mtc_bonn = bonferonni_corr(pvalues)
+# TF_bonn_list = mtc_bonn[0].tolist()
+# mtc_benj = benj_hoch(pvalues)
+# TF_benj_list = mtc_benj[0].tolist()
+# substr_df['True/False Bonferonni'] = TF_bonn_list
+# substr_df['True/False Benj-Hoch'] = TF_benj_list
+# substr_df.to_csv('substructuretruefalse.csv', sep=';')
+#
+# truetotal = 0
+# falsetotal = 0
+# for TF in TF_benj_list:
+#     if TF ==True:
+#         truetotal += 1
+#     elif TF == False:
+#         falsetotal +=1
+# print(truetotal, falsetotal)

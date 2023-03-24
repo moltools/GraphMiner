@@ -7,22 +7,21 @@ from .data_loader import load_data, determine_groups, create_dict
 from .rdkit_mining import subgraph_miner, sub_to_smiles
 
 #Preparation beforehand
-from .prep_in_advance import select_on_size, combine_basic_substructures, return_basic_substructures
-from .replacing_using_isotopes import combining, returning
-from .replacing_using_RWmol import replacing_COO, replacing_C_O, replacing_CO
-from .replacing_using_atommapnum import set_atommapnum, repl_atommap_COO, repl_atommap_CO, repl_atommap_C_O, return_replaced
+from .prep_in_advance import select_on_size
+from .replacing_using_atommapnum import set_atommapnum, repl_atommap_COO, \
+    repl_atommap_NCO, repl_atommap_CO, repl_atommap_C_O, return_replaced
 
 #Determine neighbours
-from .find_neighbours_bfs_self import list_of_nodes, dict_of_nodes, breadth_first_search
-from .find_neighbors_rdkit import rdkit_parse, rdkit_parse_atommap
+from .find_neighbors_rdkit import rdkit_parse_atommap
 
 #Mining search
 from .bfs import breadth_fs
 from .dfs import depth_fs
-from .return_to_smile import rdkit_smiles
 
 #Frequency counter
-from .frequency_counter import combine_substr, count_freq, perc_substr, list_maker
+from .frequency_counter import combine_substr, count_freq, perc_substr, \
+    list_maker
 
 #Statistics
-from .statistics import new_dataframes, join_df, retrieve_pval, bonferonni_corr, benj_hoch
+from .statistics import new_dataframes, join_df, retrieve_pval, \
+    bonferonni_corr, benj_hoch
