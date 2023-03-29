@@ -13,12 +13,23 @@ def select_on_size(smile_mol:str):
     smile_mol - SMILES format of a molecule (str)
     
     returns:
-    mol1 - MOL format from RDKit of a molecule
+    smile_mol - SMILES format of a molecule (str)
     '''
     mol1 = Chem.MolFromSmiles(smile_mol)
     heavy_atoms = mol1.GetNumHeavyAtoms()
     if heavy_atoms <= 40: #Change to 40
-        return mol1
+        return smile_mol
+
+def select_mol(molsmile):
+    if molsmile == None:
+        return
+    if '.' in molsmile:
+        return
+    if '-' in molsmile:
+        return
+    if '+' in molsmile:
+        return
+    return Chem.MolFromSmiles(molsmile)
 
 
 # def combine_basic_substructures(molsmiles:str):

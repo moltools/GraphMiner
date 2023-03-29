@@ -68,6 +68,102 @@ def repl_atommap_COO(moll, replacements:dict):
     moll = Chem.MolFromSmiles(inputsmls)
     return moll, replacements
 
+def repl_atommap_POOO(moll, replacements:dict):
+    '''
+    Replace the substructure P(=O)(O)O by C using RWMol and AtomMapNumbers
+
+    input:
+    moll - molecule in MOL format from RDKit also containing AtomMapNumbers
+    replacements - dictionary with as key the AtomMapNumber (int) of the P that
+    remains in the molecule and as values a list of the AtomMapNumbers (int)
+    that are removed from the molecule
+
+    returns:
+    moll - molecule in MOL format from RDKit also containing AtomMapNumbers
+    replacements - dictionary with as key the AtomMapNumber (int) of the P that
+    remains in the molecule and as values a list of the AtomMapNumbers (int)
+    that are removed from the molecule
+    -- but both are adjusted with the replaced P(=O)(O)O substructures
+    '''
+    list_of_P = [Pidx[0] for Pidx in
+                 moll.GetSubstructMatches(Chem.MolFromSmiles('P'))]
+    rwmol = rdkit.Chem.rdchem.RWMol()
+    rwmol.InsertMol(moll)
+    POOOlist = []
+    query = Chem.MolFromSmiles('P(=O)(O)O')
+    idx_POOO = moll.GetSubstructMatches(query)
+    for idx__POOO in idx_POOO:
+        new_list = []
+        for indiv_idx in idx__POOO:
+            if indiv_idx not in list_of_P:
+                if indiv_idx not in POOOlist:
+                    POOOlist.append(indiv_idx)
+                new_list += [moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()]
+            elif indiv_idx in list_of_P:
+                P_atom = moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()
+        replacements[P_atom] = new_list
+    # Actual Replacement
+    POOOlist.sort()
+    rem_atoms = 0
+    for number in POOOlist:
+        adj_num = number-rem_atoms
+        rwmol.RemoveAtom(adj_num)
+        if '.' in Chem.MolToSmiles(rwmol):
+            rwmol.RemoveBond(adj_num-1, adj_num)
+            rwmol.AddBond(adj_num - 1, adj_num, rdkit.Chem.rdchem.BondType.SINGLE)
+        rem_atoms += 1
+    inputsmls = Chem.MolToSmiles(rwmol)
+    moll = Chem.MolFromSmiles(inputsmls)
+    return moll, replacements
+
+def repl_atommap_NOCO(moll, replacements:dict):
+    '''
+    Replace the substructure NO by C using RWMol and AtomMapNumbers
+
+    input:
+    moll - molecule in MOL format from RDKit also containing AtomMapNumbers
+    replacements - dictionary with as key the AtomMapNumber (int) of the C that
+    remains in the molecule and as values a list of the AtomMapNumbers (int)
+    that are removed from the molecule
+
+    returns:
+    moll - molecule in MOL format from RDKit also containing AtomMapNumbers
+    replacements - dictionary with as key the AtomMapNumber (int) of the C that
+    remains in the molecule and as values a list of the AtomMapNumbers (int)
+    that are removed from the molecule
+    -- but both are adjusted with the replaced NC=O substructures
+    '''
+    list_of_C = [Cidx[0] for Cidx in
+                 moll.GetSubstructMatches(Chem.MolFromSmiles('C'))]
+    rwmol = rdkit.Chem.rdchem.RWMol()
+    rwmol.InsertMol(moll)
+    NOCOlist = []
+    query = Chem.MolFromSmiles('N(O)C(=O)')
+    idx_NOCO = moll.GetSubstructMatches(query)
+    for idx__NOCO in idx_NOCO:
+        new_list = []
+        for indiv_idx in idx__NOCO:
+            if indiv_idx not in list_of_C:
+                if indiv_idx not in NOCOlist:
+                    NOCOlist.append(indiv_idx)
+                new_list += [moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()]
+            elif indiv_idx in list_of_C:
+                C_atom = moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()
+        replacements[C_atom] = new_list
+    # Actual Replacement
+    NOCOlist.sort()
+    rem_atoms = 0
+    for number in NOCOlist:
+        adj_num = number-rem_atoms
+        rwmol.RemoveAtom(adj_num)
+        if '.' in Chem.MolToSmiles(rwmol):
+            rwmol.RemoveBond(adj_num-1, adj_num)
+            rwmol.AddBond(adj_num - 1, adj_num, rdkit.Chem.rdchem.BondType.SINGLE)
+        rem_atoms += 1
+    inputsmls = Chem.MolToSmiles(rwmol)
+    moll = Chem.MolFromSmiles(inputsmls)
+    return moll, replacements
+
 def repl_atommap_NCO(moll, replacements:dict):
     '''
     Replace the substructure NC=O by C using RWMol and AtomMapNumbers
@@ -188,6 +284,7 @@ def repl_atommap_C_O(moll, replacements:dict):
     COlist = []
     query = Chem.MolFromSmiles('C=O')
     idx_CO = moll.GetSubstructMatches(query)
+    print(replacements)
     for idx__CO in idx_CO:
         new_list = []
         for indiv_idx in idx__CO:
@@ -198,17 +295,22 @@ def repl_atommap_C_O(moll, replacements:dict):
             elif indiv_idx in list_of_C:
                 C_atom = moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()
         replacements[C_atom] = new_list
+    print(replacements)
     # Actual Replacement
     COlist.sort()
+    print(COlist)
     rem_atoms = 0
     for number in COlist:
         adj_num = number-rem_atoms
         rwmol.RemoveAtom(adj_num)
+        print('atom removed ' + str(adj_num))
         if '.' in Chem.MolToSmiles(rwmol):
+            print('BOND ADJUSTMENT')
             rwmol.RemoveBond(adj_num-1, adj_num)
             rwmol.AddBond(adj_num - 1, adj_num, rdkit.Chem.rdchem.BondType.SINGLE)
         rem_atoms += 1
     inputsmls = Chem.MolToSmiles(rwmol)
+    print(inputsmls)
     moll = Chem.MolFromSmiles(inputsmls)
     return moll, replacements
 
