@@ -18,46 +18,62 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
     list_maker, repl_atommap_NCO, repl_atommap_NOCO, select_mol, \
     repl_atommap_POOO
 
-# for group in grouplist:
-#     list_of_smiles = dict_of_data[group]
-#     all_substr = []
-#     dict_substr = {}
-#     total_molecules = 0
-#     for mol_smile in list_of_smiles:
-#         selected_mol = select_on_size(mol_smile)
-#         if selected_mol == None:
-#             continue
-#         print(' ')
-#         repl = {}
-#         sel_smile = Chem.MolToSmiles(selected_mol)
-#         sel_mol = Chem.MolFromSmiles(sel_smile)
-#         print('START: ' + sel_smile)
-#         set_atommapnum(sel_mol)
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
-#             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-#             print('C(=O)O done')
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
-#             sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
-#             print('NC=O done')
-#         # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
-#             sel_mol, repl = repl_atommap_CO(sel_mol, repl)
-#             print('CO done')
-#         # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
-#             sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
-#             print('C=O done')
-#         # print(repl)
-#         print(Chem.MolToSmiles(sel_mol))
-#         dictnode, list_node = rdkit_parse_atommap(sel_mol)
-#         subgraphdict = breadth_fs(list_node, dictnode)
-#         returned_dict = return_replaced(repl, subgraphdict)
-#         # print(returned_dict)
-#         smilesdict = rdkit_smiles(returned_dict, sel_smile)
-#         # print(smilesdict)
-#         unique_str = combine_substr(smilesdict)
-#         # print(unique_str)
-#         print('all okay')
+number = 0
+for group in grouplist:
+    list_of_smiles = dict_of_data[group]
+    all_substr = []
+    dict_substr = {}
+    total_molecules = 0
+    for mol_smile in list_of_smiles:
+        number += 1
+        print(number)
+        first_select = select_on_size(mol_smile)
+        selected_mol = select_mol(first_select)
+        if selected_mol == None:
+            continue
+        print(' ')
+        repl = {}
+        sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
+        sel_mol = Chem.MolFromSmiles(sel_smile)
+        print('START: ' + sel_smile)
+        set_atommapnum(sel_mol)
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+            sel_mol, repl = repl_atommap_COO(sel_mol, repl)
+            print('C(=O)O done')
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
+            sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
+            print('P(=O)(O)O done')
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
+        #     sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
+        #     print('NOCO done')
+        # print(Chem.MolToSmiles(sel_mol))
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
+        #     sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
+        #     print('NC=O done')
+
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+            sel_mol, repl = repl_atommap_CO(sel_mol, repl)
+            print('CO done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
+            sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
+            print('C=O done')
+        # print(Chem.MolToSmiles(sel_mol))
+        # print(repl)
+        # print(Chem.MolToSmiles(sel_mol))
+        dictnode, list_node = rdkit_parse_atommap(sel_mol)
+        print('parsing done')
+        subgraphdict = breadth_fs(list_node, dictnode)
+        print('bfs done')
+        returned_dict = return_replaced(repl, subgraphdict)
+        # print(returned_dict)
+        print('replaced done')
+        smilesdict = rdkit_smiles(returned_dict, sel_smile)
+        print('smiles returned')
+        # print(smilesdict)
+        unique_str = combine_substr(smilesdict)
+        # print(unique_str)
+        print('all okay')
     #     all_substr += (unique_str)
     #     dict_substr[total_molecules] = unique_str
     #     total_molecules += 1
@@ -114,47 +130,48 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
 
 from GraphMiner import depth_fs
 
-for group in grouplist:
-    list_of_smiles = dict_of_data[group]
-    all_substr = []
-    dict_substr = {}
-    total_molecules = 0
-    for mol_smile in list_of_smiles:
-        first_select = select_on_size(mol_smile)
-        selected_mol = select_mol(first_select)
-        if selected_mol == None:
-            continue
-        print(' ')
-        repl = {}
-        sel_smile = Chem.MolToSmiles(selected_mol)
-        sel_mol = Chem.MolFromSmiles(sel_smile)
-        print('START: ' + sel_smile)
-        set_atommapnum(sel_mol)
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
-            sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-            print('C(=O)O done')
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
-            sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
-            print('P(=O)(O)O done')
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
-        #     sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
-        #     print('NOCO done')
-        # print(Chem.MolToSmiles(sel_mol))
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
-        #     sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
-        #     print('NC=O done')
-        print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
-            sel_mol, repl = repl_atommap_CO(sel_mol, repl)
-            print('CO done')
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
-            sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
-            print('C=O done')
-        print(Chem.MolToSmiles(sel_mol))
-        # print(repl)
-        print(Chem.MolToSmiles(sel_mol))
-        dictnode, list_node = rdkit_parse_atommap(sel_mol)
-        # depth_fs(sel_mol, dictnode)
-    print('YAY')
+# for group in grouplist:
+#     list_of_smiles = dict_of_data[group]
+#     all_substr = []
+#     dict_substr = {}
+#     total_molecules = 0
+#     for mol_smile in list_of_smiles:
+#         first_select = select_on_size(mol_smile)
+#         selected_mol = select_mol(first_select)
+#         if selected_mol == None:
+#             continue
+#         print(' ')
+#         repl = {}
+#         sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
+#         sel_mol = Chem.MolFromSmiles(sel_smile)
+#         print('START: ' + sel_smile)
+#         set_atommapnum(sel_mol)
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+#             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
+#             print('C(=O)O done')
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
+#             sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
+#             print('P(=O)(O)O done')
+#         # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
+#         #     sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
+#         #     print('NOCO done')
+#         # print(Chem.MolToSmiles(sel_mol))
+#         # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
+#         #     sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
+#         #     print('NC=O done')
+#
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+#             sel_mol, repl = repl_atommap_CO(sel_mol, repl)
+#             print('CO done')
+#             # print(Chem.MolToSmiles(sel_mol))
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
+#             sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
+#             print('C=O done')
+#         # print(Chem.MolToSmiles(sel_mol))
+#         # print(repl)
+#         # print(Chem.MolToSmiles(sel_mol))
+#         dictnode, list_node = rdkit_parse_atommap(sel_mol)
+#         # depth_fs(sel_mol, dictnode)
+#         print('YAY')
 
 
