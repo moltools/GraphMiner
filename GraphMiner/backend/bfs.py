@@ -19,11 +19,13 @@ def breadth_fs(nodelist:list, neigh_dict:dict):
     #Generate the first list of keys
     for key in neigh_dict:
         subgraphs[len_subgraph].append(str(key))
+    print('step1')
     #Add in all unqiue regions for each length of subgraphs
     for index in range(len(nodelist)):
         len_subgraph += 1
         subgraphs[len_subgraph] = []
         sorted_graphs = []
+        print(index)
         for values in subgraphs[len_subgraph-1]:
             for added in values.split('-'):
                 for nb in neigh_dict[int(added)]:
@@ -37,6 +39,6 @@ def breadth_fs(nodelist:list, neigh_dict:dict):
                         if sorted_list not in sorted_graphs:
                             subgraphs[len_subgraph].append(new)
                             sorted_graphs.append(sorted_list)
-        if len(subgraphs[len_subgraph]) == 1:
+        if len(subgraphs[len_subgraph]) <= 1:
             break
     return subgraphs

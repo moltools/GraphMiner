@@ -5,6 +5,7 @@ from statsmodels.stats import multitest
 import scipy.stats
 import pandas as pd
 import numpy as np
+from rdkit import Chem
 
 def new_dataframes(input_df, groupnum):
     '''
@@ -46,8 +47,14 @@ def join_df(list_of_df):
     index of the molecule
     '''
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
-    #FIND A WAY TO NOT HARDCODE THE ZEROS
-    joined_df = joined_df.replace(np.nan, '0,0,0,0')
+    colmn = list(joined_df.columns)
+    if joined_df.iloc[0,1] != np.nan and joined_df.iloc[0,2] != np.nan:
+        # zerolist1 = ['0']*len(joined_df.iloc[0,1])
+        # zerolist2 = ['0']*len(joined_df.iloc[0,2])
+        zerolist1 = ['0'] * 5
+        zerolist2 = ['0'] * 4
+    joined_df[colmn[1]] = joined_df[colmn[1]].replace(np.nan, ','.join(zerolist1))
+    joined_df[colmn[2]] = joined_df[colmn[2]].replace(np.nan, ','.join(zerolist2))
     return joined_df
 
 def retrieve_pval(df_joined):
@@ -88,7 +95,8 @@ def bonferonni_corr(list_of_pval):
     [4] corrected alpha for Bonferonni method
     '''
     tests = multitest.multipletests(pvals = list_of_pval, alpha = 0.05, method = 'bonferroni')
-    return tests
+    TF_list_bonn = tests[0].tolist()
+    return TF_list_bonn
 
 def benj_hoch(list_of_pval):
     '''
@@ -105,4 +113,43 @@ def benj_hoch(list_of_pval):
     '''
     tests = multitest.multipletests(pvals=list_of_pval, alpha=0.05,
                                     method='fdr_bh')
-    return tests
+    TF_list_benj = tests[0].tolist()
+    return TF_list_benj
+
+
+def extract_signif_substr(TF_list, df_substr):
+    '''
+    Retrieve all substructures that are significantly differently present
+
+    input:
+    TF_list - list containing a True or False for each molecule after
+    multiple testing correction
+    df_substr - dataframe containing the substructure, whether it is present
+    in each molecule of the group (1) or not (0), and whether the multiple
+    testing correction returns True or False
+
+    returns:
+    sig_dif - a list containing all significantly differently present
+    substructures in descending length
+    '''
+    index = 0
+    sig_dif = []
+    for TF in TF_list:
+        if TF == True:
+            sig_dif.append(df_substr.iloc[index][0])
+        index += 1
+    sig_dif.sort(key=len, reverse=True)
+    return sig_dif
+
+
+def create_groups_substr(dif_sig):
+    new_dic = {}
+    for val in dif_sig:
+        placed = 'no'
+        for keyval in new_dic.keys():
+            if Chem.MolFromSmiles(keyval).HasSubstructMatch(Chem.MolFromSmiles(val)):
+                new_dic[keyval].append(val)
+                placed = 'yes'
+        if placed == 'no':
+            new_dic[val] = []
+    return new_dic

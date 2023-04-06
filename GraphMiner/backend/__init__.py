@@ -26,4 +26,4 @@ from .frequency_counter import combine_substr, count_freq, perc_substr, \
 
 #Statistics
 from .statistics import new_dataframes, join_df, retrieve_pval, \
-    bonferonni_corr, benj_hoch
+    bonferonni_corr, benj_hoch, extract_signif_substr, create_groups_substr

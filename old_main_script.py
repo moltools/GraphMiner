@@ -205,3 +205,52 @@ from GraphMiner import list_maker
 #     for row in list_of_rows:
 #         writer.writerow(row)
 #     f.close()
+
+
+from GraphMiner import depth_fs
+
+# for group in grouplist:
+#     list_of_smiles = dict_of_data[group]
+#     all_substr = []
+#     dict_substr = {}
+#     total_molecules = 0
+#     for mol_smile in list_of_smiles:
+#         first_select = select_on_size(mol_smile)
+#         selected_mol = select_mol(first_select)
+#         if selected_mol == None:
+#             continue
+#         print(' ')
+#         repl = {}
+#         sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
+#         sel_mol = Chem.MolFromSmiles(sel_smile)
+#         print('START: ' + sel_smile)
+#         set_atommapnum(sel_mol)
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+#             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
+#             print('C(=O)O done')
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
+#             sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
+#             print('P(=O)(O)O done')
+#         # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
+#         #     sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
+#         #     print('NOCO done')
+#         # print(Chem.MolToSmiles(sel_mol))
+#         # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
+#         #     sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
+#         #     print('NC=O done')
+#
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+#             sel_mol, repl = repl_atommap_CO(sel_mol, repl)
+#             print('CO done')
+#             # print(Chem.MolToSmiles(sel_mol))
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
+#             sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
+#             print('C=O done')
+#         # print(Chem.MolToSmiles(sel_mol))
+#         # print(repl)
+#         # print(Chem.MolToSmiles(sel_mol))
+#         dictnode, list_node = rdkit_parse_atommap(sel_mol)
+#         # depth_fs(sel_mol, dictnode)
+#         print('YAY')
+
+
