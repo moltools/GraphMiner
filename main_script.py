@@ -111,10 +111,10 @@ substr_df = join_df(df_list)
 pvalues = retrieve_pval(substr_df)
 
 ## Multiple Testing Correction
-from GraphMiner import bonferonni_corr, benj_hoch
+from GraphMiner import mul_test_corr
 
-TF_bonn_list = bonferonni_corr(pvalues)
-TF_benj_list = benj_hoch(pvalues)
+TF_bonn_list = mul_test_corr(pvalues, 'bonferroni')
+TF_benj_list = mul_test_corr(pvalues, 'fdr_bh')
 
 #Create CSV file
 substr_df['True/False Bonferonni'] = TF_bonn_list
