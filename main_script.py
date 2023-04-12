@@ -37,6 +37,7 @@ for group in grouplist:
         sel_mol = Chem.MolFromSmiles(sel_smile)
         print('START: ' + sel_smile)
         set_atommapnum(sel_mol)
+        tot_mol = sel_mol
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
             # print('C(=O)O done')
@@ -69,7 +70,7 @@ for group in grouplist:
         returned_dict = return_replaced2(repl, subgraphdict)
         # print(returned_dict)
 #         print('replaced done')
-        smilesdict = rdkit_smiles2(returned_dict, sel_mol)
+        smilesdict = rdkit_smiles2(returned_dict, tot_mol)
 #         print('smiles returned')
 #         # print(smilesdict)
 #         unique_str = combine_substr(smilesdict)
