@@ -59,3 +59,26 @@ def rdkit_smiles(sub_graphs:dict, smilesmol:str):
             int_atom_list = [int(index) for index in atom_list]
             mol_graphs[subgraph_length].append(Chem.MolFragmentToSmiles(mol, int_atom_list))
     return mol_graphs
+
+def rdkit_smiles2(sub_graphs:dict, smilesmol):
+    '''
+    Convert the indices of subgraphs to SMILES subgraphs
+
+    input:
+    subgraphs - dictionary containing as key (int) the subgraph length and as value
+    (list of str) with the subgraphs as strings of indeces divided by '-'
+    smilesmol - MOL format of a molecule (mol)
+
+    returns:
+    mol_graphs - dictionary containing as key (int) the subgraph length and as value
+    (list of str) the subgraphs as strings in SMILES format
+    '''
+    mol_graphs = {}
+    for subgraph_length in sub_graphs:
+        mol_graphs[subgraph_length] = []
+        for subgraphlist in sub_graphs[subgraph_length]:
+            # for atom in subgraphlist:
+            print(Chem.MolToSmiles(smilesmol))
+            # int_atom_list =
+            # mol_graphs[subgraph_length].append(Chem.MolFragmentToSmiles(smilesmol, int_atom_list))
+    return mol_graphs

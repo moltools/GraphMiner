@@ -46,22 +46,45 @@ from rdkit import Chem
 #     return neighbours_dict, heavy_atoms_list
 
 
+# def rdkit_parse_atommap(inputmol: str):
+#     '''
+#     Parsing SMILES using RDKit and AtomMapNumbers
+#
+#     input:
+#     inputsmiles - SMILES format of a molecule (str)
+#     nodelist - list containing the indeces (int) in the string containing an atom
+#
+#     returns:
+#     neighbours_dict - dictionary containing as key (int) the AtomMapNumber of the start atom
+#     and as value (list of int) the AtomMapNumbers of the neighbouring atoms
+#     '''
+#     neighbours_dict = {}
+#     num_heavy_atoms = inputmol.GetNumHeavyAtoms()
+#     heavy_atoms_list = list(range(0, num_heavy_atoms))
+#     for atom in range(num_heavy_atoms):
+#         neighbours_dict[inputmol.GetAtomWithIdx(atom).GetAtomMapNum()] = \
+#             [x.GetAtomMapNum() for x in inputmol.GetAtomWithIdx(atom).GetNeighbors()]
+#     return neighbours_dict, heavy_atoms_list
+
+
 def rdkit_parse_atommap(inputmol: str):
     '''
-    Parsing SMILES using RDKit and AtomMapNumbers
+    Obtaining neighbors of atoms using RDKit and AtomMapNumbers
 
     input:
     inputsmiles - SMILES format of a molecule (str)
-    nodelist - list containing the indeces (int) in the string containing an atom
 
     returns:
-    neighbours_dict - dictionary containing as key (int) the AtomMapNumber of the start atom
-    and as value (list of int) the AtomMapNumbers of the neighbouring atoms
+    neighbours_dict - dictionary containing as key (int) the AtomMapNumber of
+    the start atom and as value (list of int) the AtomMapNumbers of the
+    neighbouring atoms
+    atommapnumlist - list containing all atommapnumbers of the atoms in the
+    molecule
     '''
     neighbours_dict = {}
-    num_heavy_atoms = inputmol.GetNumHeavyAtoms()
-    heavy_atoms_list = list(range(0, num_heavy_atoms))
-    for atom in range(num_heavy_atoms):
-        neighbours_dict[inputmol.GetAtomWithIdx(atom).GetAtomMapNum()] = \
-            [x.GetAtomMapNum() for x in inputmol.GetAtomWithIdx(atom).GetNeighbors()]
-    return neighbours_dict, heavy_atoms_list
+    atommapnumlist = []
+    for atom in inputmol.GetAtoms():
+        atommapnumlist.append(atom.GetAtomMapNum())
+        neighbours_dict[atom.GetAtomMapNum()] = \
+            [x.GetAtomMapNum() for x in atom.GetNeighbors()]
+    return neighbours_dict, atommapnumlist

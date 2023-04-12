@@ -10,15 +10,15 @@ from .rdkit_mining import subgraph_miner, sub_to_smiles
 from .prep_in_advance import select_on_size, select_mol
 from .replacing_using_atommapnum import set_atommapnum, repl_atommap_COO, \
     repl_atommap_NCO, repl_atommap_CO, repl_atommap_C_O, return_replaced, \
-    repl_atommap_NOCO, repl_atommap_POOO
+    repl_atommap_NOCO, repl_atommap_POOO, return_replaced2
 
 #Determine neighbours
 from .find_neighbors_rdkit import rdkit_parse_atommap
 
 #Mining search
-from .bfs import breadth_fs
+from .bfs import breadth_fs, breadth_fs2
 from .dfs import depth_fs
-from .return_to_smile import rdkit_smiles
+from .return_to_smile import rdkit_smiles, rdkit_smiles2
 
 #Frequency counter
 from .frequency_counter import combine_substr, count_freq, perc_substr, \

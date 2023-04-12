@@ -249,6 +249,7 @@ def repl_atommap_CO(moll, replacements:dict):
         new_list = []
         for indiv_idx in idx__CO:
             if indiv_idx not in list_of_C:
+                new_list += [moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()]
                 if indiv_idx not in COlist:
                     COlist.append(indiv_idx)
             elif indiv_idx in list_of_C:
@@ -347,6 +348,8 @@ def return_replaced(repl_dicts:dict, index_dicts:dict):
     as value a list of all subgraphs (str) as AtomMapNumbers divided by dashes
     with the replaced substructure AtomMapNumbers
     '''
+    print(repl_dicts)
+    # print(index_dicts)
     for subgraphlength in index_dicts:
         for value in repl_dicts:
             for subgraph in index_dicts[subgraphlength]:
@@ -361,3 +364,31 @@ def return_replaced(repl_dicts:dict, index_dicts:dict):
                 r_new = '-'.join(sorted_list_str)
                 index_dicts[subgraphlength][index] = r_new
     return index_dicts
+
+def return_replaced2(repl_dicts:dict, index_dicts:dict):
+    '''
+    Return the AtomMapNumbers of the replaced substructure in found substructures
+
+    input:
+    repl_dicts - dictionary with as key the AtomMapNumber (int) of the C that
+    remains in the molecule and as values a list of the AtomMapNumbers (int)
+    that are removed from the molecule
+    index_dicts - dictionary with as key the length (int) of the subgraph and
+    as value a list of all subgraphs (str) as AtomMapNumbers divided by dashes
+
+    returns:
+    index_dicts - dictionary with as key the length (int) of the subgraph and
+    as value a list of all subgraphs (str) as AtomMapNumbers divided by dashes
+    with the replaced substructure AtomMapNumbers
+    '''
+    for subgraphlength in index_dicts:
+        for value in repl_dicts:
+            for subgraph in index_dicts[subgraphlength]:
+                if value not in subgraph:
+                    continue
+                index = index_dicts[subgraphlength].index(subgraph)
+                for val in repl_dicts[value]:
+                    subgraph.add(val)
+                index_dicts[subgraphlength][index] = subgraph
+    return index_dicts
+
