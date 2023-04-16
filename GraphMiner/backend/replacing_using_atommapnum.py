@@ -69,6 +69,7 @@ def repl_atommap_COO(moll, replacements:dict):
                 for atom in moll.GetAtoms():
                     if atom.GetAtomMapNum() in nblist:
                         idxlist.append(atom.GetIdx())
+                        print(Chem.MolFragmentToSmiles())
                 rwmol.RemoveBond(idxlist[0], idxlist[1])
                 rwmol.AddBond(idxlist[0], idxlist[1],
                               rdkit.Chem.rdchem.BondType.SINGLE)
@@ -212,13 +213,26 @@ def repl_atommap_NCO(moll, replacements:dict):
     NCOlist.sort()
     rem_atoms = 0
     for number in NCOlist:
-        adj_num = number-rem_atoms
+        adj_num = number - rem_atoms
+        repl_atom = moll.GetAtomWithIdx(adj_num)
+        nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
         rwmol.RemoveAtom(adj_num)
         if '.' in Chem.MolToSmiles(rwmol):
-            rwmol.RemoveBond(adj_num-1, adj_num)
-            rwmol.AddBond(adj_num - 1, adj_num, rdkit.Chem.rdchem.BondType.SINGLE)
+            if len(nblist) == 2:
+                idxlist = []
+                moll = rwmol.GetMol()
+                for atom in moll.GetAtoms():
+                    if atom.GetAtomMapNum() in nblist:
+                        idxlist.append(atom.GetIdx())
+                rwmol.RemoveBond(idxlist[0], idxlist[1])
+                rwmol.AddBond(idxlist[0], idxlist[1],
+                              rdkit.Chem.rdchem.BondType.SINGLE)
+            else:
+                rwmol.RemoveBond(adj_num - 1, adj_num)
+                rwmol.AddBond(adj_num - 1, adj_num,
+                              rdkit.Chem.rdchem.BondType.SINGLE)
         rem_atoms += 1
-    moll = rwmol.GetMol()
+        moll = rwmol.GetMol()
     return moll, replacements
 
 def repl_atommap_CO(moll, replacements:dict):

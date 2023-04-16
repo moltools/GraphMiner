@@ -78,7 +78,6 @@ def rdkit_smiles2(sub_graphs:dict, smilesmol):
     for atom in smilesmol.GetAtoms():
         if atom.GetAtomMapNum() != atom.GetIdx():
             atommapdict[atom.GetAtomMapNum()] = atom.GetIdx()
-    print(atommapdict)
     if len(atommapdict) >0:
         for subgraph_length in sub_graphs:
             mol_graphs[subgraph_length] = []

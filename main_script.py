@@ -19,6 +19,8 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
     repl_atommap_POOO, breadth_fs2, depth_fs, return_replaced2, rdkit_smiles2 \
 
 number = 0
+f = open('combinedstructures.csv', 'w')
+writer = csv.writer(f)
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
     all_substr = []
@@ -40,41 +42,43 @@ for group in grouplist:
         tot_mol = sel_mol
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-            # print('C(=O)O done')
+            print('C(=O)O done')
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
             sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
-            # print('P(=O)(O)O done')
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
-        #     sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
-        #     print('NOCO done')
-        # print(Chem.MolToSmiles(sel_mol))
+            print('P(=O)(O)O done')
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
+            sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
+            print('NOCO done')
         # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
         #     sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
         #     print('NC=O done')
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
             sel_mol, repl = repl_atommap_CO(sel_mol, repl)
-            # print('CO done')
+            print('CO done')
             # print(Chem.MolToSmiles(sel_mol))
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
             sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
-            # print('C=O done')
-        # print(Chem.MolToSmiles(sel_mol))
-        # print(repl)
-        # print(Chem.MolToSmiles(sel_mol))
-        dictnode, list_node = rdkit_parse_atommap(sel_mol)
-        # print('parsing done')
-        # print(dictnode)
-        # print(list_node)
-        subgraphdict = breadth_fs2(dictnode, list_node)
-        # print('bfs done')
-        returned_dict = return_replaced2(repl, subgraphdict)
-        # print(returned_dict)
+            print('C=O done')
+        [a.SetAtomMapNum(0) for a in sel_mol.GetAtoms()]
+        writer.writerow([Chem.MolToSmiles(sel_mol)])
+        print(Chem.MolToSmiles(sel_mol))
+f.close()
+#         # print(repl)
+#         # print(Chem.MolToSmiles(sel_mol))
+#         dictnode, list_node = rdkit_parse_atommap(sel_mol)
+#         print('parsing done')
+#         # print(dictnode)
+#         # print(list_node)
+#         subgraphdict = breadth_fs2(dictnode, list_node)
+#         print('bfs done')
+#         returned_dict = return_replaced2(repl, subgraphdict)
+#         # print(returned_dict)
 #         print('replaced done')
-        smilesdict = rdkit_smiles2(returned_dict, tot_mol)
+#         smilesdict = rdkit_smiles2(returned_dict, tot_mol)
 #         print('smiles returned')
-#         # print(smilesdict)
+# #         # print(smilesdict)
 #         unique_str = combine_substr(smilesdict)
-#         # print(unique_str)
+# #         # print(unique_str)
 #         print('all okay')
 #         all_substr += (unique_str)
 #         dict_substr[total_molecules] = unique_str
@@ -82,7 +86,7 @@ for group in grouplist:
 #     print(group)
 #     counts = count_freq(all_substr)
 #     list_of_rows = list_maker(dict_substr, counts)
-#     name = 'com_overview_group' + str(group) +'.csv'
+#     name = 'uuu_overview_group' + str(group) +'.csv'
 #     f = open(name,  'w')
 #     writer = csv.writer(f)
 #     Head_row = ('Substructure', 'Frequency' + str(group), 'OccurrenceList' + str(group))
