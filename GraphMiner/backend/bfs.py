@@ -55,7 +55,7 @@ def breadth_fs2(neigh_dict: dict, nodelist: list):
 
     returns:
     subgraphs - dictionary containg as key (int) the subgraph length and as value
-    (list of str) with the subgraphs as strings of indeces divided by '-'
+    (list of sets) with the subgraphs as sets
     '''
     len_subgraph = 1
     subgraphs = {}

@@ -6,7 +6,7 @@ from rdkit import Chem
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ';')
+infile = load_data(1, ',')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -16,7 +16,8 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
     combine_substr, repl_atommap_COO, set_atommapnum, rdkit_parse_atommap, \
     return_replaced, repl_atommap_CO, repl_atommap_C_O, count_freq, \
     list_maker, repl_atommap_NCO, repl_atommap_NOCO, select_mol, \
-    repl_atommap_POOO, breadth_fs2, depth_fs, return_replaced2, rdkit_smiles2 \
+    repl_atommap_POOO, breadth_fs2, depth_fs, return_replaced2, \
+    rdkit_smiles2, repl_atommap_SOO, repl_atommap_SOOO
 
 number = 0
 f = open('combinedstructures.csv', 'w')
@@ -46,12 +47,18 @@ for group in grouplist:
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
             sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
             print('P(=O)(O)O done')
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
+            sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
+            print('S(=O)(=O)O done')
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
+            sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
+            print('S(=O)(=O) done')
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
             sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
             print('NOCO done')
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
-        #     sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
-        #     print('NC=O done')
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
+            sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
+            print('NC=O done')
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
             sel_mol, repl = repl_atommap_CO(sel_mol, repl)
             print('CO done')
