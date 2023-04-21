@@ -3,10 +3,15 @@
 import csv
 from rdkit import Chem
 
+from GraphMiner import cli
+print('HE')
+args = cli()
+# print(args)
+
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ',')
+infile = load_data(args.input, ';')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-from .cli import cli 
+from .cli import cli
+import argparse
 
 
 def main():
     args = cli()
-    print("Hello Giovi!")
+    print('Hi Giovi')
     exit(0)
 
 
