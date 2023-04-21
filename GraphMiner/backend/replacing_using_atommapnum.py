@@ -44,7 +44,6 @@ def repl_atommap_COO(moll, replacements:dict):
     COOlist = []
     query = Chem.MolFromSmiles('C(=O)O')
     idx_COO = moll.GetSubstructMatches(query)
-    print(idx_COO)
     for idx__COO in idx_COO:
         new_list = []
         for indiv_idx in idx__COO:
@@ -62,49 +61,30 @@ def repl_atommap_COO(moll, replacements:dict):
         adj_num = number - rem_atoms
         repl_atom = moll.GetAtomWithIdx(adj_num)
         nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
-        # print(nblist)
         rwmol.RemoveAtom(adj_num)
         if len(nblist) == 1:
-            # print(Chem.MolToSmiles(rwmol))
             rem_atoms += 1
             moll = rwmol.GetMol()
             continue
-        elif len(nblist) == 2:
+        elif len(nblist) >= 2:
             idxlist = []
             moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
             for atom in moll.GetAtoms():
                 if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
                     idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            # print(idxlist)
-            # print(Chem.MolToSmiles(rwmol))
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-        elif len(nblist) == 3:
-            idxlist = []
-            moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
-            for atom in moll.GetAtoms():
-                if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
-                    idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[0], idxlist[2])
-            rwmol.AddBond(idxlist[0], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[1], idxlist[2])
-            rwmol.AddBond(idxlist[1], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
+            for idx1 in idxlist:
+                for idx2 in idxlist:
+                    if idx1 == idx2:
+                        continue
+                    elif idx1 != idx2:
+                        rwmol.RemoveBond(idx1, idx2)
+                        rwmol.AddBond(idx1, idx2,
+                                      rdkit.Chem.rdchem.BondType.SINGLE)
         else:
             print('STILL GOT A PROBLEM HERE WOOHOO')
             print(len(nblist))
         rem_atoms += 1
         moll = rwmol.GetMol()
-        # print(Chem.MolToSmiles(moll))
     return moll, replacements
 
 def repl_atommap_POOO(moll, replacements:dict):
@@ -148,49 +128,30 @@ def repl_atommap_POOO(moll, replacements:dict):
         adj_num = number - rem_atoms
         repl_atom = moll.GetAtomWithIdx(adj_num)
         nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
-        # print(nblist)
         rwmol.RemoveAtom(adj_num)
         if len(nblist) == 1:
-            # print(Chem.MolToSmiles(rwmol))
             rem_atoms += 1
             moll = rwmol.GetMol()
             continue
-        elif len(nblist) == 2:
+        elif len(nblist) >= 2:
             idxlist = []
             moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
             for atom in moll.GetAtoms():
                 if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
                     idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            # print(idxlist)
-            # print(Chem.MolToSmiles(rwmol))
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-        elif len(nblist) == 3:
-            idxlist = []
-            moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
-            for atom in moll.GetAtoms():
-                if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
-                    idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[0], idxlist[2])
-            rwmol.AddBond(idxlist[0], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[1], idxlist[2])
-            rwmol.AddBond(idxlist[1], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
+            for idx1 in idxlist:
+                for idx2 in idxlist:
+                    if idx1 == idx2:
+                        continue
+                    elif idx1 != idx2:
+                        rwmol.RemoveBond(idx1, idx2)
+                        rwmol.AddBond(idx1, idx2,
+                                      rdkit.Chem.rdchem.BondType.SINGLE)
         else:
             print('STILL GOT A PROBLEM HERE WOOHOO')
             print(len(nblist))
         rem_atoms += 1
         moll = rwmol.GetMol()
-        # print(Chem.MolToSmiles(moll))
     return moll, replacements
 
 def repl_atommap_NOCO(moll, replacements:dict):
@@ -234,49 +195,30 @@ def repl_atommap_NOCO(moll, replacements:dict):
         adj_num = number - rem_atoms
         repl_atom = moll.GetAtomWithIdx(adj_num)
         nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
-        # print(nblist)
         rwmol.RemoveAtom(adj_num)
         if len(nblist) == 1:
-            # print(Chem.MolToSmiles(rwmol))
             rem_atoms += 1
             moll = rwmol.GetMol()
             continue
-        elif len(nblist) == 2:
+        elif len(nblist) >= 2:
             idxlist = []
             moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
             for atom in moll.GetAtoms():
                 if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
                     idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            # print(idxlist)
-            # print(Chem.MolToSmiles(rwmol))
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-        elif len(nblist) == 3:
-            idxlist = []
-            moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
-            for atom in moll.GetAtoms():
-                if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
-                    idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[0], idxlist[2])
-            rwmol.AddBond(idxlist[0], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[1], idxlist[2])
-            rwmol.AddBond(idxlist[1], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
+            for idx1 in idxlist:
+                for idx2 in idxlist:
+                    if idx1 == idx2:
+                        continue
+                    elif idx1 != idx2:
+                        rwmol.RemoveBond(idx1, idx2)
+                        rwmol.AddBond(idx1, idx2,
+                                      rdkit.Chem.rdchem.BondType.SINGLE)
         else:
             print('STILL GOT A PROBLEM HERE WOOHOO')
             print(len(nblist))
         rem_atoms += 1
         moll = rwmol.GetMol()
-        # print(Chem.MolToSmiles(moll))
     return moll, replacements
 
 def repl_atommap_NCO(moll, replacements:dict):
@@ -320,49 +262,30 @@ def repl_atommap_NCO(moll, replacements:dict):
         adj_num = number - rem_atoms
         repl_atom = moll.GetAtomWithIdx(adj_num)
         nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
-        # print(nblist)
         rwmol.RemoveAtom(adj_num)
         if len(nblist) == 1:
-            # print(Chem.MolToSmiles(rwmol))
             rem_atoms += 1
             moll = rwmol.GetMol()
             continue
-        elif len(nblist) == 2:
+        elif len(nblist) >= 2:
             idxlist = []
             moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
             for atom in moll.GetAtoms():
                 if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
                     idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            # print(idxlist)
-            # print(Chem.MolToSmiles(rwmol))
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-        elif len(nblist) == 3:
-            idxlist = []
-            moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
-            for atom in moll.GetAtoms():
-                if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
-                    idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[0], idxlist[2])
-            rwmol.AddBond(idxlist[0], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[1], idxlist[2])
-            rwmol.AddBond(idxlist[1], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
+            for idx1 in idxlist:
+                for idx2 in idxlist:
+                    if idx1 == idx2:
+                        continue
+                    elif idx1 != idx2:
+                        rwmol.RemoveBond(idx1, idx2)
+                        rwmol.AddBond(idx1, idx2,
+                                      rdkit.Chem.rdchem.BondType.SINGLE)
         else:
             print('STILL GOT A PROBLEM HERE WOOHOO')
             print(len(nblist))
         rem_atoms += 1
         moll = rwmol.GetMol()
-        # print(Chem.MolToSmiles(moll))
     return moll, replacements
 
 def repl_atommap_CO(moll, replacements:dict):
@@ -406,49 +329,30 @@ def repl_atommap_CO(moll, replacements:dict):
         adj_num = number-rem_atoms
         repl_atom = moll.GetAtomWithIdx(adj_num)
         nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
-        print(nblist)
         rwmol.RemoveAtom(adj_num)
         if len(nblist) == 1:
-            # print(Chem.MolToSmiles(rwmol))
             rem_atoms += 1
             moll = rwmol.GetMol()
             continue
-        elif len(nblist) == 2:
+        elif len(nblist) >= 2:
             idxlist = []
             moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
             for atom in moll.GetAtoms():
                 if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
                     idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            # print(idxlist)
-            # print(Chem.MolToSmiles(rwmol))
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-        elif len(nblist) == 3:
-            idxlist = []
-            moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
-            for atom in moll.GetAtoms():
-                if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
-                    idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[0], idxlist[2])
-            rwmol.AddBond(idxlist[0], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[1], idxlist[2])
-            rwmol.AddBond(idxlist[1], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
+            for idx1 in idxlist:
+                for idx2 in idxlist:
+                    if idx1 == idx2:
+                        continue
+                    elif idx1 != idx2:
+                        rwmol.RemoveBond(idx1, idx2)
+                        rwmol.AddBond(idx1, idx2,
+                                      rdkit.Chem.rdchem.BondType.SINGLE)
         else:
             print('STILL GOT A PROBLEM HERE WOOHOO')
             print(len(nblist))
         rem_atoms += 1
         moll = rwmol.GetMol()
-        # print(Chem.MolToSmiles(moll))
     return moll, replacements
 
 def repl_atommap_C_O(moll, replacements:dict):
@@ -492,49 +396,30 @@ def repl_atommap_C_O(moll, replacements:dict):
         adj_num = number - rem_atoms
         repl_atom = moll.GetAtomWithIdx(adj_num)
         nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
-        # print(nblist)
         rwmol.RemoveAtom(adj_num)
         if len(nblist) == 1:
-            # print(Chem.MolToSmiles(rwmol))
             rem_atoms += 1
             moll = rwmol.GetMol()
             continue
-        elif len(nblist) == 2:
+        elif len(nblist) >= 2:
             idxlist = []
             moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
             for atom in moll.GetAtoms():
                 if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
                     idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            # print(idxlist)
-            # print(Chem.MolToSmiles(rwmol))
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-        elif len(nblist) == 3:
-            idxlist = []
-            moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
-            for atom in moll.GetAtoms():
-                if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
-                    idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[0], idxlist[2])
-            rwmol.AddBond(idxlist[0], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[1], idxlist[2])
-            rwmol.AddBond(idxlist[1], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
+            for idx1 in idxlist:
+                for idx2 in idxlist:
+                    if idx1 == idx2:
+                        continue
+                    elif idx1 != idx2:
+                        rwmol.RemoveBond(idx1, idx2)
+                        rwmol.AddBond(idx1, idx2,
+                                      rdkit.Chem.rdchem.BondType.SINGLE)
         else:
             print('STILL GOT A PROBLEM HERE WOOHOO')
             print(len(nblist))
         rem_atoms += 1
         moll = rwmol.GetMol()
-        # print(Chem.MolToSmiles(moll))
     return moll, replacements
 
 def repl_atommap_SOOO(moll, replacements:dict):
@@ -578,49 +463,30 @@ def repl_atommap_SOOO(moll, replacements:dict):
         adj_num = number - rem_atoms
         repl_atom = moll.GetAtomWithIdx(adj_num)
         nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
-        # print(nblist)
         rwmol.RemoveAtom(adj_num)
         if len(nblist) == 1:
-            # print(Chem.MolToSmiles(rwmol))
             rem_atoms += 1
             moll = rwmol.GetMol()
             continue
-        elif len(nblist) == 2:
+        elif len(nblist) >= 2:
             idxlist = []
             moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
             for atom in moll.GetAtoms():
                 if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
                     idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            # print(idxlist)
-            # print(Chem.MolToSmiles(rwmol))
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-        elif len(nblist) == 3:
-            idxlist = []
-            moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
-            for atom in moll.GetAtoms():
-                if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
-                    idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[0], idxlist[2])
-            rwmol.AddBond(idxlist[0], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[1], idxlist[2])
-            rwmol.AddBond(idxlist[1], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
+            for idx1 in idxlist:
+                for idx2 in idxlist:
+                    if idx1 == idx2:
+                        continue
+                    elif idx1 != idx2:
+                        rwmol.RemoveBond(idx1, idx2)
+                        rwmol.AddBond(idx1, idx2,
+                                      rdkit.Chem.rdchem.BondType.SINGLE)
         else:
             print('STILL GOT A PROBLEM HERE WOOHOO')
             print(len(nblist))
         rem_atoms += 1
         moll = rwmol.GetMol()
-        # print(Chem.MolToSmiles(moll))
     return moll, replacements
 
 def repl_atommap_SOO(moll, replacements:dict):
@@ -664,49 +530,30 @@ def repl_atommap_SOO(moll, replacements:dict):
         adj_num = number - rem_atoms
         repl_atom = moll.GetAtomWithIdx(adj_num)
         nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
-        # print(nblist)
         rwmol.RemoveAtom(adj_num)
         if len(nblist) == 1:
-            # print(Chem.MolToSmiles(rwmol))
             rem_atoms += 1
             moll = rwmol.GetMol()
             continue
-        elif len(nblist) == 2:
+        elif len(nblist) >= 2:
             idxlist = []
             moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
             for atom in moll.GetAtoms():
                 if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
                     idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            # print(idxlist)
-            # print(Chem.MolToSmiles(rwmol))
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-        elif len(nblist) == 3:
-            idxlist = []
-            moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
-            for atom in moll.GetAtoms():
-                if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
-                    idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[0], idxlist[2])
-            rwmol.AddBond(idxlist[0], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[1], idxlist[2])
-            rwmol.AddBond(idxlist[1], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
+            for idx1 in idxlist:
+                for idx2 in idxlist:
+                    if idx1 == idx2:
+                        continue
+                    elif idx1 != idx2:
+                        rwmol.RemoveBond(idx1, idx2)
+                        rwmol.AddBond(idx1, idx2,
+                                      rdkit.Chem.rdchem.BondType.SINGLE)
         else:
             print('STILL GOT A PROBLEM HERE WOOHOO')
             print(len(nblist))
         rem_atoms += 1
         moll = rwmol.GetMol()
-        # print(Chem.MolToSmiles(moll))
     return moll, replacements
 
 def repl_atommap_benzene(moll, replacements:dict):
@@ -726,7 +573,6 @@ def repl_atommap_benzene(moll, replacements:dict):
     that are removed from the molecule
     -- but both are adjusted with the replaced CO substructures
     '''
-    print(Chem.MolToSmiles(moll))
     rwmol = rdkit.Chem.rdchem.RWMol()
     rwmol.InsertMol(moll)
     CClist = []
@@ -745,46 +591,28 @@ def repl_atommap_benzene(moll, replacements:dict):
         nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
         rwmol.RemoveAtom(adj_num)
         if len(nblist) == 1:
-            # print(Chem.MolToSmiles(rwmol))
             rem_atoms += 1
             moll = rwmol.GetMol()
             continue
-        elif len(nblist) == 2:
+        elif len(nblist) >= 2:
             idxlist = []
             moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
             for atom in moll.GetAtoms():
                 if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
                     idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            # print(idxlist)
-            # print(Chem.MolToSmiles(rwmol))
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-        elif len(nblist) == 3:
-            idxlist = []
-            moll = rwmol.GetMol()
-            # print(Chem.MolToSmiles(moll))
-            for atom in moll.GetAtoms():
-                if atom.GetAtomMapNum() in nblist:
-                    # print(atom.GetAtomMapNum(), atom.GetIdx())
-                    idxlist.append(atom.GetIdx())
-            rwmol.RemoveBond(idxlist[0], idxlist[1])
-            rwmol.AddBond(idxlist[0], idxlist[1],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[0], idxlist[2])
-            rwmol.AddBond(idxlist[0], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
-            rwmol.RemoveBond(idxlist[1], idxlist[2])
-            rwmol.AddBond(idxlist[1], idxlist[2],
-                          rdkit.Chem.rdchem.BondType.SINGLE)
+            for idx1 in idxlist:
+                for idx2 in idxlist:
+                    if idx1 == idx2:
+                        continue
+                    elif idx1 != idx2:
+                        rwmol.RemoveBond(idx1, idx2)
+                        rwmol.AddBond(idx1, idx2,
+                                      rdkit.Chem.rdchem.BondType.SINGLE)
         else:
             print('STILL GOT A PROBLEM HERE WOOHOO')
             print(len(nblist))
         rem_atoms += 1
         moll = rwmol.GetMol()
-        # print(Chem.MolToSmiles(moll))
     return moll, replacements
 
 def return_replaced(repl_dicts:dict, index_dicts:dict):
@@ -803,8 +631,6 @@ def return_replaced(repl_dicts:dict, index_dicts:dict):
     as value a list of all subgraphs (str) as AtomMapNumbers divided by dashes
     with the replaced substructure AtomMapNumbers
     '''
-    print(repl_dicts)
-    # print(index_dicts)
     for subgraphlength in index_dicts:
         for value in repl_dicts:
             for subgraph in index_dicts[subgraphlength]:

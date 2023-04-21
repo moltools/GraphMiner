@@ -4,14 +4,14 @@ import csv
 from rdkit import Chem
 
 from GraphMiner import cli
-print('HE')
-args = cli()
+# print('HE')
+# args = cli()
 # print(args)
 
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(args.input, ';')
+infile = load_data(1, ',')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -71,10 +71,9 @@ for group in grouplist:
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
             sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
             print('C=O done')
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C1CCCCC1')) == True:
-        #     sel_mol, repl = repl_atommap_benzene(sel_mol, repl)
-        #     print('benzene done')
-            #VERWIJDERT NIETS WANT ZIJN ALLEMAAL C's :S
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C1CCCCC1')) == True:
+            sel_mol, repl = repl_atommap_benzene(sel_mol, repl)
+            print('benzene done')
         [a.SetAtomMapNum(0) for a in sel_mol.GetAtoms()]
         writer.writerow([Chem.MolToSmiles(sel_mol)])
         print(Chem.MolToSmiles(sel_mol))
