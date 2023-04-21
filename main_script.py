@@ -17,7 +17,7 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
     return_replaced, repl_atommap_CO, repl_atommap_C_O, count_freq, \
     list_maker, repl_atommap_NCO, repl_atommap_NOCO, select_mol, \
     repl_atommap_POOO, breadth_fs2, depth_fs, return_replaced2, \
-    rdkit_smiles2, repl_atommap_SOO, repl_atommap_SOOO
+    rdkit_smiles2, repl_atommap_SOO, repl_atommap_SOOO, repl_atommap_benzene
 
 number = 0
 f = open('combinedstructures.csv', 'w')
@@ -66,6 +66,10 @@ for group in grouplist:
         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
             sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
             print('C=O done')
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C1CCCCC1')) == True:
+        #     sel_mol, repl = repl_atommap_benzene(sel_mol, repl)
+        #     print('benzene done')
+            #VERWIJDERT NIETS WANT ZIJN ALLEMAAL C's :S
         [a.SetAtomMapNum(0) for a in sel_mol.GetAtoms()]
         writer.writerow([Chem.MolToSmiles(sel_mol)])
         print(Chem.MolToSmiles(sel_mol))

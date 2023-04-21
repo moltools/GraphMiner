@@ -709,6 +709,84 @@ def repl_atommap_SOO(moll, replacements:dict):
         # print(Chem.MolToSmiles(moll))
     return moll, replacements
 
+def repl_atommap_benzene(moll, replacements:dict):
+    '''
+    Replace the substructure C1CCCCC1 by C using RWMol and AtomMapNumbers
+
+    input:
+    moll - molecule in MOL format from RDKit also containing AtomMapNumbers
+    replacements - dictionary with as key the AtomMapNumber (int) of the C that
+    remains in the molecule and as values a list of the AtomMapNumbers (int)
+    that are removed from the molecule
+
+    returns:
+    moll - molecule in MOL format from RDKit also containing AtomMapNumbers
+    replacements - dictionary with as key the AtomMapNumber (int) of the C that
+    remains in the molecule and as values a list of the AtomMapNumbers (int)
+    that are removed from the molecule
+    -- but both are adjusted with the replaced CO substructures
+    '''
+    print(Chem.MolToSmiles(moll))
+    rwmol = rdkit.Chem.rdchem.RWMol()
+    rwmol.InsertMol(moll)
+    CClist = []
+    query = Chem.MolFromSmiles('C1CCCCC1')
+    idx_CC = moll.GetSubstructMatches(query)
+    for idx__CC in idx_CC:
+        C_atom = idx__CC[0]
+        CClist = list(idx__CC[1:])
+        replacements[C_atom] = CClist
+    # Actual Replacement
+    CClist.sort()
+    rem_atoms = 0
+    for number in CClist:
+        adj_num = number-rem_atoms
+        repl_atom = moll.GetAtomWithIdx(adj_num)
+        nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
+        rwmol.RemoveAtom(adj_num)
+        if len(nblist) == 1:
+            # print(Chem.MolToSmiles(rwmol))
+            rem_atoms += 1
+            moll = rwmol.GetMol()
+            continue
+        elif len(nblist) == 2:
+            idxlist = []
+            moll = rwmol.GetMol()
+            # print(Chem.MolToSmiles(moll))
+            for atom in moll.GetAtoms():
+                if atom.GetAtomMapNum() in nblist:
+                    # print(atom.GetAtomMapNum(), atom.GetIdx())
+                    idxlist.append(atom.GetIdx())
+            rwmol.RemoveBond(idxlist[0], idxlist[1])
+            # print(idxlist)
+            # print(Chem.MolToSmiles(rwmol))
+            rwmol.AddBond(idxlist[0], idxlist[1],
+                          rdkit.Chem.rdchem.BondType.SINGLE)
+        elif len(nblist) == 3:
+            idxlist = []
+            moll = rwmol.GetMol()
+            # print(Chem.MolToSmiles(moll))
+            for atom in moll.GetAtoms():
+                if atom.GetAtomMapNum() in nblist:
+                    # print(atom.GetAtomMapNum(), atom.GetIdx())
+                    idxlist.append(atom.GetIdx())
+            rwmol.RemoveBond(idxlist[0], idxlist[1])
+            rwmol.AddBond(idxlist[0], idxlist[1],
+                          rdkit.Chem.rdchem.BondType.SINGLE)
+            rwmol.RemoveBond(idxlist[0], idxlist[2])
+            rwmol.AddBond(idxlist[0], idxlist[2],
+                          rdkit.Chem.rdchem.BondType.SINGLE)
+            rwmol.RemoveBond(idxlist[1], idxlist[2])
+            rwmol.AddBond(idxlist[1], idxlist[2],
+                          rdkit.Chem.rdchem.BondType.SINGLE)
+        else:
+            print('STILL GOT A PROBLEM HERE WOOHOO')
+            print(len(nblist))
+        rem_atoms += 1
+        moll = rwmol.GetMol()
+        # print(Chem.MolToSmiles(moll))
+    return moll, replacements
+
 def return_replaced(repl_dicts:dict, index_dicts:dict):
     '''
     Return the AtomMapNumbers of the replaced substructure in found substructures

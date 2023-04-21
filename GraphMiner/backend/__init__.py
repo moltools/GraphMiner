@@ -11,7 +11,7 @@ from .prep_in_advance import select_on_size, select_mol
 from .replacing_using_atommapnum import set_atommapnum, repl_atommap_COO, \
     repl_atommap_NCO, repl_atommap_CO, repl_atommap_C_O, return_replaced, \
     repl_atommap_NOCO, repl_atommap_POOO, return_replaced2, repl_atommap_SOO, \
-    repl_atommap_SOOO
+    repl_atommap_SOOO, repl_atommap_benzene
 
 #Determine neighbours
 from .find_neighbors_rdkit import rdkit_parse_atommap
