@@ -150,13 +150,28 @@ def extract_signif_substr(TF_list, df_substr):
     substructures in descending length
     '''
     index = 0
+    sig_dif_dict = {}
     sig_dif = []
     for TF in TF_list:
         if TF == True:
             sig_dif.append(df_substr.iloc[index][0])
+            value0 = 0
+            value1 = 0
+            for val in df_substr.iloc[index][1]:
+                if val == '1':
+                    value0 += 1
+            for val in df_substr.iloc[index][2]:
+                if val == '1':
+                    value1 += 1
+            if value0 > value1:
+                sig_dif_dict[df_substr.iloc[index][0]] = 'group 0'
+            elif value1 > value0:
+                sig_dif_dict[df_substr.iloc[index][0]] = 'group 1'
+            if value1 == value0:
+                sig_dif_dict[df_substr.iloc[index][0]] = 'same'
         index += 1
     sig_dif.sort(key=len, reverse=True)
-    return sig_dif
+    return sig_dif, sig_dif_dict
 
 
 def create_groups_substr(dif_sig):
