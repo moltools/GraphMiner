@@ -85,11 +85,16 @@ for group in grouplist:
         #     print(Chem.MolToSmiles(sel_mol))
         # print(repl)
         print(Chem.MolToSmiles(sel_mol))
-        # dictnode, list_node = rdkit_parse_atommap(sel_mol)
+        dictnode, list_node = rdkit_parse_atommap(sel_mol)
+        subgraphdict = depth_fs(sel_mol, dictnode, list_node)
+        subgraphdict.sort(key=len)
+        print(subgraphdict)
         # print('parsing done')
         # # print(dictnode)
         # # print(list_node)
-        # subgraphdict = breadth_fs2(dictnode, list_node)
+        print(' ')
+        subgraphdict = breadth_fs2(dictnode, list_node)
+        print(subgraphdict)
         # print('bfs done')
         # returned_dict = return_replaced2(repl, subgraphdict)
         # # print(returned_dict)
@@ -120,41 +125,41 @@ for group in grouplist:
 ### STATISTICS PART ###
 
 # Load in csv files
-from GraphMiner import new_dataframes
-
-df_list = []
-sub_list = []
-start = 0
-for group in grouplist:
-    freq_file = load_data(start+2, ',')
-    red_file, substrlist = new_dataframes(freq_file, group)
-    df_list.append(red_file)
-    start += 1
-
-## Calculate p values
-from GraphMiner import join_df, retrieve_pval
-
-substr_df = join_df(df_list)
-pvalues = retrieve_pval(substr_df)
-
-## Multiple Testing Correction
-from GraphMiner import mul_test_corr
-
-TF_bonn_list = mul_test_corr(pvalues, 'bonferroni')
-TF_benj_list = mul_test_corr(pvalues, 'fdr_bh')
-
-#Create CSV file
-substr_df['True/False Bonferonni'] = TF_bonn_list
-substr_df['True/False Benj-Hoch'] = TF_benj_list
-substr_df.to_csv('substructuretruefalse.csv', sep=';')
-
-## Analysis of results
-from GraphMiner import extract_signif_substr, create_groups_substr
-
-list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
-print(dict_sigdif)
-dic_of_substr = create_groups_substr(list_sigdif)
-print(dic_of_substr)
+# from GraphMiner import new_dataframes
+#
+# df_list = []
+# sub_list = []
+# start = 0
+# for group in grouplist:
+#     freq_file = load_data(start+2, ',')
+#     red_file, substrlist = new_dataframes(freq_file, group)
+#     df_list.append(red_file)
+#     start += 1
+#
+# ## Calculate p values
+# from GraphMiner import join_df, retrieve_pval
+#
+# substr_df = join_df(df_list)
+# pvalues = retrieve_pval(substr_df)
+#
+# ## Multiple Testing Correction
+# from GraphMiner import mul_test_corr
+#
+# TF_bonn_list = mul_test_corr(pvalues, 'bonferroni')
+# TF_benj_list = mul_test_corr(pvalues, 'fdr_bh')
+#
+# #Create CSV file
+# substr_df['True/False Bonferonni'] = TF_bonn_list
+# substr_df['True/False Benj-Hoch'] = TF_benj_list
+# substr_df.to_csv('substructuretruefalse.csv', sep=';')
+#
+# ## Analysis of results
+# from GraphMiner import extract_signif_substr, create_groups_substr
+#
+# list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
+# print(dict_sigdif)
+# dic_of_substr = create_groups_substr(list_sigdif)
+# print(dic_of_substr)
 
 
 
