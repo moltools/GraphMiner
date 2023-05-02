@@ -47,36 +47,36 @@ for group in grouplist:
         print('START: ' + sel_smile)
         set_atommapnum(sel_mol)
         tot_mol = sel_mol
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
-            sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-            print('C(=O)O done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
-            sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
-            print('P(=O)(O)O done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
-            sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
-            print('S(=O)(=O)O done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
-            sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
-            print('S(=O)(=O) done')
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
-            sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
-            print('NOCO done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
-            sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
-            print('NC=O done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
-            sel_mol, repl = repl_atommap_CO(sel_mol, repl)
-            print('CO done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
-            sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
-            print('C=O done')
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+        #     sel_mol, repl = repl_atommap_COO(sel_mol, repl)
+        #     print('C(=O)O done')
+        #     # print(Chem.MolToSmiles(sel_mol))
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
+        #     sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
+        #     print('P(=O)(O)O done')
+        #     # print(Chem.MolToSmiles(sel_mol))
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
+        #     sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
+        #     print('S(=O)(=O)O done')
+        #     # print(Chem.MolToSmiles(sel_mol))
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
+        #     sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
+        #     print('S(=O)(=O) done')
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
+        #     sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
+        #     print('NOCO done')
+        #     # print(Chem.MolToSmiles(sel_mol))
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
+        #     sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
+        #     print('NC=O done')
+        #     # print(Chem.MolToSmiles(sel_mol))
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+        #     sel_mol, repl = repl_atommap_CO(sel_mol, repl)
+        #     print('CO done')
+        #     # print(Chem.MolToSmiles(sel_mol))
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
+        #     sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
+        #     print('C=O done')
             # print(Chem.MolToSmiles(sel_mol))
         # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('c1ccccc1')) == True:
         #     sel_mol, repl = repl_atommap_benzene(sel_mol, repl)
@@ -113,7 +113,7 @@ for group in grouplist:
     print(group)
     counts = count_freq(all_substr)
     list_of_rows = list_maker(dict_substr, counts)
-    name = 'small_overview_group' + str(group) +'.csv'
+    name = 'small2_overview_group' + str(group) +'.csv'
     f = open(name,  'w')
     writer = csv.writer(f)
     Head_row = ('Substructure', 'Frequency' + str(group), 'OccurrenceList' + str(group))
