@@ -4,7 +4,7 @@
 import rdkit
 from rdkit import Chem
 
-def depth_fs(molecule, nodedict:dict, numberslist:list):
+def depth_fs(molecule, nodedict:dict):
     ###WERKT NOG NIET VOOR CYCLO's
     substr_list = []
     nodedict2 = {}
@@ -13,6 +13,7 @@ def depth_fs(molecule, nodedict:dict, numberslist:list):
         for nb in nodedict[atom.GetAtomMapNum()]:
             if nb > atom.GetAtomMapNum():
                 nodedict2[atom.GetAtomMapNum()] += [nb]
+    print(nodedict2)
     for atom in molecule.GetAtoms():
         start_atom = atom.GetAtomMapNum()
         curr = {start_atom}

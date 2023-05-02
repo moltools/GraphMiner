@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import csv
+import time
+start = time.time()
 from rdkit import Chem
 
 from GraphMiner import cli
@@ -86,40 +88,40 @@ for group in grouplist:
         # print(repl)
         print(Chem.MolToSmiles(sel_mol))
         dictnode, list_node = rdkit_parse_atommap(sel_mol)
-        subgraphdict = depth_fs(sel_mol, dictnode, list_node)
-        subgraphdict.sort(key=len)
-        print(subgraphdict)
+        # subgraphdict = depth_fs(sel_mol, dictnode)
+        # subgraphdict.sort(key=len)
+        # print(subgraphdict)
         # print('parsing done')
         # # print(dictnode)
         # # print(list_node)
-        print(' ')
+        # print(' ')
         subgraphdict = breadth_fs2(dictnode, list_node)
-        print(subgraphdict)
-        # print('bfs done')
-        # returned_dict = return_replaced2(repl, subgraphdict)
+        # print(subgraphdict)
+        print('bfs done')
+        returned_dict = return_replaced2(repl, subgraphdict)
         # # print(returned_dict)
-        # print('replaced done')
-        # smilesdict = rdkit_smiles2(returned_dict, tot_mol)
-        # print('smiles returned')
+        print('replaced done')
+        smilesdict = rdkit_smiles2(returned_dict, tot_mol)
+        print('smiles returned')
         # print(smilesdict)
-#         unique_str = combine_substr(smilesdict)
+        unique_str = combine_substr(smilesdict)
 # #         # print(unique_str)
-#         print('all okay')
-#         all_substr += (unique_str)
-#         dict_substr[total_molecules] = unique_str
-#         total_molecules += 1
-#     print(group)
-#     counts = count_freq(all_substr)
-#     list_of_rows = list_maker(dict_substr, counts)
-#     name = 'total_overview_group' + str(group) +'.csv'
-#     f = open(name,  'w')
-#     writer = csv.writer(f)
-#     Head_row = ('Substructure', 'Frequency' + str(group), 'OccurrenceList' + str(group))
-#     writer.writerow(Head_row)
-#     for row in list_of_rows:
-#         writer.writerow(row)
-#     f.close()
-#     print('csv file written')
+        print('all okay')
+        all_substr += (unique_str)
+        dict_substr[total_molecules] = unique_str
+        total_molecules += 1
+    print(group)
+    counts = count_freq(all_substr)
+    list_of_rows = list_maker(dict_substr, counts)
+    name = 'small_overview_group' + str(group) +'.csv'
+    f = open(name,  'w')
+    writer = csv.writer(f)
+    Head_row = ('Substructure', 'Frequency' + str(group), 'OccurrenceList' + str(group))
+    writer.writerow(Head_row)
+    for row in list_of_rows:
+        writer.writerow(row)
+    f.close()
+    print('csv file written')
 
 
 ### STATISTICS PART ###
@@ -175,3 +177,5 @@ for group in grouplist:
 #         falsetotal +=1
 # print(truetotal, falsetotal)
 
+end = time.time()
+print(end-start)
