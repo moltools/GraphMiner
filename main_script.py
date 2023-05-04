@@ -25,9 +25,13 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
     list_maker, repl_atommap_NCO, repl_atommap_NOCO, select_mol, \
     repl_atommap_POOO, breadth_fs2, depth_fs, return_replaced2, \
     rdkit_smiles2, repl_atommap_SOO, repl_atommap_SOOO, repl_atommap_benzene, \
-    repl_atommap_cyclohex
+    repl_atommap_cyclohex, remove_atom_charges
+
+# print(Chem.MolToSmiles(remove_atom_charges(Chem.MolFromSmiles('[N-]=[N+]=CC(=O)CCC(N)C(=O)O'))))
+# print(Chem.MolToSmiles(remove_atom_charges(Chem.MolFromSmiles('O=[N+]([O-])c1c[nH]c(Cl)c1Cl'))))
 
 number = 0
+len_dict = {}
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
     all_substr = []
@@ -35,11 +39,14 @@ for group in grouplist:
     total_molecules = 0
     for mol_smile in list_of_smiles:
         number += 1
-        # print(number)
+        print(number)
         first_select = select_on_size(mol_smile)
         selected_mol = select_mol(first_select)
         if selected_mol == None:
             continue
+#         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
+#         selected_mol = remove_atom_charges(selected_mol)
+#         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
         print(' ')
         repl = {}
         sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
@@ -47,36 +54,36 @@ for group in grouplist:
         print('START: ' + sel_smile)
         set_atommapnum(sel_mol)
         tot_mol = sel_mol
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
-        #     sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-        #     print('C(=O)O done')
-        #     # print(Chem.MolToSmiles(sel_mol))
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
-        #     sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
-        #     print('P(=O)(O)O done')
-        #     # print(Chem.MolToSmiles(sel_mol))
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
-        #     sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
-        #     print('S(=O)(=O)O done')
-        #     # print(Chem.MolToSmiles(sel_mol))
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
-        #     sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
-        #     print('S(=O)(=O) done')
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
-        #     sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
-        #     print('NOCO done')
-        #     # print(Chem.MolToSmiles(sel_mol))
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
-        #     sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
-        #     print('NC=O done')
-        #     # print(Chem.MolToSmiles(sel_mol))
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
-        #     sel_mol, repl = repl_atommap_CO(sel_mol, repl)
-        #     print('CO done')
-        #     # print(Chem.MolToSmiles(sel_mol))
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
-        #     sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
-        #     print('C=O done')
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+            sel_mol, repl = repl_atommap_COO(sel_mol, repl)
+            print('C(=O)O done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
+            sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
+            print('P(=O)(O)O done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
+            sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
+            print('S(=O)(=O)O done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
+            sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
+            print('S(=O)(=O) done')
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
+            sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
+            print('NOCO done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
+            sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
+            print('NC=O done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+            sel_mol, repl = repl_atommap_CO(sel_mol, repl)
+            print('CO done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
+            sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
+            print('C=O done')
             # print(Chem.MolToSmiles(sel_mol))
         # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('c1ccccc1')) == True:
         #     sel_mol, repl = repl_atommap_benzene(sel_mol, repl)
@@ -86,8 +93,12 @@ for group in grouplist:
         #     print('Cyclo Hexane done')
         #     print(Chem.MolToSmiles(sel_mol))
         # print(repl)
-        print(Chem.MolToSmiles(sel_mol))
         dictnode, list_node = rdkit_parse_atommap(sel_mol)
+        tot_len = 0
+        for val in dictnode.values():
+            tot_len += len(val)
+        if tot_len > 2.4 * sel_mol.GetNumHeavyAtoms():
+            continue
         # subgraphdict = depth_fs(sel_mol, dictnode)
         # subgraphdict.sort(key=len)
         # print(subgraphdict)
@@ -105,23 +116,26 @@ for group in grouplist:
         print('smiles returned')
         # print(smilesdict)
         unique_str = combine_substr(smilesdict)
-# #         # print(unique_str)
+        # print(unique_str)
         print('all okay')
         all_substr += (unique_str)
         dict_substr[total_molecules] = unique_str
         total_molecules += 1
     print(group)
-    counts = count_freq(all_substr)
-    list_of_rows = list_maker(dict_substr, counts)
-    name = 'small2_overview_group' + str(group) +'.csv'
-    f = open(name,  'w')
-    writer = csv.writer(f)
-    Head_row = ('Substructure', 'Frequency' + str(group), 'OccurrenceList' + str(group))
-    writer.writerow(Head_row)
-    for row in list_of_rows:
-        writer.writerow(row)
-    f.close()
-    print('csv file written')
+#     counts = count_freq(all_substr)
+#     srows = time.time()
+#     list_of_rows = list_maker(dict_substr, counts)
+#     name = 'small2_overview_group' + str(group) +'.csv'
+#     f = open(name,  'w')
+#     writer = csv.writer(f)
+#     Head_row = ('Substructure', 'Frequency' + str(group), 'OccurrenceList' + str(group))
+#     writer.writerow(Head_row)
+#     for row in list_of_rows:
+#         writer.writerow(row)
+#     f.close()
+#     erows = time.time()
+#     print(erows - srows)
+#     print('csv file written')
 
 
 ### STATISTICS PART ###
@@ -178,4 +192,4 @@ for group in grouplist:
 # print(truetotal, falsetotal)
 
 end = time.time()
-print(end-start)
+print('time', end-start)

@@ -17,7 +17,7 @@ def select_on_size(smile_mol:str):
     '''
     mol1 = Chem.MolFromSmiles(smile_mol)
     heavy_atoms = mol1.GetNumHeavyAtoms()
-    if heavy_atoms <= 20: #Change to 40
+    if heavy_atoms <= 40: #Change to 40
         return smile_mol
 
 def select_mol(molsmile):
@@ -30,6 +30,70 @@ def select_mol(molsmile):
     if '+' in molsmile:
         return
     return Chem.MolFromSmiles(molsmile)
+
+def remove_atom_charges(mol: Chem.Mol) -> Chem.Mol:
+    """
+    Removes charges from molecule.
+    Arguments
+    ---------
+    target : Chem.Mol
+        RDKit `Chem.Mol` object to query for patterns.
+    Returns
+    -------
+    target : Chem.Mol
+        RDKit `Chem.Mol` object to query for patterns with neutralized charges.
+    Source: rdkit.org/docs/Cookbook.html
+    """
+    pattern = Chem.MolFromSmarts("[+1!h0!$([*]~[-1,-2,-3,-4]),-1!$([*]~[+1,+2,+3,+4])]")
+    at_matches = mol.GetSubstructMatches(pattern)
+    at_matches_list = [y[0] for y in at_matches]
+    if len(at_matches_list) > 0:
+        for at_idx in at_matches_list:
+            atom = mol.GetAtomWithIdx(at_idx)
+            if atom.GetIsAromatic() or any([a.GetIsAromatic() for a in atom.GetNeighbors()]):
+                # Skip removing charges for aromatic-adjacent atoms which causes valence issues.
+                continue
+            chg = atom.GetFormalCharge()
+            hcount = atom.GetTotalNumHs()
+            atom.SetFormalCharge(0)
+            atom.SetNumExplicitHs(hcount - chg)
+            atom.UpdatePropertyCache()
+    return mol
+
+
+def ed_remove_atom_charges(mol: Chem.Mol) -> Chem.Mol:
+    """
+    Removes charges from molecule.
+    Arguments
+    ---------
+    target : Chem.Mol
+        RDKit `Chem.Mol` object to query for patterns.
+    Returns
+    -------
+    target : Chem.Mol
+        RDKit `Chem.Mol` object to query for patterns with neutralized charges.
+    Source: rdkit.org/docs/Cookbook.html
+    """
+    pattern = Chem.MolFromSmarts("[+]")
+    at_matches = mol.GetSubstructMatches(pattern)
+    at_matches_list = [y[0] for y in at_matches]
+    if len(at_matches_list) > 0:
+        print('USED')
+        for at_idx in at_matches_list:
+            atom = mol.GetAtomWithIdx(at_idx)
+            if atom.GetIsAromatic() or any([a.GetIsAromatic() for a in atom.GetNeighbors()]):
+                # Skip removing charges for aromatic-adjacent atoms which causes valence issues.
+                continue
+            chg = atom.GetFormalCharge()
+            hcount = atom.GetTotalNumHs()
+            print(hcount)
+            atom.SetFormalCharge(0)
+            if hcount - chg > 0:
+                atom.SetNumExplicitHs(hcount - chg)
+            else:
+                atom.SetNumExplicitHs(0)
+            atom.UpdatePropertyCache()
+    return mol
 
 
 # def combine_basic_substructures(molsmiles:str):
