@@ -152,23 +152,28 @@ for group in grouplist:
     red_file, substrlist = new_dataframes(freq_file, group)
     df_list.append(red_file)
     start += 1
+    print(group)
 
 ## Calculate p values
 from GraphMiner import join_df, retrieve_pval
 
 substr_df = join_df(df_list)
+print('dataframe made')
 pvalues = retrieve_pval(substr_df)
+print('pvalues calculated')
 
 ## Multiple Testing Correction
 from GraphMiner import mul_test_corr
 
-TF_bonn_list = mul_test_corr(pvalues, 'bonferroni')
+# TF_bonn_list = mul_test_corr(pvalues, 'bonferroni')
 TF_benj_list = mul_test_corr(pvalues, 'fdr_bh')
+print('mtc done')
 
 #Create CSV file
-substr_df['True/False Bonferonni'] = TF_bonn_list
+# substr_df['True/False Bonferonni'] = TF_bonn_list
 substr_df['True/False Benj-Hoch'] = TF_benj_list
-substr_df.to_csv('substructuretruefalse.csv', sep=';')
+# substr_df.to_csv('substructuretruefalse.csv', sep=';')
+print('TFlist')
 
 ## Analysis of results
 from GraphMiner import extract_signif_substr, create_groups_substr
