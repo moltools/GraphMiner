@@ -9,7 +9,7 @@ from rdkit import Chem
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ';')
+infile = load_data(1, ',')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
