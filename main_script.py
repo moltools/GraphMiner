@@ -26,75 +26,75 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
 # print(Chem.MolToSmiles(remove_atom_charges(Chem.MolFromSmiles('[N-]=[N+]=CC(=O)CCC(N)C(=O)O'))))
 # print(Chem.MolToSmiles(remove_atom_charges(Chem.MolFromSmiles('O=[N+]([O-])c1c[nH]c(Cl)c1Cl'))))
 
-# number = 0
-# len_dict = {}
-# for group in grouplist:
-#     list_of_smiles = dict_of_data[group]
-#     all_substr = []
-#     dict_substr = {}
-#     total_molecules = 0
-#     for mol_smile in list_of_smiles:
-#         # number += 1
-#         # print(number)
-#         first_select = select_on_size(mol_smile, 20)
-#         selected_mol = select_mol(first_select)
-#         if selected_mol == None:
+number = 0
+len_dict = {}
+for group in grouplist:
+    list_of_smiles = dict_of_data[group]
+    all_substr = []
+    dict_substr = {}
+    total_molecules = 0
+    for mol_smile in list_of_smiles:
+        number += 1
+        print(number)
+        first_select = select_on_size(mol_smile, 40)
+        selected_mol = select_mol(first_select)
+        if selected_mol == None:
+            continue
+#         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
+#         selected_mol = remove_atom_charges(selected_mol)
+#         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
+        print(' ')
+        repl = {}
+        sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
+        sel_mol = Chem.MolFromSmiles(sel_smile)
+        print('START: ' + sel_smile)
+        set_atommapnum(sel_mol)
+        tot_mol = sel_mol
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+            sel_mol, repl = repl_atommap_COO(sel_mol, repl)
+            print('C(=O)O done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
+            sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
+            print('P(=O)(O)O done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
+            sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
+            print('S(=O)(=O)O done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
+            sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
+            print('S(=O)(=O) done')
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
+            sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
+            print('NOCO done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
+            sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
+            print('NC=O done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+            sel_mol, repl = repl_atommap_CO(sel_mol, repl)
+            print('CO done')
+            # print(Chem.MolToSmiles(sel_mol))
+        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
+            sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
+            print('C=O done')
+            # print(Chem.MolToSmiles(sel_mol))
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('c1ccccc1')) == True:
+        #     sel_mol, repl = repl_atommap_benzene(sel_mol, repl)
+        #     print('benzene done')
+        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C1CCCCC1')) == True:
+        #     sel_mol, repl = repl_atommap_cyclohex(sel_mol, repl)
+        #     print('Cyclo Hexane done')
+        #     print(Chem.MolToSmiles(sel_mol))
+        # print(repl)
+        dictnode, list_node = rdkit_parse_atommap(sel_mol)
+#         tot_len = 0
+#         for val in dictnode.values():
+#             tot_len += len(val)
+#         if tot_len > 2.4 * sel_mol.GetNumHeavyAtoms():
 #             continue
-# #         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
-# #         selected_mol = remove_atom_charges(selected_mol)
-# #         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
-#         print(' ')
-#         repl = {}
-#         sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
-#         sel_mol = Chem.MolFromSmiles(sel_smile)
-#         print('START: ' + sel_smile)
-#         set_atommapnum(sel_mol)
-#         tot_mol = sel_mol
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
-#             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-#             print('C(=O)O done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
-#             sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
-#             print('P(=O)(O)O done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
-#             sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
-#             print('S(=O)(=O)O done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
-#             sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
-#             print('S(=O)(=O) done')
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
-#             sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
-#             print('NOCO done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
-#             sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
-#             print('NC=O done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
-#             sel_mol, repl = repl_atommap_CO(sel_mol, repl)
-#             print('CO done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
-#             sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
-#             print('C=O done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('c1ccccc1')) == True:
-#         #     sel_mol, repl = repl_atommap_benzene(sel_mol, repl)
-#         #     print('benzene done')
-#         # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C1CCCCC1')) == True:
-#         #     sel_mol, repl = repl_atommap_cyclohex(sel_mol, repl)
-#         #     print('Cyclo Hexane done')
-#         #     print(Chem.MolToSmiles(sel_mol))
-#         # print(repl)
-#         dictnode, list_node = rdkit_parse_atommap(sel_mol)
-# #         tot_len = 0
-# #         for val in dictnode.values():
-# #             tot_len += len(val)
-# #         if tot_len > 2.4 * sel_mol.GetNumHeavyAtoms():
-# #             continue
 #         subgraphlist = depth_fs(sel_mol, dictnode)
 #         subgraphlist.sort(key=len)
 #         set1 = set(frozenset(x) for x in subgraphlist)
@@ -103,13 +103,13 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
 #         # # print(dictnode)
 #         # # print(list_node)
 #         # print(' ')
-#         subgraphdict = breadth_fs2(dictnode, list_node)
+        subgraphdict = breadth_fs2(dictnode, list_node)
 #         com_dict = sum(subgraphdict.values(), [])
 #         set2 = set(frozenset(x) for x in com_dict)
 #         # print(com_dict)
 #         print(set1.difference(set2))
 #         print(set2.difference(set1))
-#         print('bfs done')
+        print('bfs done')
 #         returned_dict = return_replaced2(repl, subgraphdict)
 #         # # print(returned_dict)
 #         print('replaced done')
@@ -142,46 +142,46 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
 ### STATISTICS PART ###
 
 # Load in csv files
-from GraphMiner import new_dataframes
-
-df_list = []
-sub_list = []
-start = 0
-for group in grouplist:
-    freq_file = load_data(start+2, ',')
-    red_file, substrlist = new_dataframes(freq_file, group)
-    df_list.append(red_file)
-    start += 1
-    print(group)
-
-## Calculate p values
-from GraphMiner import join_df, retrieve_pval
-
-substr_df = join_df(df_list)
-print('dataframe made')
-pvalues = retrieve_pval(substr_df)
-print('pvalues calculated')
-
-## Multiple Testing Correction
-from GraphMiner import mul_test_corr
-
-# TF_bonn_list = mul_test_corr(pvalues, 'bonferroni')
-TF_benj_list = mul_test_corr(pvalues, 'fdr_bh')
-print('mtc done')
-
-#Create CSV file
-# substr_df['True/False Bonferonni'] = TF_bonn_list
-substr_df['True/False Benj-Hoch'] = TF_benj_list
-# substr_df.to_csv('substructuretruefalse.csv', sep=';')
-print('TFlist')
-
-## Analysis of results
-from GraphMiner import extract_signif_substr, create_groups_substr
-
-list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
-print(dict_sigdif)
-dic_of_substr = create_groups_substr(list_sigdif)
-print(dic_of_substr)
+# from GraphMiner import new_dataframes
+#
+# df_list = []
+# sub_list = []
+# start = 0
+# for group in grouplist:
+#     freq_file = load_data(start+2, ',')
+#     red_file, substrlist = new_dataframes(freq_file, group)
+#     df_list.append(red_file)
+#     start += 1
+#     print(group)
+#
+# ## Calculate p values
+# from GraphMiner import join_df, retrieve_pval
+#
+# substr_df = join_df(df_list)
+# print('dataframe made')
+# pvalues = retrieve_pval(substr_df)
+# print('pvalues calculated')
+#
+# ## Multiple Testing Correction
+# from GraphMiner import mul_test_corr
+#
+# # TF_bonn_list = mul_test_corr(pvalues, 'bonferroni')
+# TF_benj_list = mul_test_corr(pvalues, 'fdr_bh')
+# print('mtc done')
+#
+# #Create CSV file
+# # substr_df['True/False Bonferonni'] = TF_bonn_list
+# substr_df['True/False Benj-Hoch'] = TF_benj_list
+# # substr_df.to_csv('substructuretruefalse.csv', sep=';')
+# print('TFlist')
+#
+# ## Analysis of results
+# from GraphMiner import extract_signif_substr, create_groups_substr
+#
+# list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
+# print(dict_sigdif)
+# dic_of_substr = create_groups_substr(list_sigdif)
+# print(dic_of_substr)
 
 
 

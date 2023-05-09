@@ -25,9 +25,9 @@ def select_mol(molsmile):
         return
     if '.' in molsmile:
         return
-    if '-' in molsmile:
-        return
-    if '+' in molsmile:
+    # if '-' in molsmile:
+    #     return
+    if '+' not in molsmile:
         return
     return Chem.MolFromSmiles(molsmile)
 
