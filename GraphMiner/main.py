@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# from __future__ import annotations
 from .cli import cli
 import argparse
 from .backend import determine_groups, create_dict, select_on_size, select_mol

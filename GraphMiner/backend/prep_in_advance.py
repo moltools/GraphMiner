@@ -27,8 +27,8 @@ def select_mol(molsmile):
         return
     # if '-' in molsmile:
     #     return
-    if '+' not in molsmile:
-        return
+    # if '+' not in molsmile:
+    #     return
     return Chem.MolFromSmiles(molsmile)
 
 def remove_atom_charges(mol: Chem.Mol) -> Chem.Mol:

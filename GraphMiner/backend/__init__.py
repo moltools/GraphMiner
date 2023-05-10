@@ -9,6 +9,7 @@ from .rdkit_mining import subgraph_miner, sub_to_smiles
 #Preparation beforehand
 from .prep_in_advance import select_on_size, select_mol, remove_atom_charges, \
     ed_remove_atom_charges
+from .timeout import timeout
 from .replacing_using_atommapnum import set_atommapnum, repl_atommap_COO, \
     repl_atommap_NCO, repl_atommap_CO, repl_atommap_C_O, return_replaced, \
     repl_atommap_NOCO, repl_atommap_POOO, return_replaced2, repl_atommap_SOO, \

@@ -21,10 +21,60 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
     list_maker, repl_atommap_NCO, repl_atommap_NOCO, select_mol, \
     repl_atommap_POOO, breadth_fs2, depth_fs, return_replaced2, \
     rdkit_smiles2, repl_atommap_SOO, repl_atommap_SOOO, repl_atommap_benzene, \
-    repl_atommap_cyclohex, remove_atom_charges
+    repl_atommap_cyclohex, remove_atom_charges, timeout
 
 # print(Chem.MolToSmiles(remove_atom_charges(Chem.MolFromSmiles('[N-]=[N+]=CC(=O)CCC(N)C(=O)O'))))
 # print(Chem.MolToSmiles(remove_atom_charges(Chem.MolFromSmiles('O=[N+]([O-])c1c[nH]c(Cl)c1Cl'))))
+@timeout(5)
+def mol_substr(selected_mol, all_substr, dict_substr, total_molecules):
+    print(' ')
+    repl = {}
+    sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
+    sel_mol = Chem.MolFromSmiles(sel_smile)
+    print('START: ' + sel_smile)
+    set_atommapnum(sel_mol)
+    tot_mol = sel_mol
+    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+        sel_mol, repl = repl_atommap_COO(sel_mol, repl)
+        print('C(=O)O done')
+        # print(Chem.MolToSmiles(sel_mol))
+    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
+        sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
+        print('P(=O)(O)O done')
+        # print(Chem.MolToSmiles(sel_mol))
+    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
+        sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
+        print('S(=O)(=O)O done')
+        # print(Chem.MolToSmiles(sel_mol))
+    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
+        sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
+        print('S(=O)(=O) done')
+    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
+        sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
+        print('NOCO done')
+        # print(Chem.MolToSmiles(sel_mol))
+    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
+        sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
+        print('NC=O done')
+        # print(Chem.MolToSmiles(sel_mol))
+    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+        sel_mol, repl = repl_atommap_CO(sel_mol, repl)
+        print('CO done')
+        # print(Chem.MolToSmiles(sel_mol))
+    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
+        sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
+        print('C=O done')
+        # print(Chem.MolToSmiles(sel_mol))
+    dictnode, list_node = rdkit_parse_atommap(sel_mol)
+    subgraphdict = breadth_fs2(dictnode, list_node)
+    returned_dict = return_replaced2(repl, subgraphdict)
+    smilesdict = rdkit_smiles2(returned_dict, tot_mol)
+    unique_str = combine_substr(smilesdict)
+    all_substr += (unique_str)
+    dict_substr[total_molecules] = unique_str
+    total_molecules += 1
+    return dict_substr, total_molecules
+
 
 number = 0
 len_dict = {}
@@ -33,53 +83,77 @@ for group in grouplist:
     all_substr = []
     dict_substr = {}
     total_molecules = 0
+    Time_Out_Error = 0
+    TOlist = []
     for mol_smile in list_of_smiles:
-        number += 1
-        print(number)
-        first_select = select_on_size(mol_smile, 40)
+        first_select = select_on_size(mol_smile, 25)
         selected_mol = select_mol(first_select)
         if selected_mol == None:
             continue
-#         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
-#         selected_mol = remove_atom_charges(selected_mol)
-#         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
-        print(' ')
-        repl = {}
-        sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
-        sel_mol = Chem.MolFromSmiles(sel_smile)
-        print('START: ' + sel_smile)
-        set_atommapnum(sel_mol)
-        tot_mol = sel_mol
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
-            sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-            print('C(=O)O done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
-            sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
-            print('P(=O)(O)O done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
-            sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
-            print('S(=O)(=O)O done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
-            sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
-            print('S(=O)(=O) done')
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
-            sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
-            print('NOCO done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
-            sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
-            print('NC=O done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
-            sel_mol, repl = repl_atommap_CO(sel_mol, repl)
-            print('CO done')
-            # print(Chem.MolToSmiles(sel_mol))
-        if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
-            sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
-            print('C=O done')
+        try:
+            mol_substr(selected_mol, all_substr, dict_substr, total_molecules)
+        except:
+            Time_Out_Error +=1
+            print('Time out', Time_Out_Error)
+            TOlist.append(Chem.MolToSmiles(selected_mol))
+            continue
+        finally:
+            number += 1
+            print('number', number)
+
+
+
+
+
+
+
+
+#         # number += 1
+#         # print(number)
+#         first_select = select_on_size(mol_smile, 25)
+#         selected_mol = select_mol(first_select)
+#         if selected_mol == None:
+#             continue
+# #         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
+# #         selected_mol = remove_atom_charges(selected_mol)
+# #         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
+#         print(' ')
+#         repl = {}
+#         sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
+#         sel_mol = Chem.MolFromSmiles(sel_smile)
+#         print('START: ' + sel_smile)
+#         set_atommapnum(sel_mol)
+#         tot_mol = sel_mol
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+#             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
+#             print('C(=O)O done')
+#             # print(Chem.MolToSmiles(sel_mol))
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
+#             sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
+#             print('P(=O)(O)O done')
+#             # print(Chem.MolToSmiles(sel_mol))
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
+#             sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
+#             print('S(=O)(=O)O done')
+#             # print(Chem.MolToSmiles(sel_mol))
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
+#             sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
+#             print('S(=O)(=O) done')
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
+#             sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
+#             print('NOCO done')
+#             # print(Chem.MolToSmiles(sel_mol))
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
+#             sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
+#             print('NC=O done')
+#             # print(Chem.MolToSmiles(sel_mol))
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+#             sel_mol, repl = repl_atommap_CO(sel_mol, repl)
+#             print('CO done')
+#             # print(Chem.MolToSmiles(sel_mol))
+#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
+#             sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
+#             print('C=O done')
             # print(Chem.MolToSmiles(sel_mol))
         # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('c1ccccc1')) == True:
         #     sel_mol, repl = repl_atommap_benzene(sel_mol, repl)
@@ -89,7 +163,7 @@ for group in grouplist:
         #     print('Cyclo Hexane done')
         #     print(Chem.MolToSmiles(sel_mol))
         # print(repl)
-        dictnode, list_node = rdkit_parse_atommap(sel_mol)
+        # dictnode, list_node = rdkit_parse_atommap(sel_mol)
 #         tot_len = 0
 #         for val in dictnode.values():
 #             tot_len += len(val)
@@ -103,22 +177,22 @@ for group in grouplist:
 #         # # print(dictnode)
 #         # # print(list_node)
 #         # print(' ')
-        subgraphdict = breadth_fs2(dictnode, list_node)
+#         subgraphdict = breadth_fs2(dictnode, list_node)
 #         com_dict = sum(subgraphdict.values(), [])
 #         set2 = set(frozenset(x) for x in com_dict)
 #         # print(com_dict)
 #         print(set1.difference(set2))
 #         print(set2.difference(set1))
-        print('bfs done')
-        returned_dict = return_replaced2(repl, subgraphdict)
-#         # # print(returned_dict)
-        print('replaced done')
-        smilesdict = rdkit_smiles2(returned_dict, tot_mol)
-        print('smiles returned')
+#         print('bfs done')
+#         returned_dict = return_replaced2(repl, subgraphdict)
+#         # print(returned_dict)
+#         print('replaced done')
+#         smilesdict = rdkit_smiles2(returned_dict, tot_mol)
+#         print('smiles returned')
 #         # print(smilesdict)
-        unique_str = combine_substr(smilesdict)
-        # print(unique_str)
-        print('all okay')
+#         unique_str = combine_substr(smilesdict)
+#         # print(unique_str)
+#         print('all okay')
 #         all_substr += (unique_str)
 #         dict_substr[total_molecules] = unique_str
 #         total_molecules += 1
