@@ -77,16 +77,16 @@ def mol_substr(selected_mol, all_substr, dict_substr, total_molecules):
 
 
 number = 0
+Time_Out_Error = 0
+TOlist = []
 len_dict = {}
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
     all_substr = []
     dict_substr = {}
     total_molecules = 0
-    Time_Out_Error = 0
-    TOlist = []
     for mol_smile in list_of_smiles:
-        first_select = select_on_size(mol_smile, 25)
+        first_select = select_on_size(mol_smile, 10000000)
         selected_mol = select_mol(first_select)
         if selected_mol == None:
             continue
@@ -100,6 +100,8 @@ for group in grouplist:
         finally:
             number += 1
             print('number', number)
+print(TOlist)
+print(Time_Out_Error)
 
 
 

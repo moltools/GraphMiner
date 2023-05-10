@@ -20,7 +20,7 @@ def select_on_size(smile_mol:str, sizelimit:int):
     if heavy_atoms <= sizelimit: #Change to 40
         return smile_mol
 
-def select_mol(molsmile):
+def select_mol(molsmile: str):
     if molsmile == None:
         return
     if '.' in molsmile:
