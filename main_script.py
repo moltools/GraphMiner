@@ -23,8 +23,7 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
     rdkit_smiles2, repl_atommap_SOO, repl_atommap_SOOO, repl_atommap_benzene, \
     repl_atommap_cyclohex, remove_atom_charges, timeout
 
-# print(Chem.MolToSmiles(remove_atom_charges(Chem.MolFromSmiles('[N-]=[N+]=CC(=O)CCC(N)C(=O)O'))))
-# print(Chem.MolToSmiles(remove_atom_charges(Chem.MolFromSmiles('O=[N+]([O-])c1c[nH]c(Cl)c1Cl'))))
+
 @timeout(5)
 def mol_substr(selected_mol, all_substr, dict_substr, total_molecules):
     print(' ')
