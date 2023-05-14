@@ -152,7 +152,7 @@ for group in grouplist:
 
     print(group)
     counts = count_freq(all_substr)
-    list_of_rows = list_maker2(dict_substr, counts)
+    list_of_rows = list_maker2(counts)
     name = 'new_type_csv' + str(group) +'.csv'
     f = open(name,  'w')
     writer = csv.writer(f)
@@ -168,137 +168,28 @@ for group in grouplist:
 # print(Time_Out_Error)
 
 
-
-
-
-
-
-
-#         # number += 1
-#         # print(number)
-#         first_select = select_on_size(mol_smile, 25)
-#         selected_mol = select_mol(first_select)
-#         if selected_mol == None:
-#             continue
-# #         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
-# #         selected_mol = remove_atom_charges(selected_mol)
-# #         print(Chem.MolToSmiles(selected_mol, kekuleSmiles=True))
-#         print(' ')
-#         repl = {}
-#         sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
-#         sel_mol = Chem.MolFromSmiles(sel_smile)
-#         print('START: ' + sel_smile)
-#         set_atommapnum(sel_mol)
-#         tot_mol = sel_mol
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
-#             sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-#             print('C(=O)O done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
-#             sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
-#             print('P(=O)(O)O done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
-#             sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
-#             print('S(=O)(=O)O done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
-#             sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
-#             print('S(=O)(=O) done')
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
-#             sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
-#             print('NOCO done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
-#             sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
-#             print('NC=O done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
-#             sel_mol, repl = repl_atommap_CO(sel_mol, repl)
-#             print('CO done')
-#             # print(Chem.MolToSmiles(sel_mol))
-#         if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
-#             sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
-#             print('C=O done')
-            # print(Chem.MolToSmiles(sel_mol))
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('c1ccccc1')) == True:
-        #     sel_mol, repl = repl_atommap_benzene(sel_mol, repl)
-        #     print('benzene done')
-        # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C1CCCCC1')) == True:
-        #     sel_mol, repl = repl_atommap_cyclohex(sel_mol, repl)
-        #     print('Cyclo Hexane done')
-        #     print(Chem.MolToSmiles(sel_mol))
-        # print(repl)
-        # dictnode, list_node = rdkit_parse_atommap(sel_mol)
-#         tot_len = 0
-#         for val in dictnode.values():
-#             tot_len += len(val)
-#         if tot_len > 2.4 * sel_mol.GetNumHeavyAtoms():
-#             continue
-#         subgraphlist = depth_fs(sel_mol, dictnode)
-#         subgraphlist.sort(key=len)
-#         set1 = set(frozenset(x) for x in subgraphlist)
-#         # print(subgraphdict)
-#         # print('parsing done')
-#         # # print(dictnode)
-#         # # print(list_node)
-#         # print(' ')
-#         subgraphdict = breadth_fs2(dictnode, list_node)
-#         com_dict = sum(subgraphdict.values(), [])
-#         set2 = set(frozenset(x) for x in com_dict)
-#         # print(com_dict)
-#         print(set1.difference(set2))
-#         print(set2.difference(set1))
-#         print('bfs done')
-#         returned_dict = return_replaced2(repl, subgraphdict)
-#         # print(returned_dict)
-#         print('replaced done')
-#         smilesdict = rdkit_smiles2(returned_dict, tot_mol)
-#         print('smiles returned')
-#         # print(smilesdict)
-#         unique_str = combine_substr(smilesdict)
-#         # print(unique_str)
-#         print('all okay')
-#         all_substr += (unique_str)
-#         dict_substr[total_molecules] = unique_str
-#         total_molecules += 1
-#     print(group)
-#     counts = count_freq(all_substr)
-#     srows = time.time()
-#     list_of_rows = list_maker(dict_substr, counts)
-#     name = 'small2_overview_group' + str(group) +'.csv'
-#     f = open(name,  'w')
-#     writer = csv.writer(f)
-#     Head_row = ('Substructure', 'Frequency' + str(group), 'OccurrenceList' + str(group))
-#     writer.writerow(Head_row)
-#     for row in list_of_rows:
-#         writer.writerow(row)
-#     f.close()
-#     erows = time.time()
-#     print(erows - srows)
-#     print('csv file written')
-
-
 ### STATISTICS PART ###
 
 # Load in csv files
-# from GraphMiner import new_dataframes
-#
-# df_list = []
-# sub_list = []
-# start = 0
-# for group in grouplist:
-#     freq_file = load_data(start+2, ',')
-#     red_file, substrlist = new_dataframes(freq_file, group)
-#     df_list.append(red_file)
-#     start += 1
-#     print(group)
-#
-# ## Calculate p values
-# from GraphMiner import join_df, retrieve_pval
-#
-# substr_df = join_df(df_list)
-# print('dataframe made')
+from GraphMiner import new_dataframes
+
+df_list = []
+sub_list = []
+start = 0
+for group in grouplist:
+    freq_file = load_data(start+2, ',')
+    df_list.append(freq_file)
+    start += 1
+    print(group)
+
+## Calculate p values
+from GraphMiner import join_df2, retrieve_pval
+
+substr_df = join_df2(df_list)
+print('dataframe made')
+print(substr_df)
+##MOET NOG DE TOTALE AANTAL MOLECULEN IN EEN GROEP EN IN TOTAAL STOREN ERGENS ##HAHAH OEEPSIEFLOEPSIE
+###MISSCHIEN APARTE CSV FILE HIERVOOR??
 # pvalues = retrieve_pval(substr_df)
 # print('pvalues calculated')
 #

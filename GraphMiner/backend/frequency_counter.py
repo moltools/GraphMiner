@@ -100,7 +100,7 @@ def list_maker(dict_sub:dict, count_sub):
         all_rows.append(csv_row)
     return all_rows
 
-def list_maker2(dict_sub:dict, count_sub):
+def list_maker2(count_sub):
     '''
     Create rows for csv file with substructure and frequency
 

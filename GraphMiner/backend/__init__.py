@@ -30,4 +30,4 @@ from .frequency_counter import combine_substr, count_freq, perc_substr, \
 
 #Statistics
 from .statistics import new_dataframes, join_df, retrieve_pval, \
-    mul_test_corr, extract_signif_substr, create_groups_substr
+    mul_test_corr, extract_signif_substr, create_groups_substr, join_df2

@@ -58,6 +58,28 @@ def join_df(list_of_df):
     joined_df[colmn[2]] = joined_df[colmn[2]].replace(np.nan, ','.join(zerolist2))
     return joined_df
 
+def join_df2(list_of_df):
+    '''
+    Combine the separate dataframes into one and replace NaN-values
+
+    input:
+    list_of_df - list containing dataframes, the dataframes contain two columns
+    - substructure in SMILES (str) and OccurrenceList[groupnumber] displaying
+    in str whether the substructure occurred (1) or not (0) in a molecule at
+    the index of the molecule
+
+    returns:
+    joined_df - dataframe containing three columns - substructure in SMILES
+    (str) and twice an OccurrenceList[groupnumber] displaying in str
+    whether the substructure occurred (1) or not (0) in a molecule at the
+    index of the molecule
+    '''
+    joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
+    colmn = list(joined_df.columns)
+    joined_df[colmn[1]] = joined_df[colmn[1]].replace(np.nan, 0)
+    joined_df[colmn[2]] = joined_df[colmn[2]].replace(np.nan, 0)
+    return joined_df
+
 def retrieve_pval(df_joined):
     '''
     Calculate the p-values for each susbstructure using two-sided t-test
