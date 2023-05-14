@@ -7,6 +7,9 @@ import pandas as pd
 import numpy as np
 from rdkit import Chem
 
+from scipy.stats import hypergeom
+import matplotlib.pyplot as plt
+
 def new_dataframes(input_df, groupnum):
     '''
     Change imported dataframes to new format for statistical analysis
@@ -78,6 +81,14 @@ def retrieve_pval(df_joined):
         pval = scipy.stats.ttest_ind(int_doc1, int_doc2, alternative='two-sided')
         pval_list.append(pval[1])
     return pval_list
+
+def hypergeometric_test_pval():
+    #M = Totaal aantal moleculen
+    #s = Totaal aantal waar substructuur in zit
+    #N = Moleculen in deze groep
+    #k = Moleculen deze groep waar substructuur in zit
+    return
+
 
 
 def mul_test_corr(list_of_pval, corr_meth):

@@ -24,6 +24,24 @@ def combine_substr(dict_smiles:dict):
                 unique_substr.append(substr)
     return unique_substr
 
+def combine_substr2(dict_smiles:dict):
+    '''
+    Create a list containing all unique substructures in a molecule
+
+    input:
+    dict_smiles - dictionary containing as key (int) the subgraph length and as value
+    (list of str) the subgraphs as strings in SMILES format
+
+    returns:
+    unique_substr - list containing all unique substructures as string in
+    SMILES format
+    '''
+    unique_substr = []
+    for substr in dict_smiles:
+        if substr not in unique_substr:
+            unique_substr.append(substr)
+    return unique_substr
+
 def count_freq(all_str:list):
     '''
     count the frequency each substructure occurs in the group of molecules
@@ -79,6 +97,25 @@ def list_maker(dict_sub:dict, count_sub):
                 presencelist[mol] = '1'
         presencestr = ','.join(presencelist)
         csv_row = (sub, count_sub[sub], presencestr)
+        all_rows.append(csv_row)
+    return all_rows
+
+def list_maker2(dict_sub:dict, count_sub):
+    '''
+    Create rows for csv file with substructure and frequency
+
+    input:
+    dict_sub - dictionary with as keys the molecule numbers and as value a list
+    of all substructures present
+    count_sub - Counter() containing the substructures and the number of times
+    it occurs
+
+    returns:
+    all_rows - list containing tuples with substructure and frequency
+    '''
+    all_rows = []
+    for sub in count_sub:
+        csv_row = (sub, count_sub[sub])
         all_rows.append(csv_row)
     return all_rows
     

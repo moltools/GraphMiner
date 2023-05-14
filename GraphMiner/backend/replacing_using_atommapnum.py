@@ -732,3 +732,28 @@ def return_replaced2(repl_dicts:dict, index_dicts:dict):
                 index_dicts[subgraphlength][index] = subgraph
     return index_dicts
 
+def return_replaced3(repl_dicts:dict, index_list:list):
+    '''
+    Return the AtomMapNumbers of the replaced substructure in found substructures
+
+    input:
+    repl_dicts - dictionary with as key the AtomMapNumber (int) of the C that
+    remains in the molecule and as values a list of the AtomMapNumbers (int)
+    that are removed from the molecule
+    index_list - list of all subgraphs (set) as AtomMapNumbers in sets
+
+    returns:
+    index_dicts - dictionary with as key the length (int) of the subgraph and
+    as value a list of all subgraphs (str) as AtomMapNumbers divided by dashes
+    with the replaced substructure AtomMapNumbers
+    '''
+    for value in repl_dicts:
+        for subgraph in index_list:
+            if value not in subgraph:
+                    continue
+            index = index_list.index(subgraph)
+            for val in repl_dicts[value]:
+                subgraph.add(val)
+            index_list[index] = subgraph
+    return index_list
+
