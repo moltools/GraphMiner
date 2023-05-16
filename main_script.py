@@ -9,7 +9,7 @@ from rdkit import Chem
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ';')
+infile = load_data(1, ',')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -153,7 +153,7 @@ for group in grouplist:
     list_of_groups[group] = group_tot
     counts = count_freq(all_substr)
     list_of_rows = list_maker2(counts)
-    name = 'new_type_csv' + str(group) +'.csv'
+    name = 'big_new_csv' + str(group) +'.csv'
     f = open(name,  'w')
     writer = csv.writer(f)
     Head_row = ('Substructure', 'Frequency' + str(group))
