@@ -73,7 +73,7 @@ def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     all_substr += (unique_str)
     dict_substr[total_molecules] = unique_str
     total_molecules += 1
-    return dict_substr, total_molecules
+    return dict_substr, total_molecules, all_substr
 
 @timeout(120)
 def mol_substr_dfs(selected_mol, all_substr, dict_substr, total_molecules):
@@ -131,6 +131,7 @@ number = 0
 Time_Out_Error = 0
 TOlist = []
 len_dict = {}
+list_of_groups = {}
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
     all_substr = []
@@ -143,14 +144,13 @@ for group in grouplist:
             continue
         number += 1
         try:
-            dict_substr, group_tot = mol_substr_bfs(selected_mol, all_substr, dict_substr, group_tot)
+            dict_substr, group_tot, all_substr = mol_substr_bfs(selected_mol, all_substr, dict_substr, group_tot)
         except:
             # Time_Out_Error +=1
             # print('Time out', Time_Out_Error)
             # TOlist.append(Chem.MolToSmiles(selected_mol))
             continue
-
-    print(group)
+    list_of_groups[group] = group_tot
     counts = count_freq(all_substr)
     list_of_rows = list_maker2(counts)
     name = 'new_type_csv' + str(group) +'.csv'
@@ -163,6 +163,7 @@ for group in grouplist:
     f.close()
     print('csv file written')
 
+print(list_of_groups)
 
 # print(TOlist)
 # print(Time_Out_Error)
@@ -183,13 +184,21 @@ for group in grouplist:
     print(group)
 
 ## Calculate p values
-from GraphMiner import join_df2, retrieve_pval
+from GraphMiner import join_df2, retrieve_pval, hypergeometric_test_pval, \
+    mul_test_corr, extract_signif_substr, create_groups_substr
 
 substr_df = join_df2(df_list)
 print('dataframe made')
-print(substr_df)
-##MOET NOG DE TOTALE AANTAL MOLECULEN IN EEN GROEP EN IN TOTAAL STOREN ERGENS ##HAHAH OEEPSIEFLOEPSIE
-###MISSCHIEN APARTE CSV FILE HIERVOOR??
+# print(substr_df)
+pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
+
+for pvallist in pvaldict.values():
+    TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
+    substr_df['True/False Benj-Hoch'] = TF_benj_list
+    list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
+    print(dict_sigdif)
+
+
 # pvalues = retrieve_pval(substr_df)
 # print('pvalues calculated')
 #

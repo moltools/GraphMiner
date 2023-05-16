@@ -104,12 +104,25 @@ def retrieve_pval(df_joined):
         pval_list.append(pval[1])
     return pval_list
 
-def hypergeometric_test_pval():
+def hypergeometric_test_pval(total_dict: dict, input_df, grouplist):
     #M = Totaal aantal moleculen
     #s = Totaal aantal waar substructuur in zit
     #N = Moleculen in deze groep
     #k = Moleculen deze groep waar substructuur in zit
-    return
+    M = sum(total_dict.values())
+    group = 1
+    pval = {}
+    for val in total_dict.keys():
+        pval[val] = []
+        N = total_dict[val]
+        for substr in input_df.iterrows():
+            for input in substr:
+                if type(input) != int:
+                    k = input[group]
+                    s = input[1] + input[2] ##KAN NOG NIET MET >2 GROEPEN :(
+                    pval[val].append(round(1-hypergeom.cdf(k-1,M,s,N), 2))
+        group += 1
+    return pval
 
 
 
