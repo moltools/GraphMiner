@@ -6,9 +6,10 @@ from .backend import determine_groups, create_dict, select_on_size, \
     select_mol, timeout, set_atommapnum, repl_atommap_COO, repl_atommap_SOO, \
     repl_atommap_SOOO, repl_atommap_POOO, repl_atommap_C_O, repl_atommap_CO, \
     repl_atommap_NCO, repl_atommap_NOCO, rdkit_parse_atommap, breadth_fs2, \
-    return_replaced2, rdkit_smiles2, combine_substr
+    return_replaced2, rdkit_smiles2, combine_substr, count_freq, list_maker2
 import pandas as pd
 from rdkit import Chem
+import csv
 
 def data_loading(args):
     df = pd.read_csv(args.input, args.separatorCSVfile)
@@ -16,7 +17,7 @@ def data_loading(args):
     dictofdata = create_dict(grouplist, df)
     return grouplist, dictofdata
 
-@timeout(5)
+@timeout(120)
 def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     print(' ')
     repl = {}
@@ -64,65 +65,75 @@ def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     all_substr += (unique_str)
     dict_substr[total_molecules] = unique_str
     total_molecules += 1
-    return dict_substr, total_molecules
+    return dict_substr, total_molecules, all_substr
+
+def write_csv_file(group, list_of_groups, group_tot, all_substr, args):
+    list_of_groups[group] = group_tot
+    counts = count_freq(all_substr)
+    list_of_rows = list_maker2(counts)
+    name = args.outputsubstr + str(group) + '.csv'
+    f = open(name, 'w')
+    writer = csv.writer(f)
+    Head_row = ('Substructure', 'Frequency' + str(group))
+    writer.writerow(Head_row)
+    for row in list_of_rows:
+        writer.writerow(row)
+    f.close()
+    print('csv file written')
+    return
 
 def main():
     args = cli()
     group_list, dict_of_data = data_loading(args)
     if args.SelectionMethod == 'MoleculeSize':
-        print('molsize')
         ### PREPARATION OF SMILES + GRAPH MINING ###
         number = 0
+        len_dict = {}
+        list_of_groups = {}
         for group in group_list:
             list_of_smiles = dict_of_data[group]
             all_substr = []
             dict_substr = {}
-            total_molecules = 0
+            group_tot = 0
             Time_Out_Error = 0
-            TOlist = []
             for mol_smile in list_of_smiles:
                 first_select = select_on_size(mol_smile, args.moleculesize)
                 selected_mol = select_mol(first_select)
                 if selected_mol == None:
                     continue
                 print(Chem.MolToSmiles(selected_mol))
-                try:
-                    mol_substr_bfs(selected_mol, all_substr, dict_substr,
-                               total_molecules)
-                except:
-                    Time_Out_Error += 1
-                    print('Time out', Time_Out_Error)
-                    TOlist.append(Chem.MolToSmiles(selected_mol))
-                    continue
-                finally:
-                    number += 1
-                    print('number', number)
+                dict_substr, group_tot, all_substr = mol_substr_bfs(selected_mol, all_substr, dict_substr, group_tot)
+                number += 1
+                print('number', number)
+            write_csv_file(group, list_of_groups, group_tot, all_substr)
     elif args.SelectionMethod == 'TimeOutTimer':
         print('TimeOutTimer')
         number = 0
+        len_dict = {}
+        list_of_groups = {}
+        Time_Out_Error = 0
         for group in group_list:
             list_of_smiles = dict_of_data[group]
             all_substr = []
             dict_substr = {}
-            total_molecules = 0
-            Time_Out_Error = 0
-            TOlist = []
+            group_tot = 0
             for mol_smile in list_of_smiles:
                 selected_mol = select_mol(mol_smile)
                 if selected_mol == None:
                     continue
                 print(Chem.MolToSmiles(selected_mol))
                 try:
-                    mol_substr_bfs(selected_mol, all_substr, dict_substr,
-                               total_molecules)
+                    dict_substr, group_tot, all_substr = \
+                        mol_substr_bfs(selected_mol, all_substr, dict_substr, group_tot)
                 except:
                     Time_Out_Error += 1
                     print('Time out', Time_Out_Error)
-                    TOlist.append(Chem.MolToSmiles(selected_mol))
                     continue
                 finally:
                     number += 1
                     print('number', number)
+            write_csv_file(group, list_of_groups, group_tot, all_substr, args)
+
     exit(0)
 
 
