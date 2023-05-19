@@ -22,10 +22,10 @@ from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
     repl_atommap_POOO, breadth_fs2, depth_fs, return_replaced2, \
     rdkit_smiles2, repl_atommap_SOO, repl_atommap_SOOO, repl_atommap_benzene, \
     repl_atommap_cyclohex, remove_atom_charges, timeout, return_replaced3, \
-    rdkit_smiles3, combine_substr2, list_maker2
+    rdkit_smiles3, combine_substr2, list_maker2, TimeoutError, repl_atommap_POOOO
 
 
-@timeout(120)
+@timeout(30)
 def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     print(' ')
     repl = {}
@@ -37,6 +37,10 @@ def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
         sel_mol, repl = repl_atommap_COO(sel_mol, repl)
         print('C(=O)O done')
+        # print(Chem.MolToSmiles(sel_mol))
+    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)(O)O')) == True:
+        sel_mol, repl = repl_atommap_POOOO(sel_mol, repl)
+        print('P(=O)(O)(O)O done')
         # print(Chem.MolToSmiles(sel_mol))
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
         sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
@@ -126,10 +130,7 @@ def mol_substr_dfs(selected_mol, all_substr, dict_substr, total_molecules):
     total_molecules += 1
     return dict_substr, total_molecules
 
-
 number = 0
-Time_Out_Error = 0
-TOlist = []
 len_dict = {}
 list_of_groups = {}
 for group in grouplist:
@@ -142,28 +143,37 @@ for group in grouplist:
         selected_mol = select_mol(first_select)
         if selected_mol == None:
             continue
-        number += 1
-        try:
-            dict_substr, group_tot, all_substr = mol_substr_bfs(selected_mol, all_substr, dict_substr, group_tot)
-        except:
-            # Time_Out_Error +=1
-            # print('Time out', Time_Out_Error)
-            # TOlist.append(Chem.MolToSmiles(selected_mol))
-            continue
-    list_of_groups[group] = group_tot
-    counts = count_freq(all_substr)
-    list_of_rows = list_maker2(counts)
-    name = 'big_new_csv' + str(group) +'.csv'
-    f = open(name,  'w')
-    writer = csv.writer(f)
-    Head_row = ('Substructure', 'Frequency' + str(group))
-    writer.writerow(Head_row)
-    for row in list_of_rows:
-        writer.writerow(row)
-    f.close()
-    print('csv file written')
+        elif type(selected_mol) == list:
+            print('list found')
+            number += 1
+            for mol in selected_mol:
+                try:
+                    dict_substr, group_tot, all_substr = mol_substr_bfs(Chem.MolFromSmiles(mol), all_substr, dict_substr, group_tot)
+                except TimeoutError:
+                    print('timeout')
+                    continue
+        else:
+            number += 1
+            try:
+                dict_substr, group_tot, all_substr = mol_substr_bfs(selected_mol, all_substr, dict_substr, group_tot)
+            except TimeoutError:
+                print('timeout')
+                continue
+    # list_of_groups[group] = group_tot
+    # counts = count_freq(all_substr)
+    # list_of_rows = list_maker2(counts)
+    # name = 'totnew_csv' + str(group) +'.csv'
+    # f = open(name,  'w')
+    # writer = csv.writer(f)
+    # Head_row = ('Substructure', 'Frequency' + str(group))
+    # writer.writerow(Head_row)
+    # for row in list_of_rows:
+    #     writer.writerow(row)
+    # f.close()
+    # print('csv file written')
 
 print(list_of_groups)
+print(number)
 
 # print(TOlist)
 # print(Time_Out_Error)
@@ -174,29 +184,37 @@ print(list_of_groups)
 # Load in csv files
 from GraphMiner import new_dataframes
 
-df_list = []
-sub_list = []
-start = 0
-for group in grouplist:
-    freq_file = load_data(start+2, ',')
-    df_list.append(freq_file)
-    start += 1
-    print(group)
-
-## Calculate p values
-from GraphMiner import join_df2, retrieve_pval, hypergeometric_test_pval, \
-    mul_test_corr, extract_signif_substr, create_groups_substr
-
-substr_df = join_df2(df_list)
-print('dataframe made')
-# print(substr_df)
-pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
-
-for pvallist in pvaldict.values():
-    TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
-    substr_df['True/False Benj-Hoch'] = TF_benj_list
-    list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
-    print(dict_sigdif)
+# df_list = []
+# sub_list = []
+# start = 0
+# for group in grouplist:
+#     freq_file = load_data(start+2, ',')
+#     df_list.append(freq_file)
+#     start += 1
+#     print(group)
+#
+# ## Calculate p values
+# from GraphMiner import join_df2, retrieve_pval, hypergeometric_test_pval, \
+#     mul_test_corr, extract_signif_substr, create_groups_substr
+#
+# substr_df = join_df2(df_list)
+# print('dataframe made')
+# # print(substr_df)
+# pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
+# for key in pvaldict.keys():
+#     substr_df[key] = pvaldict[key]
+#
+# f = open('pvaloverview.csv',  'w')
+# writer = csv.writer(f)
+# for row in substr_df.iterrows():
+#     writer.writerow(row)
+# f.close()
+#
+# for pvallist in pvaldict.values():
+#     TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
+#     substr_df['True/False Benj-Hoch'] = TF_benj_list
+#     list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
+#     print(dict_sigdif)
 
 
 # pvalues = retrieve_pval(substr_df)

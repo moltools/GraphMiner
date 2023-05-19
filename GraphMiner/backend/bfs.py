@@ -65,7 +65,7 @@ def breadth_fs2(neigh_dict: dict, nodelist: list):
         subgraphs[len_subgraph].append({key})
     # Add in all unqiue regions for each length of subgraphs
     for index in range(len(nodelist)):
-        print(index)
+        # print(index)
         len_subgraph += 1
         subgraphs[len_subgraph] = []
         sorted_graphs = []

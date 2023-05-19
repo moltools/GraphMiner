@@ -108,8 +108,77 @@ def repl_atommap_POOO(moll, replacements:dict):
                  moll.GetSubstructMatches(Chem.MolFromSmiles('P'))]
     rwmol = rdkit.Chem.rdchem.RWMol()
     rwmol.InsertMol(moll)
+    # print(Chem.MolToSmiles(moll))
     POOOlist = []
     query = Chem.MolFromSmiles('P(=O)(O)O')
+    idx_POOO = moll.GetSubstructMatches(query)
+    for idx__POOO in idx_POOO:
+        new_list = []
+        for indiv_idx in idx__POOO:
+            if indiv_idx not in list_of_P:
+                if indiv_idx not in POOOlist:
+                    POOOlist.append(indiv_idx)
+                new_list += [moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()]
+            elif indiv_idx in list_of_P:
+                P_atom = moll.GetAtomWithIdx(indiv_idx).GetAtomMapNum()
+        replacements[P_atom] = new_list
+    # Actual Replacement
+    POOOlist.sort()
+    rem_atoms = 0
+    for number in POOOlist:
+        adj_num = number - rem_atoms
+        repl_atom = moll.GetAtomWithIdx(adj_num)
+        nblist = [x.GetAtomMapNum() for x in repl_atom.GetNeighbors()]
+        rwmol.RemoveAtom(adj_num)
+        if len(nblist) == 1:
+            rem_atoms += 1
+            moll = rwmol.GetMol()
+            continue
+        elif len(nblist) >= 2:
+            idxlist = []
+            moll = rwmol.GetMol()
+            for atom in moll.GetAtoms():
+                if atom.GetAtomMapNum() in nblist:
+                    idxlist.append(atom.GetIdx())
+            for idx1 in idxlist:
+                for idx2 in idxlist:
+                    if idx1 == idx2:
+                        continue
+                    elif idx1 != idx2:
+                        rwmol.RemoveBond(idx1, idx2)
+                        rwmol.AddBond(idx1, idx2,
+                                      rdkit.Chem.rdchem.BondType.SINGLE)
+        else:
+            print('STILL GOT A PROBLEM HERE WOOHOO')
+            print(len(nblist))
+        rem_atoms += 1
+        moll = rwmol.GetMol()
+    return moll, replacements
+
+def repl_atommap_POOOO(moll, replacements:dict):
+    '''
+    Replace the substructure P(=O)(O)(O)O by P using RWMol and AtomMapNumbers
+
+    input:
+    moll - molecule in MOL format from RDKit also containing AtomMapNumbers
+    replacements - dictionary with as key the AtomMapNumber (int) of the P that
+    remains in the molecule and as values a list of the AtomMapNumbers (int)
+    that are removed from the molecule
+
+    returns:
+    moll - molecule in MOL format from RDKit also containing AtomMapNumbers
+    replacements - dictionary with as key the AtomMapNumber (int) of the P that
+    remains in the molecule and as values a list of the AtomMapNumbers (int)
+    that are removed from the molecule
+    -- but both are adjusted with the replaced P(=O)(O)(O)O substructures
+    '''
+    list_of_P = [Pidx[0] for Pidx in
+                 moll.GetSubstructMatches(Chem.MolFromSmiles('P'))]
+    rwmol = rdkit.Chem.rdchem.RWMol()
+    rwmol.InsertMol(moll)
+    print(Chem.MolToSmiles(moll))
+    POOOlist = []
+    query = Chem.MolFromSmiles('P(=O)(O)(O)O')
     idx_POOO = moll.GetSubstructMatches(query)
     for idx__POOO in idx_POOO:
         new_list = []
@@ -242,6 +311,7 @@ def repl_atommap_NCO(moll, replacements:dict):
                  moll.GetSubstructMatches(Chem.MolFromSmiles('C'))]
     rwmol = rdkit.Chem.rdchem.RWMol()
     rwmol.InsertMol(moll)
+    # print(Chem.MolToSmiles(moll))
     NCOlist = []
     query = Chem.MolFromSmiles('NC(=O)')
     idx_NCO = moll.GetSubstructMatches(query)
@@ -286,6 +356,7 @@ def repl_atommap_NCO(moll, replacements:dict):
             print(len(nblist))
         rem_atoms += 1
         moll = rwmol.GetMol()
+        # print(Chem.MolToSmiles(moll))
     return moll, replacements
 
 def repl_atommap_CO(moll, replacements:dict):

@@ -90,12 +90,18 @@ def rdkit_smiles2(sub_graphs:dict, smilesmol):
                 subgraphlist = list(subgraphset)
                 mol_graphs[subgraph_length].append(
                     Chem.MolFragmentToSmiles(smilesmol, subgraphlist))
+                if '.' in Chem.MolFragmentToSmiles(smilesmol, subgraphlist):
+                    print(Chem.MolFragmentToSmiles(smilesmol, subgraphlist))
+                    print(Chem.MolToSmiles(smilesmol))
     else:
         for subgraph_length in sub_graphs:
             mol_graphs[subgraph_length] = []
             for subgraphset in sub_graphs[subgraph_length]:
                 subgraphlist = list(subgraphset)
                 mol_graphs[subgraph_length].append(Chem.MolFragmentToSmiles(smilesmol, subgraphlist))
+                if '.' in Chem.MolFragmentToSmiles(smilesmol, subgraphlist):
+                    print(Chem.MolFragmentToSmiles(smilesmol, subgraphlist))
+                    print(subgraphlist)
     return mol_graphs
 
 def rdkit_smiles3(sub_graphs:dict, smilesmol):

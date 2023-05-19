@@ -24,11 +24,17 @@ def select_mol(molsmile: str):
     if molsmile == None:
         return
     if '.' in molsmile:
-        return
-    # if '-' in molsmile:
-    #     return
-    # if '+' not in molsmile:
-    #     return
+        splitmol = molsmile.split('.')
+        selected = []
+        for part in splitmol:
+            if Chem.MolFromSmiles(part).GetNumHeavyAtoms() > 5:
+                selected.append(part)
+        if len(selected) == 0:
+            return
+        elif len(selected) == 1:
+            return Chem.MolFromSmiles(selected[0])
+        elif len(selected) > 1:
+            return selected
     return Chem.MolFromSmiles(molsmile)
 
 def remove_atom_charges(mol: Chem.Mol) -> Chem.Mol:
