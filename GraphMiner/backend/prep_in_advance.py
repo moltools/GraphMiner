@@ -24,11 +24,7 @@ def select_mol(molsmile: str):
     if molsmile == None:
         return
     if '.' in molsmile:
-        splitmol = molsmile.split('.')
-        selected = []
-        for part in splitmol:
-            if Chem.MolFromSmiles(part).GetNumHeavyAtoms() > 5:
-                selected.append(part)
+        selected = molsmile.split('.')
         if len(selected) == 0:
             return
         elif len(selected) == 1:

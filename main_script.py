@@ -159,21 +159,21 @@ for group in grouplist:
             except TimeoutError:
                 print('timeout')
                 continue
-    # list_of_groups[group] = group_tot
-    # counts = count_freq(all_substr)
-    # list_of_rows = list_maker2(counts)
-    # name = 'totnew_csv' + str(group) +'.csv'
-    # f = open(name,  'w')
-    # writer = csv.writer(f)
-    # Head_row = ('Substructure', 'Frequency' + str(group))
-    # writer.writerow(Head_row)
-    # for row in list_of_rows:
-    #     writer.writerow(row)
-    # f.close()
-    # print('csv file written')
+    list_of_groups[group] = group_tot
+    counts = count_freq(all_substr)
+    list_of_rows = list_maker2(counts)
+    name = 'totnew_csv' + str(group) +'.csv'
+    f = open(name,  'w')
+    writer = csv.writer(f)
+    Head_row = ('Substructure', 'Frequency' + str(group))
+    writer.writerow(Head_row)
+    for row in list_of_rows:
+        writer.writerow(row)
+    f.close()
+    print('csv file written')
 
-print(list_of_groups)
-print(number)
+# print(list_of_groups)
+# print(number)
 
 # print(TOlist)
 # print(Time_Out_Error)
@@ -184,37 +184,37 @@ print(number)
 # Load in csv files
 from GraphMiner import new_dataframes
 
-# df_list = []
-# sub_list = []
-# start = 0
-# for group in grouplist:
-#     freq_file = load_data(start+2, ',')
-#     df_list.append(freq_file)
-#     start += 1
-#     print(group)
-#
-# ## Calculate p values
-# from GraphMiner import join_df2, retrieve_pval, hypergeometric_test_pval, \
-#     mul_test_corr, extract_signif_substr, create_groups_substr
-#
-# substr_df = join_df2(df_list)
-# print('dataframe made')
-# # print(substr_df)
-# pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
-# for key in pvaldict.keys():
-#     substr_df[key] = pvaldict[key]
-#
-# f = open('pvaloverview.csv',  'w')
-# writer = csv.writer(f)
-# for row in substr_df.iterrows():
-#     writer.writerow(row)
-# f.close()
-#
-# for pvallist in pvaldict.values():
-#     TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
-#     substr_df['True/False Benj-Hoch'] = TF_benj_list
-#     list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
-#     print(dict_sigdif)
+df_list = []
+sub_list = []
+start = 0
+for group in grouplist:
+    freq_file = load_data(start+2, ',')
+    df_list.append(freq_file)
+    start += 1
+    print(group)
+
+## Calculate p values
+from GraphMiner import join_df2, retrieve_pval, hypergeometric_test_pval, \
+    mul_test_corr, extract_signif_substr, create_groups_substr
+
+substr_df = join_df2(df_list)
+print('dataframe made')
+# print(substr_df)
+pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
+for key in pvaldict.keys():
+    substr_df[key] = pvaldict[key]
+
+f = open('pvaloverview.csv',  'w')
+writer = csv.writer(f)
+for row in substr_df.iterrows():
+    writer.writerow(row)
+f.close()
+
+for pvallist in pvaldict.values():
+    TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
+    substr_df['True/False Benj-Hoch'] = TF_benj_list
+    list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
+    print(dict_sigdif)
 
 
 # pvalues = retrieve_pval(substr_df)

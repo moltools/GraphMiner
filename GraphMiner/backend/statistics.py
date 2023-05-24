@@ -119,7 +119,9 @@ def hypergeometric_test_pval(total_dict: dict, input_df, grouplist):
             for input in substr:
                 if type(input) != int:
                     k = input[group]
-                    s = input[1] + input[2] ##KAN NOG NIET MET >2 GROEPEN :(
+                    s = 0
+                    for index in range(len(grouplist)):
+                        s += input[index + 1]
                     pval[val].append(round(1-hypergeom.cdf(k-1,M,s,N), 2))
         group += 1
     return pval
@@ -201,14 +203,8 @@ def extract_signif_substr(TF_list, df_substr):
     for TF in TF_list:
         if TF == True:
             sig_dif.append(df_substr.iloc[index][0])
-            value0 = 0
-            value1 = 0
-            for val in df_substr.iloc[index][1]:
-                if val == '1':
-                    value0 += 1
-            for val in df_substr.iloc[index][2]:
-                if val == '1':
-                    value1 += 1
+            value0 = df_substr.iloc[index][1]
+            value1 = df_substr.iloc[index][2]
             if value0 > value1:
                 sig_dif_dict[df_substr.iloc[index][0]] = 'group 0'
             elif value1 > value0:
