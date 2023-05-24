@@ -15,17 +15,16 @@ dict_of_data = create_dict(grouplist, infile)
 
 ### PREPARATION OF SMILES + GRAPH MINING ###
 
-from GraphMiner import select_on_size, breadth_fs, rdkit_smiles, \
+from GraphMiner import select_on_size, \
     combine_substr, repl_atommap_COO, set_atommapnum, rdkit_parse_atommap, \
-    return_replaced, repl_atommap_CO, repl_atommap_C_O, count_freq, \
-    list_maker, repl_atommap_NCO, repl_atommap_NOCO, select_mol, \
+    repl_atommap_CO, repl_atommap_C_O, count_freq, \
+    repl_atommap_NCO, repl_atommap_NOCO, select_mol, \
     repl_atommap_POOO, breadth_fs2, depth_fs, return_replaced2, \
-    rdkit_smiles2, repl_atommap_SOO, repl_atommap_SOOO, repl_atommap_benzene, \
-    repl_atommap_cyclohex, remove_atom_charges, timeout, return_replaced3, \
+    rdkit_smiles2, repl_atommap_SOO, repl_atommap_SOOO, timeout, return_replaced3, \
     rdkit_smiles3, combine_substr2, list_maker2, TimeoutError, repl_atommap_POOOO
 
 
-@timeout(30)
+@timeout(1)
 def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     print(' ')
     repl = {}
@@ -172,17 +171,10 @@ for group in grouplist:
     f.close()
     print('csv file written')
 
-# print(list_of_groups)
-# print(number)
-
-# print(TOlist)
-# print(Time_Out_Error)
-
 
 ### STATISTICS PART ###
 
 # Load in csv files
-from GraphMiner import new_dataframes
 
 df_list = []
 sub_list = []
@@ -194,12 +186,11 @@ for group in grouplist:
     print(group)
 
 ## Calculate p values
-from GraphMiner import join_df2, retrieve_pval, hypergeometric_test_pval, \
+from GraphMiner import join_df2, hypergeometric_test_pval, \
     mul_test_corr, extract_signif_substr, create_groups_substr
 
-substr_df = join_df2(df_list)
+substr_df = join_df2(df_list) ##NOT FEASIBLE >2 groups
 print('dataframe made')
-# print(substr_df)
 pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
 for key in pvaldict.keys():
     substr_df[key] = pvaldict[key]
@@ -214,46 +205,8 @@ for pvallist in pvaldict.values():
     TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
     substr_df['True/False Benj-Hoch'] = TF_benj_list
     list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
-    print(dict_sigdif)
-
-
-# pvalues = retrieve_pval(substr_df)
-# print('pvalues calculated')
-#
-# ## Multiple Testing Correction
-# from GraphMiner import mul_test_corr
-#
-# # TF_bonn_list = mul_test_corr(pvalues, 'bonferroni')
-# TF_benj_list = mul_test_corr(pvalues, 'fdr_bh')
-# print('mtc done')
-#
-# #Create CSV file
-# # substr_df['True/False Bonferonni'] = TF_bonn_list
-# substr_df['True/False Benj-Hoch'] = TF_benj_list
-# # substr_df.to_csv('substructuretruefalse.csv', sep=';')
-# print('TFlist')
-#
-# ## Analysis of results
-# from GraphMiner import extract_signif_substr, create_groups_substr
-#
-# list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
-# print(dict_sigdif)
-# dic_of_substr = create_groups_substr(list_sigdif)
-# print(dic_of_substr)
-
-
-
-
-
-
-# truetotal = 0
-# falsetotal = 0
-# for TF in TF_benj_list:
-#     if TF == True:
-#         truetotal += 1
-#     elif TF == False:
-#         falsetotal +=1
-# print(truetotal, falsetotal)
+    dic_of_substr = create_groups_substr(list_sigdif)
+    print(dic_of_substr)
 
 end = time.time()
 print('time', end-start)
