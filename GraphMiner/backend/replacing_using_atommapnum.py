@@ -176,7 +176,6 @@ def repl_atommap_POOOO(moll, replacements:dict):
                  moll.GetSubstructMatches(Chem.MolFromSmiles('P'))]
     rwmol = rdkit.Chem.rdchem.RWMol()
     rwmol.InsertMol(moll)
-    print(Chem.MolToSmiles(moll))
     POOOlist = []
     query = Chem.MolFromSmiles('P(=O)(O)(O)O')
     idx_POOO = moll.GetSubstructMatches(query)

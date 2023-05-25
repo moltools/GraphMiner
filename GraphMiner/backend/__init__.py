@@ -22,8 +22,8 @@ from .return_to_smile import rdkit_smiles2, rdkit_smiles3
 
 #Frequency counter
 from .frequency_counter import combine_substr, count_freq, perc_substr, \
-     combine_substr2, list_maker2
+     combine_substr2
 
 #Statistics
-from .statistics import mul_test_corr, extract_signif_substr, create_groups_substr, join_df2, \
+from .statistics import mul_test_corr, extract_signif_substr, create_groups_substr, \
     hypergeometric_test_pval

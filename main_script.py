@@ -4,6 +4,8 @@ import csv
 import time
 start = time.time()
 from rdkit import Chem
+import pandas as pd
+import numpy as np
 
 
 ### DATA LOADING ###
@@ -21,10 +23,10 @@ from GraphMiner import select_on_size, \
     repl_atommap_NCO, repl_atommap_NOCO, select_mol, \
     repl_atommap_POOO, breadth_fs2, depth_fs, return_replaced2, \
     rdkit_smiles2, repl_atommap_SOO, repl_atommap_SOOO, timeout, return_replaced3, \
-    rdkit_smiles3, combine_substr2, list_maker2, TimeoutError, repl_atommap_POOOO
+    rdkit_smiles3, combine_substr2, TimeoutError, repl_atommap_POOOO
 
 
-@timeout(1)
+@timeout(5)
 def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     print(' ')
     repl = {}
@@ -130,8 +132,10 @@ def mol_substr_dfs(selected_mol, all_substr, dict_substr, total_molecules):
     return dict_substr, total_molecules
 
 number = 0
+group_num = 0
 len_dict = {}
 list_of_groups = {}
+list_of_df = []
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
     all_substr = []
@@ -160,37 +164,50 @@ for group in grouplist:
                 continue
     list_of_groups[group] = group_tot
     counts = count_freq(all_substr)
-    list_of_rows = list_maker2(counts)
-    name = 'totnew_csv' + str(group) +'.csv'
-    f = open(name,  'w')
-    writer = csv.writer(f)
-    Head_row = ('Substructure', 'Frequency' + str(group))
-    writer.writerow(Head_row)
-    for row in list_of_rows:
-        writer.writerow(row)
-    f.close()
-    print('csv file written')
+    count_dict = {}
+    id=0
+    for substr in counts:
+        count_dict[id] = [substr, counts[substr]]
+        id+=1
+    columnnames = ['Substructure', 'Frequency' + str(group_num)]
+    df = pd.DataFrame.from_dict(count_dict, orient='index', columns=columnnames)
+    print('df')
+    print(df)
+    list_of_df.append(df)
+    group_num += 1
+    print(list_of_df)
+
+if len(list_of_df) == 1:
+    list_of_df[0].to_csv('substrfile.csv', header = ['Substructure', 'Frequency'])
+elif len(list_of_df) == 2:
+    joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
+    colmn = list(joined_df.columns)
+    joined_df[colmn[1]] = joined_df[colmn[1]].replace(np.nan, 0)
+    joined_df[colmn[2]] = joined_df[colmn[2]].replace(np.nan, 0)
+    joined_df.to_csv('substrfile.csv', header = ['Substructure', 'Frequency0', 'Frequency1'])
+elif len(list_of_df) >=3:
+    joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
+    for dfnum in range(2, len(list_of_df)):
+        joined_df = pd.merge(joined_df, list_of_df[dfnum], how='outer')
+    print(joined_df)
+    colmn = list(joined_df.columns)
+    headers = ['Substructure']
+    for num_df in range(len(list_of_df)):
+        joined_df[colmn[num_df + 1]] = joined_df[colmn[num_df + 1]].replace(np.nan, 0)
+        headers.append('Frequency' + str(num_df))
+    print(headers)
+    joined_df.to_csv('substrfile.csv',header=headers)
 
 
 ### STATISTICS PART ###
 
 # Load in csv files
-
-df_list = []
-sub_list = []
-start = 0
-for group in grouplist:
-    freq_file = load_data(start+2, ',')
-    df_list.append(freq_file)
-    start += 1
-    print(group)
+substr_df = load_data(2, ',')
 
 ## Calculate p values
-from GraphMiner import join_df2, hypergeometric_test_pval, \
+from GraphMiner import hypergeometric_test_pval, \
     mul_test_corr, extract_signif_substr, create_groups_substr
 
-substr_df = join_df2(df_list) ##NOT FEASIBLE >2 groups
-print('dataframe made')
 pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
 for key in pvaldict.keys():
     substr_df[key] = pvaldict[key]
@@ -204,7 +221,8 @@ f.close()
 for pvallist in pvaldict.values():
     TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
     substr_df['True/False Benj-Hoch'] = TF_benj_list
-    list_sigdif, dict_sigdif = extract_signif_substr(TF_benj_list, substr_df)
+    list_sigdif = extract_signif_substr(TF_benj_list, substr_df)
+    print(list_sigdif)
     dic_of_substr = create_groups_substr(list_sigdif)
     print(dic_of_substr)
 
