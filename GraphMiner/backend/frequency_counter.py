@@ -2,7 +2,6 @@
 
 #IMPORT STATEMENTS
 from collections import Counter
-from rdkit import Chem
 
 def combine_substr(dict_smiles:dict):
     '''
