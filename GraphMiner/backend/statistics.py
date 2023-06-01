@@ -72,20 +72,10 @@ def extract_signif_substr(TF_list, df_substr):
 
 def create_groups_substr(dif_sig):
     new_dic = {}
-    new_dic['Nonetype'] = []
     for val in dif_sig:
-        print(val)
-        if Chem.MolFromSmiles(val) == None:
-            new_dic['Nonetype'].append(val)
-            continue
         placed = 'no'
         for keyval in new_dic.keys():
-            if Chem.MolFromSmiles(keyval) == None:
-                continue
-            print('keyval', keyval)
-            print('mol keyval', Chem.MolFromSmiles(keyval))
-            print('mol val', Chem.MolFromSmiles(val))
-            if Chem.MolFromSmiles(keyval).HasSubstructMatch(Chem.MolFromSmiles(val)):
+            if Chem.MolFromSmiles(keyval, sanitize=False).HasSubstructMatch(Chem.MolFromSmiles(val, sanitize=False)):
                 new_dic[keyval].append(val)
                 placed = 'yes'
         if placed == 'no':

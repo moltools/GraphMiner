@@ -11,7 +11,7 @@ import numpy as np
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ';')
+infile = load_data(1, ',')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -26,7 +26,7 @@ from GraphMiner import select_on_size, \
     rdkit_smiles3, combine_substr2, TimeoutError, repl_atommap_POOOO
 
 
-@timeout(120)
+@timeout(1)
 def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     print(' ')
     repl = {}
@@ -73,7 +73,7 @@ def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     dictnode, list_node = rdkit_parse_atommap(sel_mol)
     subgraphdict = breadth_fs2(dictnode, list_node)
     returned_dict = return_replaced2(repl, subgraphdict)
-    smilesdict = rdkit_smiles2(returned_dict, tot_mol)
+    smilesdict, moldict = rdkit_smiles2(returned_dict, tot_mol, tot_mol)
     unique_str = combine_substr(smilesdict)
     all_substr += (unique_str)
     dict_substr[total_molecules] = unique_str
@@ -136,31 +136,41 @@ group_num = 0
 len_dict = {}
 list_of_groups = {}
 list_of_df = []
+TO = 0
+TOlist = []
+tottlist = []
 for group in grouplist:
     list_of_smiles = dict_of_data[group]
     all_substr = []
     dict_substr = {}
     group_tot = 0
     for mol_smile in list_of_smiles:
-        first_select = select_on_size(mol_smile, 10000000)
+        first_select = select_on_size(mol_smile, 60)
         selected_mol = select_mol(first_select)
         if selected_mol == None:
             continue
         elif type(selected_mol) == list:
             print('list found')
             number += 1
+            print(number)
             for mol in selected_mol:
                 try:
                     dict_substr, group_tot, all_substr = mol_substr_bfs(Chem.MolFromSmiles(mol), all_substr, dict_substr, group_tot)
+                    tottlist.append(Chem.MolFromSmiles(mol).GetNumHeavyAtoms())
                 except TimeoutError:
                     print('timeout')
+                    TO += 1
+                    TOlist.append(Chem.MolFromSmiles(mol).GetNumHeavyAtoms())
                     continue
         else:
             number += 1
             try:
                 dict_substr, group_tot, all_substr = mol_substr_bfs(selected_mol, all_substr, dict_substr, group_tot)
+                tottlist.append(selected_mol.GetNumHeavyAtoms())
             except TimeoutError:
                 print('timeout')
+                TO += 1
+                TOlist.append(selected_mol.GetNumHeavyAtoms())
                 continue
     list_of_groups[group] = group_tot
     counts = count_freq(all_substr)
@@ -176,7 +186,9 @@ for group in grouplist:
     list_of_df.append(df)
     group_num += 1
     print(list_of_df)
-
+print('TO', TO)
+print(TOlist)
+print(tottlist)
 if len(list_of_df) == 1:
     list_of_df[0].to_csv('substrfile.csv', header = ['Substructure', 'Frequency'])
 elif len(list_of_df) == 2:
@@ -225,6 +237,10 @@ for pvallist in pvaldict.values():
     print(list_sigdif)
     dic_of_substr = create_groups_substr(list_sigdif)
     print(dic_of_substr)
-
+print(TOlist)
+print(tottlist)
 end = time.time()
 print('time', end-start)
+print('TO', TO)
+print('number', number)
+
