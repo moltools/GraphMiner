@@ -234,7 +234,7 @@ f = open('significantsubstr2.csv', 'w')
 writer = csv.writer(f)
 p = 0
 for pvallist in pvaldict.values():
-    writer.writerow(p)
+    writer.writerow([p])
     p +=1
     TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
     substr_df['True/False Benj-Hoch'] = TF_benj_list
