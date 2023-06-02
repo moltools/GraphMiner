@@ -230,15 +230,23 @@ for row in substr_df.iterrows():
     writer.writerow(row)
 f.close()
 
+f = open('significantsubstr.csv', 'w')
+writer = csv.writer(f)
+p = 0
 for pvallist in pvaldict.values():
+    writer.write(p)
+    p +=1
     TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
     substr_df['True/False Benj-Hoch'] = TF_benj_list
     list_sigdif = extract_signif_substr(TF_benj_list, substr_df)
     print(list_sigdif)
+    writer.write(list_sigdif)
     dic_of_substr = create_groups_substr(list_sigdif)
     print(dic_of_substr)
-print(TOlist)
-print(tottlist)
+    writer.write(dic_of_substr)
+f.close()
+# print(TOlist)
+# print(tottlist)
 end = time.time()
 print('time', end-start)
 print('TO', TO)
