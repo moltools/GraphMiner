@@ -11,7 +11,7 @@ import numpy as np
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ';')
+infile = load_data(1, ',')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -190,13 +190,13 @@ print('TO', TO)
 print(TOlist)
 print(tottlist)
 if len(list_of_df) == 1:
-    list_of_df[0].to_csv('substrfile.csv', header = ['Substructure', 'Frequency'])
+    list_of_df[0].to_csv('substrfile2.csv', header = ['Substructure', 'Frequency'])
 elif len(list_of_df) == 2:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     colmn = list(joined_df.columns)
     joined_df[colmn[1]] = joined_df[colmn[1]].replace(np.nan, 0)
     joined_df[colmn[2]] = joined_df[colmn[2]].replace(np.nan, 0)
-    joined_df.to_csv('substrfile.csv', header = ['Substructure', 'Frequency0', 'Frequency1'])
+    joined_df.to_csv('substrfile2.csv', header = ['Substructure', 'Frequency0', 'Frequency1'])
 elif len(list_of_df) >=3:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     for dfnum in range(2, len(list_of_df)):
@@ -208,7 +208,7 @@ elif len(list_of_df) >=3:
         joined_df[colmn[num_df + 1]] = joined_df[colmn[num_df + 1]].replace(np.nan, 0)
         headers.append('Frequency' + str(num_df))
     print(headers)
-    joined_df.to_csv('substrfile.csv',header=headers)
+    joined_df.to_csv('substrfile2.csv',header=headers)
 
 
 ### STATISTICS PART ###
@@ -224,13 +224,13 @@ pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
 for key in pvaldict.keys():
     substr_df[key] = pvaldict[key]
 
-f = open('pvaloverview.csv',  'w')
+f = open('pvaloverview2.csv',  'w')
 writer = csv.writer(f)
 for row in substr_df.iterrows():
     writer.writerow(row)
 f.close()
 
-f = open('significantsubstr.csv', 'w')
+f = open('significantsubstr2.csv', 'w')
 writer = csv.writer(f)
 p = 0
 for pvallist in pvaldict.values():
