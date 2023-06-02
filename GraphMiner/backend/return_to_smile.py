@@ -32,7 +32,7 @@ def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol):
             if '.' in Chem.MolFragmentToSmiles(smilesmol, subgraphlist):
                 continue
             smiles_graphs[subgraph_length].append(
-                Chem.MolFragmentToSmiles(zeromol, subgraphlist, kekulize=True))
+                Chem.MolFragmentToSmiles(zeromol, subgraphlist, allBondsExplicit=True))
     return smiles_graphs, mol_graphs
 
 def rdkit_smiles3(sub_graphs:dict, smilesmol):
