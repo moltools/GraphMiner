@@ -240,10 +240,10 @@ for pvallist in pvaldict.values():
     substr_df['True/False Benj-Hoch'] = TF_benj_list
     list_sigdif = extract_signif_substr(TF_benj_list, substr_df)
     print(list_sigdif)
-    writer.write(list_sigdif)
+    writer.writerow(list_sigdif)
     dic_of_substr = create_groups_substr(list_sigdif)
     print(dic_of_substr)
-    writer.write(dic_of_substr)
+    writer.writerow(dic_of_substr)
 f.close()
 # print(TOlist)
 # print(tottlist)
