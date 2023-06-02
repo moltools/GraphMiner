@@ -26,7 +26,7 @@ from GraphMiner import select_on_size, \
     rdkit_smiles3, combine_substr2, TimeoutError, repl_atommap_POOOO
 
 
-@timeout(30)
+@timeout(1)
 def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     print(' ')
     repl = {}
