@@ -210,6 +210,11 @@ elif len(list_of_df) >=3:
     print(headers)
     joined_df.to_csv('substrfile2.csv',header=headers)
 
+f = open('datafilepart1.csv', 'w')
+writer = csv.writer(f)
+writer.writerow(grouplist)
+writer.writerow(list_of_groups)
+f.close()
 
 ### STATISTICS PART ###
 
