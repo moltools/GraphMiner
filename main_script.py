@@ -11,7 +11,7 @@ import numpy as np
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ',')
+infile = load_data(1, ';')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -26,7 +26,7 @@ from GraphMiner import select_on_size, \
     rdkit_smiles3, combine_substr2, TimeoutError, repl_atommap_POOOO
 
 
-@timeout(1)
+@timeout(30)
 def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     print(' ')
     repl = {}
