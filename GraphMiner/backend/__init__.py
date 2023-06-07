@@ -27,3 +27,5 @@ from .frequency_counter import combine_substr, count_freq, perc_substr, \
 #Statistics
 from .statistics import mul_test_corr, extract_signif_substr, create_groups_substr, \
     hypergeometric_test_pval
+from .results_analysis import mol_to_fingerprint, plot_dendrogram, \
+    create_groups_dendrogram, draw_mol_fig,tanimoto_coefficient

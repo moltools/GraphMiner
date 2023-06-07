@@ -218,7 +218,9 @@ substr_df = load_data(2, ',')
 
 ## Calculate p values
 from GraphMiner import hypergeometric_test_pval, \
-    mul_test_corr, extract_signif_substr, create_groups_substr
+    mul_test_corr, extract_signif_substr, create_groups_substr, \
+    mol_to_fingerprint, plot_dendrogram, create_groups_dendrogram, \
+    draw_mol_fig,tanimoto_coefficient
 
 pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
 for key in pvaldict.keys():
@@ -234,19 +236,30 @@ f = open('significantsubstr2.csv', 'w')
 writer = csv.writer(f)
 p = 0
 for pvallist in pvaldict.values():
+    writer.writerow('New Group')
     writer.writerow([p])
     p +=1
     TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
     substr_df['True/False Benj-Hoch'] = TF_benj_list
     list_sigdif = extract_signif_substr(TF_benj_list, substr_df)
-    print(list_sigdif)
-    writer.writerow(list_sigdif)
+    # writer.writerow(list_sigdif)
     dic_of_substr = create_groups_substr(list_sigdif)
-    print(dic_of_substr)
-    writer.writerow(dic_of_substr)
+    # writer.writerow(dic_of_substr)
+    smilessubstr = [smiles.upper() for smiles in list_sigdif]
+    molsubstr = [Chem.MolFromSmiles(smiles) for smiles in smilessubstr]
+    fps = [mol_to_fingerprint(mol) for mol in molsubstr]
+    dist_m = np.zeros((len(list_sigdif), len(list_sigdif)))
+    for i, fp_i in enumerate(fps):
+        for j, fp_j in enumerate(fps):
+            if j > i:
+                coef = 1 - tanimoto_coefficient(fp_i, fp_j)
+                dist_m[i, j] = coef
+                dist_m[j, i] = coef
+    dendrogram = plot_dendrogram(dist_m, smilessubstr)
+    valueslist = create_groups_dendrogram(dendrogram)
+    writer.writerow(valueslist)
+    draw_mol_fig(valueslist)
 f.close()
-# print(TOlist)
-# print(tottlist)
 end = time.time()
 print('time', end-start)
 print('TO', TO)
