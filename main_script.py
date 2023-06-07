@@ -11,7 +11,7 @@ import numpy as np
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ';')
+infile = load_data(1, ',')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -190,13 +190,17 @@ print('TO', TO)
 print(TOlist)
 print(tottlist)
 if len(list_of_df) == 1:
-    list_of_df[0].to_csv('substrfile2.csv', header = ['Substructure', 'Frequency'])
+    list_of_df[0].to_csv('substrfile3.csv', header = ['Substructure', 'Frequency'])
 elif len(list_of_df) == 2:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     colmn = list(joined_df.columns)
     joined_df[colmn[1]] = joined_df[colmn[1]].replace(np.nan, 0)
     joined_df[colmn[2]] = joined_df[colmn[2]].replace(np.nan, 0)
-    joined_df.to_csv('substrfile2.csv', header = ['Substructure', 'Frequency0', 'Frequency1'])
+    headers = ['Substructure']
+    for groupname in grouplist:
+        headers.append('Frequency' + str(groupname))
+    print(headers)
+    joined_df.to_csv('substrfile3.csv', header = headers)
 elif len(list_of_df) >=3:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     for dfnum in range(2, len(list_of_df)):
@@ -206,11 +210,12 @@ elif len(list_of_df) >=3:
     headers = ['Substructure']
     for num_df in range(len(list_of_df)):
         joined_df[colmn[num_df + 1]] = joined_df[colmn[num_df + 1]].replace(np.nan, 0)
-        headers.append('Frequency' + str(num_df))
+    for groupname in grouplist:
+        headers.append('Frequency' + str(groupname))
     print(headers)
-    joined_df.to_csv('substrfile2.csv',header=headers)
+    joined_df.to_csv('substrfile3.csv',header=headers)
 
-f = open('datafilepart1.csv', 'w')
+f = open('datafilepart13.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(grouplist)
 writer.writerow(list_of_groups)
@@ -231,13 +236,13 @@ pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
 for key in pvaldict.keys():
     substr_df[key] = pvaldict[key]
 
-f = open('pvaloverview2.csv',  'w')
+f = open('pvaloverview3.csv',  'w')
 writer = csv.writer(f)
 for row in substr_df.iterrows():
     writer.writerow(row)
 f.close()
 
-f = open('significantsubstr2.csv', 'w')
+f = open('significantsubstr3.csv', 'w')
 writer = csv.writer(f)
 p = 0
 for pvallist in pvaldict.values():
