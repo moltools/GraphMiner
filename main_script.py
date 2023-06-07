@@ -246,13 +246,13 @@ f = open('significantsubstr3.csv', 'w')
 writer = csv.writer(f)
 p = 0
 for pvallist in pvaldict.values():
-    writer.writerow('New Group')
+    writer.writerow(['New Group'])
     writer.writerow([p])
     p +=1
     TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
     substr_df['True/False Benj-Hoch'] = TF_benj_list
     list_sigdif = extract_signif_substr(TF_benj_list, substr_df)
-    # writer.writerow(list_sigdif)
+    writer.writerow(list_sigdif)
     dic_of_substr = create_groups_substr(list_sigdif)
     # writer.writerow(dic_of_substr)
     smilessubstr = [smiles.upper() for smiles in list_sigdif]
