@@ -53,27 +53,24 @@ def create_groups_dendrogram(dn):
 #     # plt.show()
 #     return
 
-def draw_mol_fig(vallist):
+def draw_mol_fig(vallist, filepath):
     for group in vallist:
         plt.title("Group " + group)
         mols = [Chem.MolFromSmiles(mol) for mol in vallist[group]]
         res = rdFMCS.FindMCS(mols)
         pattern = Chem.MolFromSmarts(res.smartsString)
-        # pattern
-        # print(pattern)
-        fig = Draw.MolToImage(pattern, size=(120,120))
-        # print(fig)
-        # Image.open(fig)
-        plt.imshow(fig)
-        plt.show()
+        totalpath = filepath + 'group' + str(group) + '.png'
+        print(totalpath)
+        Draw.MolToFile(pattern, totalpath)
     return
 
 
-def plot_dendrogram(dist_matrix, substrsmiles):
+def plot_dendrogram(dist_matrix, substrsmiles, filename):
     X = squareform(dist_matrix)
     Z = linkage(X, "ward")
     fig = plt.figure(figsize=(25, 10))
     dn = dendrogram(Z, orientation="right", labels = substrsmiles, color_threshold=1.5)
-    plt.show()
+    plt.savefig(filename)
     return dn
+
 
