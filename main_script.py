@@ -255,7 +255,14 @@ for pvallist in pvaldict.values():
     writer.writerow(list_sigdif)
     dic_of_substr = create_groups_substr(list_sigdif)
     # writer.writerow(dic_of_substr)
-    smilessubstr = [smiles.upper() for smiles in list_sigdif]
+    # smilessubstr = [smiles for smiles in list_sigdif]
+    smilessubstr = []
+    for smiless in list_sigdif:
+        smiless.replace('c', 'C')
+        smiless.replace('n', 'N')
+        smiless.replace('o', 'O')
+        smiless.replace('s', 'S')
+        smilessubstr.append(smiless)
     molsubstr = [Chem.MolFromSmiles(smiles) for smiles in smilessubstr]
     fps = [mol_to_fingerprint(mol) for mol in molsubstr]
     dist_m = np.zeros((len(list_sigdif), len(list_sigdif)))
