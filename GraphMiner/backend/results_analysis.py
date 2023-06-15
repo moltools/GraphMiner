@@ -12,6 +12,7 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 
 def mol_to_fingerprint(mol: Chem.Mol, num_bits: int = 2048, radius: int = 3) -> np.array:
     """Creates Morgan fingerprint from RDKit Mol."""
+    print(Chem.MolToSmiles(mol))
     bit_fingerprint = np.zeros((0,), dtype=int)
     morgan_bit_vector = AllChem.GetMorganFingerprintAsBitVect(mol, radius, num_bits)
     DataStructs.ConvertToNumpyArray(morgan_bit_vector, bit_fingerprint)
@@ -60,7 +61,7 @@ def draw_mol_fig(vallist, filepath):
         res = rdFMCS.FindMCS(mols)
         pattern = Chem.MolFromSmarts(res.smartsString)
         totalpath = filepath + 'group' + str(group) + '.png'
-        print(totalpath)
+        # print(totalpath)
         Draw.MolToFile(pattern, totalpath)
     return
 
