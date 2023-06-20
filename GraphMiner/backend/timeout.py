@@ -7,7 +7,7 @@ class TimeoutError(Exception):
     pass
 
 # timer only works on UNIX systems; also not thread-safe
-def timeout(seconds=30, error_message=os.strerror(errno.ETIME)):
+def timeout(seconds=1, error_message=os.strerror(errno.ETIME)):
     def decorator(func):
         def _handle_timeout(signum, frame):
             raise TimeoutError(error_message)
