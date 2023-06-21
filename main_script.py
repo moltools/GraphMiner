@@ -80,7 +80,7 @@ def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     total_molecules += 1
     return dict_substr, total_molecules, all_substr
 
-@timeout(120)
+@timeout(30)
 def mol_substr_dfs(selected_mol, all_substr, dict_substr, total_molecules):
     print(' ')
     repl = {}
@@ -155,7 +155,7 @@ for group in grouplist:
             print(number)
             for mol in selected_mol:
                 try:
-                    dict_substr, group_tot, all_substr = mol_substr_bfs(Chem.MolFromSmiles(mol), all_substr, dict_substr, group_tot)
+                    dict_substr, group_tot, all_substr = mol_substr_dfs(Chem.MolFromSmiles(mol), all_substr, dict_substr, group_tot)
                     tottlist.append(Chem.MolFromSmiles(mol).GetNumHeavyAtoms())
                 except TimeoutError:
                     print('timeout')
@@ -165,7 +165,7 @@ for group in grouplist:
         else:
             number += 1
             try:
-                dict_substr, group_tot, all_substr = mol_substr_bfs(selected_mol, all_substr, dict_substr, group_tot)
+                dict_substr, group_tot, all_substr = mol_substr_dfs(selected_mol, all_substr, dict_substr, group_tot)
                 tottlist.append(selected_mol.GetNumHeavyAtoms())
             except TimeoutError:
                 print('timeout')
