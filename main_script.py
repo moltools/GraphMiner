@@ -190,7 +190,7 @@ print('TO', TO)
 print(TOlist)
 print(tottlist)
 if len(list_of_df) == 1:
-    list_of_df[0].to_csv('substrfile3.csv', header = ['Substructure', 'Frequency'])
+    list_of_df[0].to_csv('substrfile.csv', header = ['Substructure', 'Frequency'])
 elif len(list_of_df) == 2:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     colmn = list(joined_df.columns)
@@ -200,7 +200,7 @@ elif len(list_of_df) == 2:
     for groupname in grouplist:
         headers.append('Frequency' + str(groupname))
     print(headers)
-    joined_df.to_csv('substrfile3.csv', header = headers)
+    joined_df.to_csv('substrfile.csv', header = headers)
 elif len(list_of_df) >=3:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     for dfnum in range(2, len(list_of_df)):
@@ -213,9 +213,9 @@ elif len(list_of_df) >=3:
     for groupname in grouplist:
         headers.append('Frequency' + str(groupname))
     print(headers)
-    joined_df.to_csv('substrfile3.csv',header=headers)
+    joined_df.to_csv('substrfile.csv',header=headers)
 
-f = open('datafilepart13.csv', 'w')
+f = open('datafilepart1.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(grouplist)
 writer.writerow(list_of_groups)
@@ -236,13 +236,13 @@ pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
 for key in pvaldict.keys():
     substr_df[key] = pvaldict[key]
 
-f = open('pvaloverview3.csv',  'w')
+f = open('pvaloverview.csv',  'w')
 writer = csv.writer(f)
 for row in substr_df.iterrows():
     writer.writerow(row)
 f.close()
 
-f = open('significantsubstr3.csv', 'w')
+f = open('significantsubstr.csv', 'w')
 writer = csv.writer(f)
 p = 0
 for pvallist in pvaldict.values():
@@ -272,11 +272,11 @@ for pvallist in pvaldict.values():
                 coef = 1 - tanimoto_coefficient(fp_i, fp_j)
                 dist_m[i, j] = coef
                 dist_m[j, i] = coef
-    namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images3/' + str(groupname) + '_dendrogram.png'
+    namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(groupname) + '_dendrogram.png'
     dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
     valueslist = create_groups_dendrogram(dendrogram)
     writer.writerow(valueslist)
-    filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images3' + '/' + str(groupname)
+    filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images' + '/' + str(groupname)
     draw_mol_fig(valueslist, filepaths)
 f.close()
 end = time.time()
