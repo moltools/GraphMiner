@@ -89,36 +89,36 @@ def mol_substr_dfs(selected_mol, all_substr, dict_substr, total_molecules):
     print('START: ' + sel_smile)
     set_atommapnum(sel_mol)
     tot_mol = sel_mol
-    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
-        sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-        print('C(=O)O done')
-        # print(Chem.MolToSmiles(sel_mol))
-    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
-        sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
-        print('P(=O)(O)O done')
-        # print(Chem.MolToSmiles(sel_mol))
-    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
-        sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
-        print('S(=O)(=O)O done')
-        # print(Chem.MolToSmiles(sel_mol))
-    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
-        sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
-        print('S(=O)(=O) done')
-    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
-        sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
-        print('NOCO done')
-        # print(Chem.MolToSmiles(sel_mol))
-    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
-        sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
-        print('NC=O done')
-        # print(Chem.MolToSmiles(sel_mol))
-    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
-        sel_mol, repl = repl_atommap_CO(sel_mol, repl)
-        print('CO done')
-        # print(Chem.MolToSmiles(sel_mol))
-    if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
-        sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
-        print('C=O done')
+    # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
+    #     sel_mol, repl = repl_atommap_COO(sel_mol, repl)
+    #     print('C(=O)O done')
+    #     # print(Chem.MolToSmiles(sel_mol))
+    # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
+    #     sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
+    #     print('P(=O)(O)O done')
+    #     # print(Chem.MolToSmiles(sel_mol))
+    # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
+    #     sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
+    #     print('S(=O)(=O)O done')
+    #     # print(Chem.MolToSmiles(sel_mol))
+    # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
+    #     sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
+    #     print('S(=O)(=O) done')
+    # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
+    #     sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
+    #     print('NOCO done')
+    #     # print(Chem.MolToSmiles(sel_mol))
+    # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
+    #     sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
+    #     print('NC=O done')
+    #     # print(Chem.MolToSmiles(sel_mol))
+    # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
+    #     sel_mol, repl = repl_atommap_CO(sel_mol, repl)
+    #     print('CO done')
+    #     # print(Chem.MolToSmiles(sel_mol))
+    # if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
+    #     sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
+    #     print('C=O done')
         # print(Chem.MolToSmiles(sel_mol))
     dictnode, list_node = rdkit_parse_atommap(sel_mol)
     subgraphdict = depth_fs(sel_mol, dictnode)
@@ -190,7 +190,7 @@ print('TO', TO)
 print(TOlist)
 print(tottlist)
 if len(list_of_df) == 1:
-    list_of_df[0].to_csv('substrfile2.csv', header = ['Substructure', 'Frequency'])
+    list_of_df[0].to_csv('substrfile3.csv', header = ['Substructure', 'Frequency'])
 elif len(list_of_df) == 2:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     colmn = list(joined_df.columns)
@@ -200,7 +200,7 @@ elif len(list_of_df) == 2:
     for groupname in grouplist:
         headers.append('Frequency' + str(groupname))
     print(headers)
-    joined_df.to_csv('substrfile2.csv', header = headers)
+    joined_df.to_csv('substrfile3.csv', header = headers)
 elif len(list_of_df) >=3:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     for dfnum in range(2, len(list_of_df)):
@@ -213,9 +213,9 @@ elif len(list_of_df) >=3:
     for groupname in grouplist:
         headers.append('Frequency' + str(groupname))
     print(headers)
-    joined_df.to_csv('substrfile2.csv',header=headers)
+    joined_df.to_csv('substrfile3.csv',header=headers)
 
-f = open('datafilepart12.csv', 'w')
+f = open('datafilepart13.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(grouplist)
 writer.writerow(list_of_groups)
@@ -236,13 +236,13 @@ pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
 for key in pvaldict.keys():
     substr_df[key] = pvaldict[key]
 
-f = open('pvaloverview2.csv',  'w')
+f = open('pvaloverview3.csv',  'w')
 writer = csv.writer(f)
 for row in substr_df.iterrows():
     writer.writerow(row)
 f.close()
 
-f = open('significantsubstr2.csv', 'w')
+f = open('significantsubstr3.csv', 'w')
 writer = csv.writer(f)
 p = 0
 for pvallist in pvaldict.values():
