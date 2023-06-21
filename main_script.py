@@ -129,7 +129,7 @@ def mol_substr_dfs(selected_mol, all_substr, dict_substr, total_molecules):
     all_substr += (unique_str)
     dict_substr[total_molecules] = unique_str
     total_molecules += 1
-    return dict_substr, total_molecules
+    return dict_substr, total_molecules, all_substr
 
 number = 0
 group_num = 0
