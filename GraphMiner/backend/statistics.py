@@ -42,7 +42,7 @@ def mul_test_corr(list_of_pval, corr_meth):
     False, [2] corrected p-values, [3] corrected alpha for Sidak method and
     [4] corrected alpha for Multiple Testing Correction method
     '''
-    tests = multitest.multipletests(pvals = list_of_pval, alpha = 0.05, method = corr_meth)
+    tests = multitest.multipletests(pvals = list_of_pval, alpha = 0.005, method = corr_meth)
     TF_list_mtc = tests[0].tolist()
     return TF_list_mtc
 

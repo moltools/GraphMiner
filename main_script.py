@@ -190,7 +190,7 @@ print('TO', TO)
 print(TOlist)
 print(tottlist)
 if len(list_of_df) == 1:
-    list_of_df[0].to_csv('substrfile.csv', header = ['Substructure', 'Frequency'])
+    list_of_df[0].to_csv('substrfile3.csv', header = ['Substructure', 'Frequency'])
 elif len(list_of_df) == 2:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     colmn = list(joined_df.columns)
@@ -200,7 +200,7 @@ elif len(list_of_df) == 2:
     for groupname in grouplist:
         headers.append('Frequency' + str(groupname))
     print(headers)
-    joined_df.to_csv('substrfile.csv', header = headers)
+    joined_df.to_csv('substrfile3.csv', header = headers)
 elif len(list_of_df) >=3:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     for dfnum in range(2, len(list_of_df)):
@@ -213,9 +213,9 @@ elif len(list_of_df) >=3:
     for groupname in grouplist:
         headers.append('Frequency' + str(groupname))
     print(headers)
-    joined_df.to_csv('substrfile.csv',header=headers)
+    joined_df.to_csv('substrfile3.csv',header=headers)
 
-f = open('datafilepart1.csv', 'w')
+f = open('datafilepart13.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(grouplist)
 writer.writerow(list_of_groups)
@@ -236,13 +236,13 @@ pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
 for key in pvaldict.keys():
     substr_df[key] = pvaldict[key]
 
-f = open('pvaloverview.csv',  'w')
+f = open('pvaloverview3.csv',  'w')
 writer = csv.writer(f)
 for row in substr_df.iterrows():
     writer.writerow(row)
 f.close()
 
-f = open('significantsubstr.csv', 'w')
+f = open('significantsubstr3.csv', 'w')
 writer = csv.writer(f)
 p = 0
 for pvallist in pvaldict.values():
@@ -253,31 +253,31 @@ for pvallist in pvaldict.values():
     substr_df['True/False Benj-Hoch'] = TF_benj_list
     list_sigdif = extract_signif_substr(TF_benj_list, substr_df)
     writer.writerow(list_sigdif)
-    dic_of_substr = create_groups_substr(list_sigdif)
-    writer.writerow(dic_of_substr)
-    smilessubstr = [smiles for smiles in list_sigdif]
-    smilessubstr = []
-    for smiless in list_sigdif:
-        smiless.replace('c', 'C')
-        smiless.replace('n', 'N')
-        smiless.replace('o', 'O')
-        smiless.replace('s', 'S')
-        smilessubstr.append(smiless)
-    molsubstr = [Chem.MolFromSmiles(smiles) for smiles in smilessubstr]
-    fps = [mol_to_fingerprint(mol) for mol in molsubstr]
-    dist_m = np.zeros((len(list_sigdif), len(list_sigdif)))
-    for i, fp_i in enumerate(fps):
-        for j, fp_j in enumerate(fps):
-            if j > i:
-                coef = 1 - tanimoto_coefficient(fp_i, fp_j)
-                dist_m[i, j] = coef
-                dist_m[j, i] = coef
-    namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(groupname) + '_dendrogram.png'
-    dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
-    valueslist = create_groups_dendrogram(dendrogram)
-    writer.writerow(valueslist)
-    filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images' + '/' + str(groupname)
-    draw_mol_fig(valueslist, filepaths)
+    # dic_of_substr = create_groups_substr(list_sigdif)
+    # writer.writerow(dic_of_substr)
+    # smilessubstr = [smiles for smiles in list_sigdif]
+    # smilessubstr = []
+    # for smiless in list_sigdif:
+    #     smiless.replace('c', 'C')
+    #     smiless.replace('n', 'N')
+    #     smiless.replace('o', 'O')
+    #     smiless.replace('s', 'S')
+    #     smilessubstr.append(smiless)
+    # molsubstr = [Chem.MolFromSmiles(smiles) for smiles in smilessubstr]
+    # fps = [mol_to_fingerprint(mol) for mol in molsubstr]
+    # dist_m = np.zeros((len(list_sigdif), len(list_sigdif)))
+    # for i, fp_i in enumerate(fps):
+    #     for j, fp_j in enumerate(fps):
+    #         if j > i:
+    #             coef = 1 - tanimoto_coefficient(fp_i, fp_j)
+    #             dist_m[i, j] = coef
+    #             dist_m[j, i] = coef
+    # namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(groupname) + '_dendrogram.png'
+    # dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
+    # valueslist = create_groups_dendrogram(dendrogram)
+    # writer.writerow(valueslist)
+    # filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images' + '/' + str(groupname)
+    # draw_mol_fig(valueslist, filepaths)
 f.close()
 end = time.time()
 print('time', end-start)
