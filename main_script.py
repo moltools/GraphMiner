@@ -145,7 +145,7 @@ for group in grouplist:
     dict_substr = {}
     group_tot = 0
     for mol_smile in list_of_smiles:
-        first_select = select_on_size(mol_smile, 60)
+        first_select = select_on_size(mol_smile, 40)
         selected_mol = select_mol(first_select)
         if selected_mol == None:
             continue
