@@ -11,7 +11,7 @@ import numpy as np
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ';')
+infile = load_data(1, ',')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -190,7 +190,7 @@ print('TO', TO)
 print(TOlist)
 print(tottlist)
 if len(list_of_df) == 1:
-    list_of_df[0].to_csv('substrfile3.csv', header = ['Substructure', 'Frequency'])
+    list_of_df[0].to_csv('substrfile2.csv', header = ['Substructure', 'Frequency'])
 elif len(list_of_df) == 2:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     colmn = list(joined_df.columns)
@@ -200,7 +200,7 @@ elif len(list_of_df) == 2:
     for groupname in grouplist:
         headers.append('Frequency' + str(groupname))
     print(headers)
-    joined_df.to_csv('substrfile3.csv', header = headers)
+    joined_df.to_csv('substrfile2.csv', header = headers)
 elif len(list_of_df) >=3:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     for dfnum in range(2, len(list_of_df)):
@@ -213,12 +213,13 @@ elif len(list_of_df) >=3:
     for groupname in grouplist:
         headers.append('Frequency' + str(groupname))
     print(headers)
-    joined_df.to_csv('substrfile3.csv',header=headers)
+    joined_df.to_csv('substrfile2.csv',header=headers)
 
-f = open('datafilepart13.csv', 'w')
+f = open('datafilepart12.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(grouplist)
-writer.writerow(list_of_groups)
+writer.writerow(list_of_groups.keys())
+writer.writerow(list_of_groups.values())
 f.close()
 
 ### STATISTICS PART ###
@@ -236,13 +237,13 @@ pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
 for key in pvaldict.keys():
     substr_df[key] = pvaldict[key]
 
-f = open('pvaloverview3.csv',  'w')
+f = open('pvaloverview2.csv',  'w')
 writer = csv.writer(f)
 for row in substr_df.iterrows():
     writer.writerow(row)
 f.close()
 
-f = open('significantsubstr3.csv', 'w')
+f = open('significantsubstr2.csv', 'w')
 writer = csv.writer(f)
 p = 0
 for pvallist in pvaldict.values():
