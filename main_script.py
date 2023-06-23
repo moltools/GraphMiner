@@ -253,32 +253,31 @@ for pvallist in pvaldict.values():
     TF_benj_list = mul_test_corr(pvallist, 'fdr_bh')
     substr_df['True/False Benj-Hoch'] = TF_benj_list
     list_sigdif = extract_signif_substr(TF_benj_list, substr_df)
-    writer.writerow(list_sigdif)
-    # dic_of_substr = create_groups_substr(list_sigdif)
-    # writer.writerow(dic_of_substr)
-    # smilessubstr = [smiles for smiles in list_sigdif]
-    # smilessubstr = []
-    # for smiless in list_sigdif:
-    #     smiless.replace('c', 'C')
-    #     smiless.replace('n', 'N')
-    #     smiless.replace('o', 'O')
-    #     smiless.replace('s', 'S')
-    #     smilessubstr.append(smiless)
-    # molsubstr = [Chem.MolFromSmiles(smiles) for smiles in smilessubstr]
-    # fps = [mol_to_fingerprint(mol) for mol in molsubstr]
-    # dist_m = np.zeros((len(list_sigdif), len(list_sigdif)))
-    # for i, fp_i in enumerate(fps):
-    #     for j, fp_j in enumerate(fps):
-    #         if j > i:
-    #             coef = 1 - tanimoto_coefficient(fp_i, fp_j)
-    #             dist_m[i, j] = coef
-    #             dist_m[j, i] = coef
-    # namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(groupname) + '_dendrogram.png'
-    # dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
-    # valueslist = create_groups_dendrogram(dendrogram)
-    # writer.writerow(valueslist)
-    # filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images' + '/' + str(groupname)
-    # draw_mol_fig(valueslist, filepaths)
+    # writer.writerow(list_sigdif)
+    dic_of_substr = create_groups_substr(list_sigdif)
+    writer.writerow(dic_of_substr.keys())
+    smilessubstr = []
+    for smiless in list_sigdif:
+        smiless = smiless.replace('c', 'C')
+        smiless = smiless.replace('n', 'N')
+        smiless = smiless.replace('o', 'O')
+        smiless = smiless.replace('s', 'S')
+        smilessubstr.append(smiless)
+    molsubstr = [Chem.MolFromSmiles(smiles) for smiles in smilessubstr]
+    fps = [mol_to_fingerprint(mol) for mol in molsubstr]
+    dist_m = np.zeros((len(list_sigdif), len(list_sigdif)))
+    for i, fp_i in enumerate(fps):
+        for j, fp_j in enumerate(fps):
+            if j > i:
+                coef = 1 - tanimoto_coefficient(fp_i, fp_j)
+                dist_m[i, j] = coef
+                dist_m[j, i] = coef
+    namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(groupname) + '_dendrogram.png'
+    dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
+    valueslist = create_groups_dendrogram(dendrogram)
+    writer.writerow(valueslist)
+    filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images' + '/' + str(groupname)
+    draw_mol_fig(valueslist, filepaths)
 f.close()
 end = time.time()
 print('time', end-start)
