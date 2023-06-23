@@ -60,9 +60,14 @@ def draw_mol_fig(vallist, filepath):
         mols = [Chem.MolFromSmiles(mol) for mol in vallist[group]]
         res = rdFMCS.FindMCS(mols)
         pattern = Chem.MolFromSmarts(res.smartsString)
-        totalpath = filepath + 'group' + str(group) + '.png'
-        # print(totalpath)
+        totalpath = filepath + '/mcs_group' + str(group) + '.png'
         Draw.MolToFile(pattern, totalpath)
+        plt.title("Group " + group)
+        lengths = [len(mol) for mol in vallist[group]]
+        biggest = vallist[group][lengths.index(max(lengths))]
+        bigmol = Chem.MolFromSmiles(biggest)
+        totalpath = filepath + '/biggest_group' + str(group) + '.png'
+        Draw.MolToFile(bigmol, totalpath)
     return
 
 
