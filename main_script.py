@@ -204,7 +204,7 @@ def main(logger: Logger) -> None:
         list_of_df.append(df)
         group_num += 1
         logger.debug(list_of_df)
-    logger.debug('TO', TO)
+    logger.debug(f"TO {TO}")
     logger.debug(TOlist)
     logger.debug(tottlist)
     if len(list_of_df) == 1:
@@ -299,9 +299,9 @@ def main(logger: Logger) -> None:
         draw_mol_fig(valueslist, filepaths)
     f.close()
     end = time.time()
-    logger.debug('time', end-start)
-    logger.debug('TO', TO)
-    logger.debug('number', number)
+    logger.debug(f'time {end-start}')
+    logger.debug(f'TO {TO}')
+    logger.debug(f'number {number}')
 
 
 if __name__ == "__main__":
