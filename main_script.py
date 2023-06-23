@@ -264,7 +264,14 @@ for pvallist in pvaldict.values():
         smiless = smiless.replace('s', 'S')
         smilessubstr.append(smiless)
     molsubstr = [Chem.MolFromSmiles(smiles) for smiles in smilessubstr]
-    fps = [mol_to_fingerprint(mol) for mol in molsubstr]
+    fps = []
+    for mol in molsubstr:
+        try:
+            fpsmol = mol_to_fingerprint(mol)
+            fps.append(fpsmol)
+        except:
+            continue
+            # fps = [mol_to_fingerprint(mol) for mol in molsubstr]
     dist_m = np.zeros((len(list_sigdif), len(list_sigdif)))
     for i, fp_i in enumerate(fps):
         for j, fp_j in enumerate(fps):
