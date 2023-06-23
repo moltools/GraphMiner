@@ -246,6 +246,7 @@ f.close()
 f = open('significantsubstr4.csv', 'w')
 writer = csv.writer(f)
 p = 0
+tryoutfail = 0
 for pvallist in pvaldict.values():
     writer.writerow(['New Group'])
     writer.writerow([p])
@@ -270,6 +271,7 @@ for pvallist in pvaldict.values():
             fpsmol = mol_to_fingerprint(mol)
             fps.append(fpsmol)
         except:
+            tryoutfail += 1
             continue
             # fps = [mol_to_fingerprint(mol) for mol in molsubstr]
     dist_m = np.zeros((len(list_sigdif), len(list_sigdif)))
@@ -282,7 +284,7 @@ for pvallist in pvaldict.values():
     namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images4/' + str(groupname) + '_dendrogram.png'
     dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
     valueslist = create_groups_dendrogram(dendrogram)
-    writer.writerow(valueslist)
+    # writer.writerow(valueslist)
     filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images4' + '/' + str(groupname)
     draw_mol_fig(valueslist, filepaths)
 f.close()
@@ -290,4 +292,5 @@ end = time.time()
 print('time', end-start)
 print('TO', TO)
 print('number', number)
+print('tryoutfail', tryoutfail)
 
