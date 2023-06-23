@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from logging import Logger, StreamHandler
+from logging import Logger, StreamHandler, FileHandler
 
 TIMEOUT_TIME = 1  # change this to change the timeout time in seconds
 LOGGER_LEVEL = 'INFO'  # skips debug messages
@@ -291,9 +291,6 @@ def main(logger: Logger) -> None:
                     dist_m[i, j] = coef
                     dist_m[j, i] = coef
 
-        print(dist_m)
-        exit("remove later")
-
         namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(groupname) + '_dendrogram.png'
         dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
         valueslist = create_groups_dendrogram(dendrogram)
@@ -308,9 +305,14 @@ def main(logger: Logger) -> None:
 
 
 if __name__ == "__main__":
-    logger = Logger('main_script.py', LOGGER_LEVEL)
+    logger = Logger('main_script.py')
+
     stream_handler = StreamHandler()
     stream_handler.setLevel(LOGGER_LEVEL)
     logger.addHandler(stream_handler)
+
+    file_handler = FileHandler('main_script.log')  # this is the file where all debug messages will be written to
+    file_handler.setLevel("DEBUG")  # always log debug messages to file
+    logger.addHandler(file_handler)
 
     main(logger)
