@@ -1,0 +1,11 @@
+smiles,group
+Nc1ncc(C=Cc2ccc([N+](=O)[O-])o2)nn1,antibacterial
+CCCCCC(CC=CCCC(=O)NCC(=CCl)C1=CCCC(C)C1=O)OC,antibacterial
+Cc1noc(NS(=O)(=O)c2ccc(N)cc2)c1C,antibacterial
+CCN(CC)C(C)=NN=Cc1c2c(O)c3c(O)c(C)c4c(c3c1O)C(=O)C(C)(OC=CC(OC)C(C)C(OC(C)=O)C(C)C(O)C(C)C(O)C(C)C=CC=C(C)C(=O)N2)O4,antibacterial
+O=C1C(O)=C(c2ccc(O)cc2)C(=O)C(O)=C1c1ccc(O)cc1,antibacterial
+O=C(C=Cc1ccc(Cl)cc1Cl)N1CCOCC1,not-antibacterial
+CCC1OC(=O)C(C)=CC(C)C(OC2OC(C)CC(N(C)C)C2O)C(C)(OC)CC(C)C(=O)C(C)=CC1(C)O,not-antibacterial
+C=CCn1c(=O)c(C2C(C(=O)OC(C)C)=C(N)N(NC(=O)c3ccncc3)C3=C2C(=O)CCC3)cc2cc(C)ccc21,not-antibacterial
+COC(=O)Cc1cc(=O)oc2cc(OC3OC(C)C(OC)C(OC(=O)c4ccc(C)[nH]4)C3O)ccc12,not-antibacterial
+CCC(C)C(=O)C(C)c1oc(=O)c(C)c(O)c1C,not-antibacterial
