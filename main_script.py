@@ -260,6 +260,8 @@ for pvallist in pvaldict.values():
     # writer.writerow(list_sigdif)
     dic_of_substr = create_groups_substr(list_sigdif)
     writer.writerow(dic_of_substr.keys())
+    if len(list_sigdif) < 3:
+        continue
     smilessubstr = []
     for smiless in list_sigdif:
         smiless = smiless.replace('c', 'C')
