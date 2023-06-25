@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-LOGGER_LEVEL = 'DEBUG'  # prints debug messages to stdout
+# LOGGER_LEVEL = 'DEBUG'  # prints debug messages to stdout
 
 import csv
 import time
@@ -9,12 +9,12 @@ from rdkit import Chem
 import pandas as pd
 import numpy as np
 
-from tqdm import tqdm
+# from tqdm import tqdm
 
 ### DATA LOADING ###
 from GraphMiner import load_data, determine_groups, create_dict
 
-infile = load_data(1, ';')
+infile = load_data(1, ',')
 grouplist = determine_groups(infile)
 dict_of_data = create_dict(grouplist, infile)
 
@@ -275,8 +275,8 @@ for pvallist in pvaldict.values():
             fps.append(fpsmol)
         except:
             tryoutfail += 1
-            logger.debug(Exception)
-            logger.debug(type(Exception).__name__)
+            # logger.debug(Exception)
+            # logger.debug(type(Exception).__name__)
             continue
             # fps = [mol_to_fingerprint(mol) for mol in molsubstr]
     dist_m = np.zeros((len(list_sigdif), len(list_sigdif)))
@@ -300,16 +300,16 @@ print('number', number)
 print('tryoutfail', tryoutfail)
 
 
-if __name__ == "__main__":
-    logger = Logger('main_script.py')
+# if __name__ == "__main__":
+#     logger = Logger('main_script.py')
 
-    stream_handler = StreamHandler()
-    stream_handler.setLevel(LOGGER_LEVEL)
-    logger.addHandler(stream_handler)
+#     stream_handler = StreamHandler()
+#     stream_handler.setLevel(LOGGER_LEVEL)
+#     logger.addHandler(stream_handler)
 
-    file_handler = FileHandler('main_script.log')  # this is the file where all debug messages will be written to
-    file_handler.setLevel("DEBUG")  # always log debug messages to file
-    logger.addHandler(file_handler)
+#     file_handler = FileHandler('main_script.log')  # this is the file where all debug messages will be written to
+#     file_handler.setLevel("DEBUG")  # always log debug messages to file
+#     logger.addHandler(file_handler)
 
-    main(logger)
+#     main(logger)
 
