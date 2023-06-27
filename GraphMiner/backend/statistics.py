@@ -29,7 +29,7 @@ def hypergeometric_test_pval(total_dict: dict, input_df, grouplist):
         group += 1
     return pval
 
-def mul_test_corr(list_of_pval, corr_meth):
+def mul_test_corr(list_of_pval, corr_meth, pval):
     '''
     Perform Multiple Testing Correction using input method
 
@@ -42,7 +42,7 @@ def mul_test_corr(list_of_pval, corr_meth):
     False, [2] corrected p-values, [3] corrected alpha for Sidak method and
     [4] corrected alpha for Multiple Testing Correction method
     '''
-    tests = multitest.multipletests(pvals = list_of_pval, alpha = 0.05, method = corr_meth)
+    tests = multitest.multipletests(pvals = list_of_pval, alpha = pval, method = corr_meth)
     TF_list_mtc = tests[0].tolist()
     return TF_list_mtc
 

@@ -41,38 +41,30 @@ def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
         sel_mol, repl = repl_atommap_COO(sel_mol, repl)
         print('C(=O)O done')
-        # print(Chem.MolToSmiles(sel_mol))
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)(O)O')) == True:
         sel_mol, repl = repl_atommap_POOOO(sel_mol, repl)
         print('P(=O)(O)(O)O done')
-        # print(Chem.MolToSmiles(sel_mol))
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
         sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
         print('P(=O)(O)O done')
-        # print(Chem.MolToSmiles(sel_mol))
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
         sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
         print('S(=O)(=O)O done')
-        # print(Chem.MolToSmiles(sel_mol))
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
         sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
         print('S(=O)(=O) done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
         sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
         print('NOCO done')
-        # print(Chem.MolToSmiles(sel_mol))
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
         sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
         print('NC=O done')
-        # print(Chem.MolToSmiles(sel_mol))
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
         sel_mol, repl = repl_atommap_CO(sel_mol, repl)
         print('CO done')
-        # print(Chem.MolToSmiles(sel_mol))
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
         sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
         print('C=O done')
-        # print(Chem.MolToSmiles(sel_mol))
     dictnode, list_node = rdkit_parse_atommap(sel_mol)
     subgraphdict = breadth_fs2(dictnode, list_node)
     returned_dict = return_replaced2(repl, subgraphdict)
@@ -167,6 +159,7 @@ for group in grouplist:
                     continue
         else:
             number += 1
+            print(number)
             try:
                 dict_substr, group_tot, all_substr = mol_substr_bfs(selected_mol, all_substr, dict_substr, group_tot)
                 tottlist.append(selected_mol.GetNumHeavyAtoms())
@@ -193,7 +186,7 @@ print('TO', TO)
 print(TOlist)
 print(tottlist)
 if len(list_of_df) == 1:
-    list_of_df[0].to_csv('substrfile4.csv', header = ['Substructure', 'Frequency'])
+    list_of_df[0].to_csv('substrfile.csv', header = ['Substructure', 'Frequency'])
 elif len(list_of_df) == 2:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     colmn = list(joined_df.columns)
@@ -203,7 +196,7 @@ elif len(list_of_df) == 2:
     for groupname in grouplist:
         headers.append('Frequency' + str(groupname))
     print(headers)
-    joined_df.to_csv('substrfile4.csv', header = headers)
+    joined_df.to_csv('substrfile.csv', header = headers)
 elif len(list_of_df) >=3:
     joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
     for dfnum in range(2, len(list_of_df)):
@@ -216,9 +209,9 @@ elif len(list_of_df) >=3:
     for groupname in grouplist:
         headers.append('Frequency' + str(groupname))
     print(headers)
-    joined_df.to_csv('substrfile4.csv',header=headers)
+    joined_df.to_csv('substrfile.csv',header=headers)
 
-f = open('datafilepart14.csv', 'w')
+f = open('datafile.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(grouplist)
 writer.writerow(list_of_groups.keys())
@@ -240,13 +233,13 @@ pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
 for key in pvaldict.keys():
     substr_df[key] = pvaldict[key]
 
-f = open('pvaloverview4.csv',  'w')
+f = open('pvaloverview.csv',  'w')
 writer = csv.writer(f)
 for row in substr_df.iterrows():
     writer.writerow(row)
 f.close()
 
-f = open('significantsubstr4.csv', 'w')
+f = open('significantsubstr.csv', 'w')
 writer = csv.writer(f)
 p = 0
 tryoutfail = 0
@@ -288,11 +281,11 @@ for pvallist in pvaldict.values():
                 coef = 1 - tanimoto_coefficient(fp_i, fp_j)
                 dist_m[i, j] = coef
                 dist_m[j, i] = coef
-    namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images4/' + str(groupname) + '_dendrogram.png'
+    namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(groupname) + '_dendrogram.png'
     dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
     valueslist = create_groups_dendrogram(dendrogram)
     # writer.writerow(valueslist)
-    filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images4' + '/' + str(groupname)
+    filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images' + '/' + str(groupname)
     draw_mol_fig(valueslist, filepaths)
 f.close()
 end = time.time()
