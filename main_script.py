@@ -243,7 +243,7 @@ f = open('significantsubstr.csv', 'w')
 writer = csv.writer(f)
 p = 0
 tryoutfail = 0
-groupnum = 0
+groupnum = 1
 for pvallist in pvaldict.values():
     writer.writerow(['New Group'])
     writer.writerow([p])
