@@ -248,7 +248,7 @@ for pvallist in pvaldict.values():
     writer.writerow(['New Group'])
     writer.writerow([p])
     p +=1
-    TF_benj_list = mul_test_corr(pvallist, 'fdr_bh', 0.05)
+    TF_benj_list = mul_test_corr(pvallist, 'fdr_bh', 0.005)
     substr_df['True/False Benj-Hoch'] = TF_benj_list
     list_sigdif = extract_signif_substr(TF_benj_list, substr_df)
     # writer.writerow(list_sigdif)
