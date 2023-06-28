@@ -255,6 +255,7 @@ for pvallist in pvaldict.values():
     dic_of_substr = create_groups_substr(list_sigdif)
     writer.writerow(dic_of_substr.keys())
     if len(list_sigdif) < 3:
+        groupnum += 1
         continue
     smilessubstr = []
     for smiless in list_sigdif:
