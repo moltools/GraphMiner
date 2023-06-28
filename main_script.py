@@ -243,6 +243,7 @@ f = open('significantsubstr.csv', 'w')
 writer = csv.writer(f)
 p = 0
 tryoutfail = 0
+groupnum = 0
 for pvallist in pvaldict.values():
     writer.writerow(['New Group'])
     writer.writerow([p])
@@ -282,13 +283,14 @@ for pvallist in pvaldict.values():
                 dist_m[i, j] = coef
                 dist_m[j, i] = coef
     print(dist_m)
-    namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(groupname) + '_dendrogram.png'
+    namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(groupnum) + '_dendrogram.png'
     dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
-    print(groupname)
+    print(groupnum)
     valueslist = create_groups_dendrogram(dendrogram)
     # writer.writerow(valueslist)
-    filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images' + '/' + str(groupname)
+    filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images' + '/' + str(groupnum)
     draw_mol_fig(valueslist, filepaths)
+    groupnum += 1
 f.close()
 end = time.time()
 print('time', end-start)
