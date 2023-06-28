@@ -275,6 +275,7 @@ for pvallist in pvaldict.values():
             continue
             # fps = [mol_to_fingerprint(mol) for mol in molsubstr]
     dist_m = np.zeros((len(list_sigdif), len(list_sigdif)))
+    print(dist_m)
     for i, fp_i in enumerate(fps):
         for j, fp_j in enumerate(fps):
             if j > i:
@@ -283,6 +284,7 @@ for pvallist in pvaldict.values():
                 dist_m[j, i] = coef
     namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(groupname) + '_dendrogram.png'
     dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
+    print(groupname)
     valueslist = create_groups_dendrogram(dendrogram)
     # writer.writerow(valueslist)
     filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images' + '/' + str(groupname)
