@@ -275,13 +275,13 @@ for pvallist in pvaldict.values():
             continue
             # fps = [mol_to_fingerprint(mol) for mol in molsubstr]
     dist_m = np.zeros((len(list_sigdif), len(list_sigdif)))
-    print(dist_m)
     for i, fp_i in enumerate(fps):
         for j, fp_j in enumerate(fps):
             if j > i:
                 coef = 1 - tanimoto_coefficient(fp_i, fp_j)
                 dist_m[i, j] = coef
                 dist_m[j, i] = coef
+    print(dist_m)
     namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(groupname) + '_dendrogram.png'
     dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
     print(groupname)
