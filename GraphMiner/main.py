@@ -20,6 +20,7 @@ from GraphMiner import determine_groups, create_dict, select_on_size, \
 args = cli()
 
 def data_loading(args):
+    print(args.separatorCSVfile)
     df = pd.read_csv(args.input, args.separatorCSVfile)
     grouplist = determine_groups(df)
     dictofdata = create_dict(grouplist, df)
@@ -161,6 +162,8 @@ def mtc_clustering(pvaldict, substr_df, grouplist, args, pathway):
                     coef = 1 - tanimoto_coefficient(fp_i, fp_j)
                     dist_m[i, j] = coef
                     dist_m[j, i] = coef
+        imgpath = pathway + '/Images'
+        os.mkdir(imgpath)
         namefile = pathway + '/Images/' + str(
             groupname) + '_dendrogram.png'
         dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
