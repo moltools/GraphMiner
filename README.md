@@ -5,6 +5,7 @@ Run GraphMiner tool:
 ```GraphMiner -i _inputfile_```
 
 Other features:
+
 ```-mtc/--MultipleTestCorr {bonferroni, fdr_bh, holm} - default = fdr_bh```
 
 ```-o/--outputfolder [str] - default = 'GraphMinerResults'```
