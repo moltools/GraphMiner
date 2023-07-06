@@ -37,7 +37,7 @@ def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol, dotsub):
                 Chem.MolFragmentToSmiles(zeromol, subgraphlist))
     print('dot_structure', dot_structure)
     dotsub += dot_structure
-    return smiles_graphs, mol_graphs
+    return smiles_graphs, mol_graphs, dotsub
 
 def rdkit_smiles3(sub_graphs:dict, smilesmol):
     '''

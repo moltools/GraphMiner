@@ -64,7 +64,7 @@ def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules, dotsu
     dictnode, list_node = rdkit_parse_atommap(sel_mol)
     subgraphdict = breadth_fs2(dictnode, list_node)
     returned_dict = return_replaced2(repl, subgraphdict)
-    smilesdict, moldict = rdkit_smiles2(returned_dict, tot_mol, tot_mol, dotsub)
+    smilesdict, moldict, dotsub = rdkit_smiles2(returned_dict, tot_mol, tot_mol, dotsub)
     unique_str = combine_substr(smilesdict)
     all_substr += (unique_str)
     dict_substr[total_molecules] = unique_str
