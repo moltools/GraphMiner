@@ -20,8 +20,7 @@ from GraphMiner import determine_groups, create_dict, select_on_size, \
 args = cli()
 
 def data_loading(args):
-    print(args.separatorCSVfile)
-    df = pd.read_csv(args.input, args.separatorCSVfile)
+    df = pd.read_csv(args.input, sep=args.separatorCSVfile)
     grouplist = determine_groups(df)
     dictofdata = create_dict(grouplist, df)
     return grouplist, dictofdata
