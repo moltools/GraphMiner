@@ -18,6 +18,7 @@ def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol):
     mol_graphs = {}
     smiles_graphs = {}
     atommapdict = {}
+    dot_structure = 0
     for atom in smilesmol.GetAtoms():
         atommapdict[atom.GetAtomMapNum()] = atom.GetIdx()
         atom.SetAtomMapNum(0)
@@ -30,9 +31,11 @@ def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol):
                     subgraphset.add(atommapdict[atommapnum])
             subgraphlist = list(subgraphset)
             if '.' in Chem.MolFragmentToSmiles(smilesmol, subgraphlist):
+                dot_structure += 1
                 continue
             smiles_graphs[subgraph_length].append(
                 Chem.MolFragmentToSmiles(zeromol, subgraphlist))
+    print('dot_structure', dot_structure)
     return smiles_graphs, mol_graphs
 
 def rdkit_smiles3(sub_graphs:dict, smilesmol):

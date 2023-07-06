@@ -27,40 +27,40 @@ def data_loading(args):
 
 @timeout(args.TimeOutTimer)
 def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
-    print(' ')
+    # print(' ')
     repl = {}
     sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
     sel_mol = Chem.MolFromSmiles(sel_smile)
-    print('START: ' + sel_smile)
+    # print('START: ' + sel_smile)
     set_atommapnum(sel_mol)
     tot_mol = sel_mol
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
         sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-        print('C(=O)O done')
+        # print('C(=O)O done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)(O)O')) == True:
         sel_mol, repl = repl_atommap_POOOO(sel_mol, repl)
-        print('P(=O)(O)(O)O done')
+        # print('P(=O)(O)(O)O done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
         sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
-        print('P(=O)(O)O done')
+        # print('P(=O)(O)O done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
         sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
-        print('S(=O)(=O)O done')
+        # print('S(=O)(=O)O done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
         sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
-        print('S(=O)(=O) done')
+        # print('S(=O)(=O) done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
         sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
-        print('NOCO done')
+        # print('NOCO done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
         sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
-        print('NC=O done')
+        # print('NC=O done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
         sel_mol, repl = repl_atommap_CO(sel_mol, repl)
-        print('CO done')
+        # print('CO done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
         sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
-        print('C=O done')
+        # print('C=O done')
     dictnode, list_node = rdkit_parse_atommap(sel_mol)
     subgraphdict = breadth_fs2(dictnode, list_node)
     returned_dict = return_replaced2(repl, subgraphdict)
@@ -180,7 +180,7 @@ def main():
     cur_path = os.getcwd()
     new_path = cur_path + '/GraphMinerResults'
     os.mkdir(new_path)
-    print(new_path)
+    # print(new_path)
     group_list, dict_of_data = data_loading(args)
     number = 0
     TimeOut = 0
@@ -197,26 +197,26 @@ def main():
             if selected_mol == None:
                 continue
             elif type(selected_mol) == list:
-                print('list found')
+                # print('list found')
                 number += 1
-                print(number)
+                # print(number)
                 for mol in selected_mol:
                     try:
                         dict_substr, group_tot, all_substr = mol_substr_bfs(
                             Chem.MolFromSmiles(mol), all_substr, dict_substr,
                             group_tot)
                     except TimeoutError:
-                        print('timeout')
+                        # print('timeout')
                         TimeOut += 1
                         continue
             else:
                 number += 1
-                print(number)
+                # print(number)
                 try:
                     dict_substr, group_tot, all_substr = mol_substr_bfs(
                         selected_mol, all_substr, dict_substr, group_tot)
                 except TimeoutError:
-                    print('timeout')
+                    # print('timeout')
                     TimeOut += 1
                     continue
         list_of_groups[group] = group_tot
