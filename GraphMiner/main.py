@@ -124,6 +124,8 @@ def mtc_clustering(pvaldict, substr_df, grouplist, args, pathway):
     writer = csv.writer(f)
     p = 0
     tryoutfail = 0
+    imgpath = pathway + '/Images'
+    os.mkdir(imgpath)
     for pvallist in pvaldict.values():
         groupname = grouplist[p]
         writer.writerow(['New Group'])
@@ -161,8 +163,6 @@ def mtc_clustering(pvaldict, substr_df, grouplist, args, pathway):
                     coef = 1 - tanimoto_coefficient(fp_i, fp_j)
                     dist_m[i, j] = coef
                     dist_m[j, i] = coef
-        imgpath = pathway + '/Images'
-        os.mkdir(imgpath)
         namefile = pathway + '/Images/' + str(
             groupname) + '_dendrogram.png'
         dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
