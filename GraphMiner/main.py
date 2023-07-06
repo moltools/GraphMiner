@@ -26,7 +26,7 @@ def data_loading(args):
     return grouplist, dictofdata
 
 @timeout(args.TimeOutTimer)
-def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules, dot_sub):
+def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules, dotsub):
     # print(' ')
     repl = {}
     sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
