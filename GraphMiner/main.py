@@ -106,7 +106,7 @@ def writesubstrfile(list_of_df, grouplist, dict_of_groups, pathway):
 
 def calculatepval(args, list_of_groups, grouplist, pathway):
     substrfile = pathway + '/substrfile.csv'
-    substr_df = pd.read_csv(substrfile, args.SeparatorCSVfile)
+    substr_df = pd.read_csv(substrfile, sep=args.separatorCSVfile)
     pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
     for key in pvaldict.keys():
         substr_df[key] = pvaldict[key]
