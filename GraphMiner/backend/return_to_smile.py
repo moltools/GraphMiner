@@ -2,7 +2,7 @@
 
 from rdkit import Chem
 
-def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol):
+def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol, dotsub):
     '''
     Convert the indices of subgraphs to SMILES subgraphs
 
@@ -36,6 +36,7 @@ def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol):
             smiles_graphs[subgraph_length].append(
                 Chem.MolFragmentToSmiles(zeromol, subgraphlist))
     print('dot_structure', dot_structure)
+    dotsub += dot_structure
     return smiles_graphs, mol_graphs
 
 def rdkit_smiles3(sub_graphs:dict, smilesmol):

@@ -26,7 +26,7 @@ def data_loading(args):
     return grouplist, dictofdata
 
 @timeout(args.TimeOutTimer)
-def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
+def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules, dot_sub):
     # print(' ')
     repl = {}
     sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
@@ -64,7 +64,7 @@ def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     dictnode, list_node = rdkit_parse_atommap(sel_mol)
     subgraphdict = breadth_fs2(dictnode, list_node)
     returned_dict = return_replaced2(repl, subgraphdict)
-    smilesdict, moldict = rdkit_smiles2(returned_dict, tot_mol, tot_mol)
+    smilesdict, moldict = rdkit_smiles2(returned_dict, tot_mol, tot_mol, dotsub)
     unique_str = combine_substr(smilesdict)
     all_substr += (unique_str)
     dict_substr[total_molecules] = unique_str
@@ -176,6 +176,7 @@ def mtc_clustering(pvaldict, substr_df, grouplist, args, pathway):
     return
 
 def main():
+    dotsub = 0
     args = cli()
     cur_path = os.getcwd()
     new_path = cur_path + '/GraphMinerResults'
@@ -204,7 +205,7 @@ def main():
                     try:
                         dict_substr, group_tot, all_substr = mol_substr_bfs(
                             Chem.MolFromSmiles(mol), all_substr, dict_substr,
-                            group_tot)
+                            group_tot, dotsub)
                     except TimeoutError:
                         # print('timeout')
                         TimeOut += 1
@@ -214,7 +215,7 @@ def main():
                 # print(number)
                 try:
                     dict_substr, group_tot, all_substr = mol_substr_bfs(
-                        selected_mol, all_substr, dict_substr, group_tot)
+                        selected_mol, all_substr, dict_substr, group_tot, dotsub)
                 except TimeoutError:
                     # print('timeout')
                     TimeOut += 1
@@ -234,6 +235,7 @@ def main():
     writesubstrfile(list_of_df, group_list, list_of_groups, new_path)
     substr_df, pvaldict = calculatepval(args, list_of_groups, group_list, new_path)
     mtc_clustering(pvaldict, substr_df, group_list, args, new_path)
+    print(dotsub)
     exit(0)
 
 
