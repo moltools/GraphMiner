@@ -233,7 +233,7 @@ def main():
     print('TimedOutMolecules', TimeOut)
     writesubstrfile(list_of_df, group_list, list_of_groups, new_path)
     substr_df, pvaldict = calculatepval(args, list_of_groups, group_list, new_path)
-    mtc_clustering(pvaldict, substr_df, group_list, new_path)
+    mtc_clustering(pvaldict, substr_df, group_list, args, new_path)
     exit(0)
 
 
