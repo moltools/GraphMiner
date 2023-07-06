@@ -6,6 +6,7 @@ import pandas as pd
 from rdkit import Chem
 import numpy as np
 import csv
+import os
 from GraphMiner import determine_groups, create_dict, select_on_size, \
     combine_substr, repl_atommap_COO, set_atommapnum, rdkit_parse_atommap, \
     repl_atommap_CO, repl_atommap_C_O, count_freq, \
@@ -70,9 +71,10 @@ def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
     total_molecules += 1
     return dict_substr, total_molecules, all_substr
 
-def writesubstrfile(list_of_df, grouplist, dict_of_groups):
+def writesubstrfile(list_of_df, grouplist, dict_of_groups, pathway):
+    substrfile = pathway + '/substrfile.csv'
     if len(list_of_df) == 1:
-        list_of_df[0].to_csv('substrfile.csv',
+        list_of_df[0].to_csv(substrfile,
                              header=['Substructure', 'Frequency'])
     elif len(list_of_df) == 2:
         joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
@@ -82,7 +84,7 @@ def writesubstrfile(list_of_df, grouplist, dict_of_groups):
         headers = ['Substructure']
         for groupname in grouplist:
             headers.append('Frequency' + str(groupname))
-        joined_df.to_csv('substrfile.csv', header=headers)
+        joined_df.to_csv(substrfile, header=headers)
     elif len(list_of_df) >= 3:
         joined_df = pd.merge(list_of_df[0], list_of_df[1], how='outer')
         for dfnum in range(2, len(list_of_df)):
@@ -94,7 +96,7 @@ def writesubstrfile(list_of_df, grouplist, dict_of_groups):
                 colmn[num_df + 1]].replace(np.nan, 0)
         for groupname in grouplist:
             headers.append('Frequency' + str(groupname))
-        joined_df.to_csv('substrfile.csv', header=headers)
+        joined_df.to_csv(substrfile, header=headers)
     f = open('datafile.csv', 'w')
     writer = csv.writer(f)
     writer.writerow(dict_of_groups.keys())
@@ -102,21 +104,23 @@ def writesubstrfile(list_of_df, grouplist, dict_of_groups):
     f.close()
     return
 
-def calculatepval(args, list_of_groups, grouplist):
-    substr_df = pd.read_csv('substrfile.csv', args.SeparatorCSVfile)
+def calculatepval(args, list_of_groups, grouplist, pathway):
+    substrfile = pathway + '/substrfile.csv'
+    substr_df = pd.read_csv(substrfile, args.SeparatorCSVfile)
     pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
     for key in pvaldict.keys():
         substr_df[key] = pvaldict[key]
-
-    f = open('pvaloverview.csv', 'w')
+    pvalfile = pathway + '/pvaloverview.csv'
+    f = open(pvalfile, 'w')
     writer = csv.writer(f)
     for row in substr_df.iterrows():
         writer.writerow(row)
     f.close()
     return substr_df, pvaldict
 
-def mtc_clustering(pvaldict, substr_df, grouplist, args):
-    f = open('significantsubstr.csv', 'w')
+def mtc_clustering(pvaldict, substr_df, grouplist, args, pathway):
+    filepath1 = pathway + '/significantsubstr.csv'
+    f = open(filepath1, 'w')
     writer = csv.writer(f)
     p = 0
     tryoutfail = 0
@@ -157,19 +161,24 @@ def mtc_clustering(pvaldict, substr_df, grouplist, args):
                     coef = 1 - tanimoto_coefficient(fp_i, fp_j)
                     dist_m[i, j] = coef
                     dist_m[j, i] = coef
-        namefile = '/home/duive014/MOLTOOLS/GraphMiner/Images/' + str(
+        namefile = pathway + '/Images/' + str(
             groupname) + '_dendrogram.png'
         dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
         valueslist = create_groups_dendrogram(dendrogram)
         # writer.writerow(valueslist)
-        filepaths = '/home/duive014/MOLTOOLS/GraphMiner/Images' + '/' + str(
+        filepaths = pathway + '/Images/' + str(
             groupname)
+        os.mkdir(filepaths)
         draw_mol_fig(valueslist, filepaths)
     f.close()
     return
 
 def main():
     args = cli()
+    cur_path = os.getcwd()
+    new_path = cur_path + '/GraphMinerResults'
+    os.mkdir(new_path)
+    print(new_path)
     group_list, dict_of_data = data_loading(args)
     number = 0
     TimeOut = 0
