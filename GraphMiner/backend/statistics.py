@@ -20,6 +20,7 @@ def hypergeometric_test_pval(total_dict: dict, input_df, grouplist):
         N = total_dict[val]
         for substr in input_df.iterrows():
             for input in substr:
+                print(input)
                 if type(input) != int:
                     k = input[group+1]
                     s = 0
