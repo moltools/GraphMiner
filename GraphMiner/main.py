@@ -131,7 +131,7 @@ def mtc_clustering(pvaldict, substr_df, grouplist, args, pathway):
         writer.writerow(['New Group'])
         writer.writerow([p])
         p += 1
-        TF_benj_list = mul_test_corr(pvallist, 'fdr_bh', args.PValue)
+        TF_benj_list = mul_test_corr(pvallist, args.MultipleTestCorr, args.PValue)
         substr_df['True/False Benj-Hoch'] = TF_benj_list
         list_sigdif = extract_signif_substr(TF_benj_list, substr_df)
         dic_of_substr = create_groups_substr(list_sigdif)
@@ -165,7 +165,7 @@ def mtc_clustering(pvaldict, substr_df, grouplist, args, pathway):
                     dist_m[j, i] = coef
         namefile = pathway + '/Images/' + str(
             groupname) + '_dendrogram.png'
-        dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile)
+        dendrogram = plot_dendrogram(dist_m, smilessubstr, namefile, args)
         valueslist = create_groups_dendrogram(dendrogram)
         # writer.writerow(valueslist)
         filepaths = pathway + '/Images/' + str(
@@ -179,7 +179,7 @@ def main():
     dotsub = 0
     args = cli()
     cur_path = os.getcwd()
-    new_path = cur_path + '/GraphMinerResults'
+    new_path = cur_path + '/' + args.outputfolder
     os.mkdir(new_path)
     # print(new_path)
     group_list, dict_of_data = data_loading(args)

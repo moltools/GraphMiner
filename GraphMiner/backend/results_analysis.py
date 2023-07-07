@@ -71,11 +71,11 @@ def draw_mol_fig(vallist, filepath):
     return
 
 
-def plot_dendrogram(dist_matrix, substrsmiles, filename):
+def plot_dendrogram(dist_matrix, substrsmiles, filename, args):
     X = squareform(dist_matrix)
     Z = linkage(X, "ward")
     fig = plt.figure(figsize=(25, 10))
-    dn = dendrogram(Z, orientation="right", labels = substrsmiles, color_threshold=1.2)
+    dn = dendrogram(Z, orientation="right", labels = substrsmiles, color_threshold=args.CutOffDendrogram)
     plt.savefig(filename)
     return dn
 
