@@ -2,7 +2,7 @@
 
 from rdkit import Chem
 
-def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol, dotsub):
+def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol):
     '''
     Convert the indices of subgraphs to SMILES subgraphs
 
@@ -10,6 +10,7 @@ def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol, dotsub):
     subgraphs - dictionary containing as key (int) the subgraph length and as value
     (set of int) with the subgraphs as integers
     smilesmol - MOL format of a molecule (mol)
+    zeromol - Chem.Mol format of the molecule at the start (mol)
 
     returns:
     mol_graphs - dictionary containing as key (int) the subgraph length and as value
@@ -18,7 +19,6 @@ def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol, dotsub):
     mol_graphs = {}
     smiles_graphs = {}
     atommapdict = {}
-    dot_structure = 0
     for atom in smilesmol.GetAtoms():
         atommapdict[atom.GetAtomMapNum()] = atom.GetIdx()
         atom.SetAtomMapNum(0)
@@ -31,13 +31,10 @@ def rdkit_smiles2(sub_graphs:dict, smilesmol, zeromol, dotsub):
                     subgraphset.add(atommapdict[atommapnum])
             subgraphlist = list(subgraphset)
             if '.' in Chem.MolFragmentToSmiles(smilesmol, subgraphlist):
-                dot_structure += 1
                 continue
             smiles_graphs[subgraph_length].append(
                 Chem.MolFragmentToSmiles(zeromol, subgraphlist))
-    print('dot_structure', dot_structure)
-    dotsub += dot_structure
-    return smiles_graphs, mol_graphs, dotsub
+    return smiles_graphs, mol_graphs
 
 def rdkit_smiles3(sub_graphs:dict, smilesmol):
     '''

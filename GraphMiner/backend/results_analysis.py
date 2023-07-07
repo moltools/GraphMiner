@@ -10,8 +10,18 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 # from sklearn.decomposition import PCA
 
 
-def mol_to_fingerprint(mol: Chem.Mol, num_bits: int = 2048, radius: int = 3) -> np.array:
-    """Creates Morgan fingerprint from RDKit Mol."""
+def mol_to_fingerprint(mol: Chem.Mol, num_bits: int = 2048, radius: int = 3):
+    """
+    Creates Morgan fingerprint from RDKit Mol
+
+    input:
+    mol - molecule in Chem.Mol format
+    num_bits - number of bits for making the fingerprint (int)
+    radius - radius for making the fingerprint(int)
+
+    output:
+    bit_fingerprint - Fingerprint in a Numpy Array
+    """
     # print(Chem.MolToSmiles(mol))
     bit_fingerprint = np.zeros((0,), dtype=int)
     morgan_bit_vector = AllChem.GetMorganFingerprintAsBitVect(mol, radius, num_bits)
@@ -19,7 +29,15 @@ def mol_to_fingerprint(mol: Chem.Mol, num_bits: int = 2048, radius: int = 3) -> 
     return bit_fingerprint
 
 def tanimoto_coefficient(first_fingerprint: np.array, second_fingerprint: np.array) -> float:
-    """Calculates Tanimoto coefficient between two fingerprints."""
+    """Calculates Tanimoto coefficient between two fingerprints
+
+    input:
+    first_fingerprint - Fingerprint in a Numpy Array
+    second_fingerprint - Fingerprint in a Numpy Array
+
+    output:
+    tanimoto coefficient (float)
+    """
     return (
         np.logical_and(first_fingerprint, second_fingerprint).sum() / (
             float(np.logical_or(first_fingerprint, second_fingerprint).sum())
@@ -27,6 +45,16 @@ def tanimoto_coefficient(first_fingerprint: np.array, second_fingerprint: np.arr
     )
 
 def create_groups_dendrogram(dn):
+    """
+    Create the different groups which are shown in the dendrogram
+
+    input:
+    dn - information resulting from the dendrogram function
+
+    output:
+    vallist - dictionary with as key the groupnumber (str) and as value the
+    substructures (list of str)
+    """
     vallist = {}
     groupnum = 0
     vallist[str(groupnum)] = [dn['ivl'][0]]
@@ -40,21 +68,15 @@ def create_groups_dendrogram(dn):
             vallist[str(groupnum)].append(dn['ivl'][index])
     return vallist
 
-# def PCA():
-#     pca = PCA(n_components=2)
-#     pcs = pca.fit_transform(fps)
-#     ev = pca.explained_variance_ratio_
-#
-#     x, y = pcs[:, 0], pcs[:, 1]
-#     ev_x, ev_y = round(ev[0] * 100, 2), round(ev[1] * 100, 2)
-#
-#     # plt.scatter(x, y, s=1)
-#     # plt.xlabel(f"PC1 ({ev_x}%)")
-#     # plt.ylabel(f"PC2 ({ev_y}%)")
-#     # plt.show()
-#     return
-
 def draw_mol_fig(vallist, filepath):
+    '''
+    Draw the molecule as a structure
+
+    input:
+    vallist - dictionary with as key the groupnumber (str) and as value the
+    substructures (list of str)
+    filepath - pathway as to where to store the file
+    '''
     for group in vallist:
         plt.title("Group " + group)
         mols = [Chem.MolFromSmiles(mol) for mol in vallist[group]]
@@ -72,6 +94,18 @@ def draw_mol_fig(vallist, filepath):
 
 
 def plot_dendrogram(dist_matrix, substrsmiles, filename, args):
+    '''
+    Create and plot the dendrogram
+
+    input:
+    dist_matrix - matrix containing all pairwise distances
+    substrsmiles - a list of all the substructures which are over/under enriched
+    filename - pathway to where to store the output file
+    args - arguments from command line
+
+    output:
+    dn - all information regarding the dendrogram
+    '''
     X = squareform(dist_matrix)
     Z = linkage(X, "ward")
     fig = plt.figure(figsize=(25, 10))

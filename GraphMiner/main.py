@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-# from __future__ import annotations
 from .cli import cli
-import argparse
 import pandas as pd
 from rdkit import Chem
 import numpy as np
@@ -20,58 +18,96 @@ from GraphMiner import determine_groups, create_dict, select_on_size, \
 args = cli()
 
 def data_loading(args):
+    '''
+    Load in the input dataset
+
+    input:
+    args - arguments from the commandline
+
+    output:
+    grouplist - list of all groups present in input dataset
+    dictofdata - dictionary with as key the group (str) and as value a list
+    of all molecules in that group (list of str)
+    '''
     df = pd.read_csv(args.input, sep=args.separatorCSVfile)
     grouplist = determine_groups(df)
     dictofdata = create_dict(grouplist, df)
     return grouplist, dictofdata
 
 @timeout(args.TimeOutTimer)
-def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules, dotsub):
-    # print(' ')
+def mol_substr_bfs(selected_mol, all_substr, dict_substr, total_molecules):
+    '''
+    Perform filtering and graph mining
+
+    input:
+    selected_mol - molecule in SMILES format (str)
+    all_substr - a list of all substructures found in the group (list of str)
+    dict_substr - a dictionary with as key the number of the molecule (int) and
+    as value the list of all unique substructures (list of str)
+    total_molecules - number of molecules passed in the group (int)
+
+    returns:
+    all_substr - a list of all substructures found in the group (list of str)
+    dict_substr - a dictionary with as key the number of the molecule (int) and
+    as value the list of all unique substructures (list of str)
+    total_molecules - number of molecules passed in the group (int)
+    '''
+    print(' ')
     repl = {}
     sel_smile = Chem.MolToSmiles(selected_mol, kekuleSmiles = True)
     sel_mol = Chem.MolFromSmiles(sel_smile)
-    # print('START: ' + sel_smile)
+    print('START: ' + sel_smile)
     set_atommapnum(sel_mol)
     tot_mol = sel_mol
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C(=O)O')) == True:
         sel_mol, repl = repl_atommap_COO(sel_mol, repl)
-        # print('C(=O)O done')
+        print('C(=O)O done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)(O)O')) == True:
         sel_mol, repl = repl_atommap_POOOO(sel_mol, repl)
-        # print('P(=O)(O)(O)O done')
+        print('P(=O)(O)(O)O done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('P(=O)(O)O')) == True:
         sel_mol, repl = repl_atommap_POOO(sel_mol, repl)
-        # print('P(=O)(O)O done')
+        print('P(=O)(O)O done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)O')) == True:
         sel_mol, repl = repl_atommap_SOOO(sel_mol, repl)
-        # print('S(=O)(=O)O done')
+        print('S(=O)(=O)O done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('S(=O)(=O)')) == True:
         sel_mol, repl = repl_atommap_SOO(sel_mol, repl)
-        # print('S(=O)(=O) done')
+        print('S(=O)(=O) done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('N(O)C(=O)')) == True:
         sel_mol, repl = repl_atommap_NOCO(sel_mol, repl)
-        # print('NOCO done')
+        print('NOCO done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('NC=O')) == True:
         sel_mol, repl = repl_atommap_NCO(sel_mol, repl)
-        # print('NC=O done')
+        print('NC=O done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('CO')) == True:
         sel_mol, repl = repl_atommap_CO(sel_mol, repl)
-        # print('CO done')
+        print('CO done')
     if sel_mol.HasSubstructMatch(Chem.MolFromSmiles('C=O')) == True:
         sel_mol, repl = repl_atommap_C_O(sel_mol, repl)
-        # print('C=O done')
+        print('C=O done')
     dictnode, list_node = rdkit_parse_atommap(sel_mol)
     subgraphdict = breadth_fs2(dictnode, list_node)
     returned_dict = return_replaced2(repl, subgraphdict)
-    smilesdict, moldict, dotsub = rdkit_smiles2(returned_dict, tot_mol, tot_mol, dotsub)
+    smilesdict, moldict = rdkit_smiles2(returned_dict, tot_mol, tot_mol)
     unique_str = combine_substr(smilesdict)
     all_substr += (unique_str)
     dict_substr[total_molecules] = unique_str
     total_molecules += 1
-    return dict_substr, total_molecules, all_substr, dotsub
+    return dict_substr, total_molecules, all_substr
 
 def writesubstrfile(list_of_df, grouplist, dict_of_groups, pathway):
+    '''
+    Write file with all substructures
+
+    input:
+    list_of_df - list of the dataframes containing substructures and frequencies
+    of each group
+    grouplist - list of all groups
+    dict_of_groups - dictionary with as key the name of the group (str) and
+    as value the number of molecules in the group (int)
+    pathway - the pathway as to where to save the files
+    '''
     substrfile = pathway + '/substrfile.csv'
     if len(list_of_df) == 1:
         list_of_df[0].to_csv(substrfile,
@@ -104,7 +140,22 @@ def writesubstrfile(list_of_df, grouplist, dict_of_groups, pathway):
     f.close()
     return
 
-def calculatepval(args, list_of_groups, grouplist, pathway):
+def calculatepval(list_of_groups, grouplist, pathway):
+    '''
+    Calculate all p-values using hypergeometric test
+
+    input:
+    list_of_groups - dictionary with as key the name of the group (str) and
+    as value the number of molecules in the group (int)
+    grouplist - list containing all groupnames (list of str)
+    pathway - pathway as to where to save the files (str)
+
+    output:
+    substr_df - dataframe containing all substructures and the frequency for each
+    group and the pvalues for each group.
+    pvaldict - dictionary with as key the group name (str) and as value a list of
+    all p-values (float)
+    '''
     substrfile = pathway + '/substrfile.csv'
     substr_df = pd.read_csv(substrfile, sep=',')
     pvaldict = hypergeometric_test_pval(list_of_groups, substr_df, grouplist)
@@ -119,6 +170,18 @@ def calculatepval(args, list_of_groups, grouplist, pathway):
     return substr_df, pvaldict
 
 def mtc_clustering(pvaldict, substr_df, grouplist, args, pathway):
+    '''
+    Perform multiple testing correction and clustering
+
+    input:
+    substr_df - dataframe containing all substructures and the frequency for each
+    group and the pvalues for each group.
+    pvaldict - dictionary with as key the group name (str) and as value a list of
+    all p-values (float)
+    grouplist - list containing all groupnames (list of str)
+    args - arguments from the command line
+    pathway - pathway as to where to save the files (str)
+    '''
     filepath1 = pathway + '/significantsubstr.csv'
     f = open(filepath1, 'w')
     writer = csv.writer(f)
@@ -176,6 +239,9 @@ def mtc_clustering(pvaldict, substr_df, grouplist, args, pathway):
     return
 
 def main():
+    '''
+    Main function
+    '''
     dotsub = 0
     args = cli()
     cur_path = os.getcwd()
@@ -233,7 +299,7 @@ def main():
         list_of_df.append(df)
     print('TimedOutMolecules', TimeOut)
     writesubstrfile(list_of_df, group_list, list_of_groups, new_path)
-    substr_df, pvaldict = calculatepval(args, list_of_groups, group_list, new_path)
+    substr_df, pvaldict = calculatepval(list_of_groups, group_list, new_path)
     mtc_clustering(pvaldict, substr_df, group_list, args, new_path)
     print(dotsub)
     exit(0)

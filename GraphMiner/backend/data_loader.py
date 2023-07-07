@@ -1,24 +1,12 @@
 #!/usr/bin/env python3
 
-from sys import argv
-import pandas as pd
-
-def load_data(input_num:int, seperator:str):
-    '''
-    Load in the csv file
-
-    returns: 
-    df - pandas dataframe of the csv file
-    '''
-    df = pd.read_csv(argv[input_num], sep = seperator)
-    return df
-
 def determine_groups(dataset):
     '''
     Determine which groups are present in the dataset
     
     input:
-    dataset - pandas dataframe containing SMILES in first column and group number in second column
+    dataset - pandas dataframe containing SMILES in first column and
+    group number in second column
 
     returns:
     dif_groups - list of the group numbers that are present in the dataset
@@ -38,10 +26,13 @@ def create_dict(diff_groups:list, data_set):
     
     input:
     diff_groups - list of the group numbers that are present in the data
-    data_set - pandas dataframe containing SMILES in first column and group number in second column
+    data_set - pandas dataframe containing SMILES in first column and
+    group number in second column
     
     returns:
-    list_of_mol - dictionary with as key the group number and as value a list of all SMILES in that group'''
+    list_of_mol - dictionary with as key the group number and as value a list
+    of all SMILES in that group
+    '''
     list_of_mol = {}
     for group_num in diff_groups:
         list_of_mol[group_num] = []

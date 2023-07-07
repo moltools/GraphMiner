@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 
-#IMPORT STATEMENTS
-from rdkit import Chem
-
 def rdkit_parse_atommap(inputmol: str):
     '''
     Obtaining neighbors of atoms using RDKit and AtomMapNumbers
 
     input:
-    inputsmiles - SMILES format of a molecule (str)
+    inputmol - SMILES format of a molecule (str)
 
     returns:
     neighbours_dict - dictionary containing as key (int) the AtomMapNumber of
