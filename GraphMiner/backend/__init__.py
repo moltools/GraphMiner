@@ -1,8 +1,5 @@
 #Load data
-from .data_loader import load_data, determine_groups, create_dict
-
-#Previous tools
-from .rdkit_mining import subgraph_miner, sub_to_smiles
+from .data_loader import determine_groups, create_dict
 
 #Preparation beforehand
 from .prep_in_advance import select_on_size, select_mol
