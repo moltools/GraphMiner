@@ -269,9 +269,9 @@ def main():
                 # print(number)
                 for mol in selected_mol:
                     try:
-                        dict_substr, group_tot, all_substr, dotsub = mol_substr_bfs(
+                        dict_substr, group_tot, all_substr = mol_substr_bfs(
                             Chem.MolFromSmiles(mol), all_substr, dict_substr,
-                            group_tot, dotsub)
+                            group_tot)
                     except TimeoutError:
                         # print('timeout')
                         TimeOut += 1
@@ -280,8 +280,8 @@ def main():
                 number += 1
                 # print(number)
                 try:
-                    dict_substr, group_tot, all_substr, dotsub = mol_substr_bfs(
-                        selected_mol, all_substr, dict_substr, group_tot, dotsub)
+                    dict_substr, group_tot, all_substr = mol_substr_bfs(
+                        selected_mol, all_substr, dict_substr, group_tot)
                 except TimeoutError:
                     # print('timeout')
                     TimeOut += 1
